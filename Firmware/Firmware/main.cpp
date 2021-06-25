@@ -97,9 +97,9 @@ int main(void)
     while (1) 
     {
 		PORTB |= PIN(2);
-		_delay_ms(1000);
+		_delay_ms(100);
 		PORTB &= ~PIN(2);
-		_delay_ms(1000);
+		_delay_ms(100);
     }
 }
 
