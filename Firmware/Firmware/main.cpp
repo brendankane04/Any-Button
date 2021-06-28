@@ -1,124 +1,64 @@
-/*
- * NEC Protocol IR remote control decoder using PIC16F877A CCS C code
- * Firmware.cpp
- *
- * Created: 6/9/2021 4:39:57 PM
- * Author : brend
- */ 
+//Remote Control Receiver Momentary+Alternate Original ATtiny13A 20191021 2200
+//PB1,PB2 : Momentary Operation
+//PB3,PB4 : Alternate Operation
 
-using namespace std;
-
-#ifndef F_CPU 
-#define F_CPU 1600000UL //1.6MHz
-#endif
-
-#include <stdint.h>
 #include <avr/io.h>
+#define F_CPU 16000000UL
 #include <util/delay.h>
+#define pin PINB
 
-#define TRUE 1
-#define FALSE 0
+uint16_t cti;
+uint8_t ir=0x01,ib,bt,custom,data;
 
-#define REMOTE_0 0x00FF16E9
-#define REMOTE_1 0x00FF0CF3
+void infrared(){
 
-#define PIN(pin) (1 << (pin)) //Pick a specific pin on a port
+	cti=0;while(~pin & ir){cti++;_delay_us(100);} //Leader(16T) Check
+	if(cti>70 && cti<100){ //cti:90(16T)
 
-uint32_t ir_code = 0;
-uint16_t address = 0;
-uint8_t command = 0;
-uint8_t inv_command = 0;
+		cti=0;while((pin & ir)&&(cti<55)){cti++;_delay_us(100);} //Blank(8T) Check
 
-//Reads in the input of one pin
-// 1: High
-// 0: Low
-int input(int pin)
-{
-	return !!(PORTB & PIN(pin));
-}
+		if(cti>35){ //cti:45(8T)
+			for(ib=0;ib<16;ib++){
+				while(~pin & ir);
+				cti=0;while((pin & ir)&&(cti<20)){cti++;_delay_us(100);}
+				if(cti>10){bt=1;}else{bt=0;} //cti:16(3T)
+				data<<=1; //data:Data Code
+				data|=bt;
+				if(ib==7){custom=data;data=0;} //custom:Custom Code
+			}
+			if(custom==0x99){
+				if(data==0x01){PORTB|=(1<<1);} //PB1:Momentary
+				if(data==0x02){PORTB|=(1<<2);} //PB2:Momentary
+				if(data==0x03){PORTB^=(1<<3);} //PB3:Alternate
+				if(data==0x04){PORTB^=(1<<4);} //PB4:Alternate
 
-void blink()
-{
-	DDRB |= 0x01;
-	PORTB |= 0x01;
-	_delay_ms(500);
-	PORTB &= ~0x01;
-	_delay_ms(500);
-}
+				cti=0;while((pin & ir)&&(cti<10)){cti++;_delay_us(100);}
+				while(~pin & ir); //Stop Bit
+			}
+		}//if(cti>35
+		
+	}//if(cti>70
 
-//Reads in the NEC code of an IR receiver
-short nec_remote_read()
-{
-	uint8_t count = 0, i = 0;
-
-	// Check 9ms pulse (remote control sends logic high)
-	while((input(0) == 0) && (count < 200))
-	{
-		count++;
-		_delay_us(50);
+	cti=0;
+	for(;;){ //Blank Check
+		cti++;
+		_delay_us(100);
+		if(~pin & ir){cti=0;}
+		if(cti>500){PORTB&=0b11111001;break;}
 	}
-
-	if( (count > 199) || (count < 160))        // NEC protocol?
-		return FALSE;
-
-	count = 0;
-	// Check 4.5ms space (remote control sends logic low)
-	while((input(0)) && (count < 100))
-	{
-		count++;
-		_delay_us(50);
-	}
-
-	if( (count > 99) || (count < 60))          // NEC protocol?
-		return FALSE;
-
-	// Read code message (32-bit)
-	for(i = 0; i < 32; i++)
-	{
-		count = 0;
-		while((input(0) == 0) && (count < 14))
-		{
-			count++;
-			_delay_us(50);
-		}
-
-		if( (count > 13) || (count < 8))      // NEC protocol?
-			return FALSE;
-
-		count = 0;
-		while((input(0)) && (count < 40))
-		{
-			count++;
-			_delay_us(50);
-		}
-
-		if( (count > 39) || (count < 8))      // NEC protocol?
-			return FALSE;
-
-		if( count > 20)                       // If space width > 1ms
-			//bit_set(ir_code, (31 - i));         // Write 1 to bit (31 - i)
-			ir_code |= (1 << (31 - i));
-		else                                  // If space width < 1ms
-			//bit_clear(ir_code, (31 - i));       // Write 0 to bit (31 - i)
-			ir_code &= ~(1 << (31 - i));
-	}
-	return TRUE;
 }
 
-int main(void)
-{
-	DDRB |= PIN(2);
-    while (1) 
-    {
-		if(nec_remote_read())
-		{
-			PORTB |= PIN(2);
-			_delay_ms(500);
-		}
-		else
-		{
-			PORTB &= ~PIN(2);
-		}
-    }
-}
+int main( void ){
 
+	CLKPR =0b10000000; //Prescaler Change Enable
+	CLKPR =0b00000000; //Div1(9.6MHz)
+
+	DDRB  =0b00011110; //PB4-1:LED
+	PORTB =0b00000000; //PB0:IR Sensor
+
+	while(1){
+
+		if(~pin & ir){infrared();}
+
+	}
+}
