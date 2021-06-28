@@ -19,6 +19,9 @@ using namespace std;
 #define TRUE 1
 #define FALSE 0
 
+#define REMOTE_0 0x00FF16E9
+#define REMOTE_1 0x00FF0CF3
+
 #define PIN(pin) (1 << (pin)) //Pick a specific pin on a port
 
 uint32_t ir_code = 0;
@@ -27,9 +30,20 @@ uint8_t command = 0;
 uint8_t inv_command = 0;
 
 //Reads in the input of one pin
+// 1: High
+// 0: Low
 int input(int pin)
 {
-	return PORTB & PIN(pin);
+	return !!(PORTB & PIN(pin));
+}
+
+void blink()
+{
+	DDRB |= 0x01;
+	PORTB |= 0x01;
+	_delay_ms(500);
+	PORTB &= ~0x01;
+	_delay_ms(500);
 }
 
 //Reads in the NEC code of an IR receiver
@@ -96,10 +110,15 @@ int main(void)
 	DDRB |= PIN(2);
     while (1) 
     {
-		PORTB |= PIN(2);
-		_delay_ms(100);
-		PORTB &= ~PIN(2);
-		_delay_ms(100);
+		if(nec_remote_read())
+		{
+			PORTB |= PIN(2);
+			_delay_ms(500);
+		}
+		else
+		{
+			PORTB &= ~PIN(2);
+		}
     }
 }
 
