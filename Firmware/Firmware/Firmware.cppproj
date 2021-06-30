@@ -195,6 +195,12 @@
     </ToolchainSettings>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="IR_NEC.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="IR_NEC.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="main.cpp">
       <SubType>compile</SubType>
     </Compile>

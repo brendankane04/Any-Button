@@ -51,12 +51,12 @@ enum PulseType
 // In µs
 enum PulseDuration
 {
-	LEADING_PULSE_DUR = 9500,
-	INITIAL_SPACE_DUR = 4500,
+	LEADING_PULSE_DUR = 900,
+	INITIAL_SPACE_DUR = 4300,
 	REPEAT_SPACE_DUR = 2250,
 	FINAL_PULSE_DUR = 540,
-	LOGIC_SHORT_DUR = 540,
-	LOGIC_LONG_DUR = 1688
+	LOGIC_SHORT_DUR = 400,
+	LOGIC_LONG_DUR = 700
 };
 
 typedef enum
@@ -197,7 +197,7 @@ void IR_disable_repetition(uint8_t command)
 
 		repDisCmdsCount++;
 		// Dynamic memory allocation
-		repDisCmds = realloc(repDisCmds, sizeof(*repDisCmds) * repDisCmdsCount);
+		repDisCmds = (uint8_t*) realloc(repDisCmds, sizeof(*repDisCmds) * repDisCmdsCount);
 		
 		if (repDisCmds != NULL)
 		{
@@ -219,7 +219,7 @@ void IR_enable_repetition(uint8_t command)
 			/* Command to disable found */
 
 			// Create memory for temporary pointer where commands will be copied to
-			uint8_t *tempCmds = calloc(repDisCmdsCount, sizeof(*repDisCmds));
+			uint8_t *tempCmds = (uint8_t*) (repDisCmdsCount, sizeof(*repDisCmds));
 			
 			if (tempCmds != NULL)
 			{
@@ -234,7 +234,7 @@ void IR_enable_repetition(uint8_t command)
 				
 				// Copy back all commands except the deleted one
 				repDisCmdsCount--;
-				repDisCmds = calloc(repDisCmdsCount, sizeof(*repDisCmds));
+				repDisCmds = (uint8_t*) calloc(repDisCmdsCount, sizeof(*repDisCmds));
 				if (repDisCmds != NULL)
 				{
 					for (uint8_t j = 0, k = 0; j < repDisCmdsCount + 1; j++)
