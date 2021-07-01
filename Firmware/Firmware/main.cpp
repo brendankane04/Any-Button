@@ -9,21 +9,53 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
 #include <util/delay.h>
-#include "IR_NEC.h"
 
-int main( void )
+#define FALSE 0
+#define TRUE  1
+
+const int delay = 1000;
+int change = 0;
+
+void blink()
+{
+	PORTB |= 0x02;
+	_delay_ms(delay);
+	PORTB &= ~0x02;
+}
+
+//waits until the interrupt pin is triggered and records how long the device waited for a response in 10's of microseconds
+int wait_until_change()
+{
+	int count = 0;
+	GIMSK |= _BV(INT0);
+	while(!change)
+	{
+		//Increment & reset when it's been increasing for too long
+		count++;
+		if(count == 1500) count = 0;
+
+		_delay_us(10);
+	}
+	change = FALSE;
+	GIMSK &= ~_BV(INT0);
+	return count;
+}
+
+int main(void)
 {
 	DDRB = 0x02; 
-	const int delay = 1000;
-	IR_init(100);
+	MCUCR |= _BV(ISC00);
+	int length = 0;
 	sei();
 
 	while(1)
 	{
-		PORTB |= 0x02;
-		_delay_ms(delay);
-		PORTB &= ~0x02;
-		_delay_ms(delay);
-		IR_data_ready();
+		length = wait_until_change();
+		if(length > 10) blink();
 	}
+}
+
+ISR(INT0_vect)
+{
+	change = TRUE;
 }
