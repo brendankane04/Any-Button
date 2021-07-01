@@ -255,9 +255,9 @@ END GROUP
  .text._Z5blinkv
                 0x00000040       0x20 main.o
                 0x00000040                _Z5blinkv
- .text._Z14wait_until_intv
+ .text._Z17wait_until_changev
                 0x00000060       0x3e main.o
-                0x00000060                _Z14wait_until_intv
+                0x00000060                _Z17wait_until_changev
  .text.main     0x0000009e       0x16 main.o
                 0x0000009e                main
  .text.__vector_1
@@ -400,20 +400,20 @@ END GROUP
  .debug_abbrev  0x00000000      0x3e8 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATtiny_DFP/1.8.332/gcc/dev/attiny85/avr25/crtattiny85.o
  .debug_abbrev  0x000003e8      0x175 main.o
 
-.debug_line     0x00000000      0x2ae
+.debug_line     0x00000000      0x2af
  *(.debug_line .debug_line.* .debug_line_end)
  .debug_line    0x00000000       0xf2 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATtiny_DFP/1.8.332/gcc/dev/attiny85/avr25/crtattiny85.o
- .debug_line    0x000000f2      0x1bc main.o
+ .debug_line    0x000000f2      0x1bd main.o
 
 .debug_frame    0x00000000       0x68
  *(.debug_frame)
  .debug_frame   0x00000000       0x68 main.o
 
-.debug_str      0x00000000      0x383
+.debug_str      0x00000000      0x382
  *(.debug_str)
  .debug_str     0x00000000      0x169 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATtiny_DFP/1.8.332/gcc/dev/attiny85/avr25/crtattiny85.o
- .debug_str     0x00000169      0x21a main.o
-                                0x24e (size before relaxing)
+ .debug_str     0x00000169      0x219 main.o
+                                0x254 (size before relaxing)
 
 .debug_loc      0x00000000      0x105
  *(.debug_loc)

@@ -13,6 +13,12 @@
 #define FALSE 0
 #define TRUE  1
 
+struct IR_cmd
+{
+	int addr;
+	int cmd;
+};
+
 const int delay = 1000;
 int change = 0;
 
@@ -39,6 +45,20 @@ int wait_until_change()
 	change = FALSE;
 	GIMSK &= ~_BV(INT0);
 	return count;
+}
+
+//Record the length of 1 pulse of a square wave
+int record_square_wave()
+{
+	int length;
+	wait_until_change();
+	length = wait_until_change();
+	return length;	
+}
+
+IR_cmd IR_Recv()
+{
+	
 }
 
 int main(void)
