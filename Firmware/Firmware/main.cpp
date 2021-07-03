@@ -13,10 +13,16 @@
 #define FALSE 0
 #define TRUE  1
 
+//Constants for reading in the IR command
+#define AGC_PULSE 8000
+#define LONG_PULSE 3500
+#define ONE_PULSE 1350
+#define STOP_BIT
+
 struct IR_cmd
 {
-	int addr;
-	int cmd;
+	char addr;
+	char cmd;
 };
 
 const int delay = 1000;
@@ -29,7 +35,7 @@ void blink()
 	PORTB &= ~0x02;
 }
 
-//waits until the interrupt pin is triggered and records how long the device waited for a response in 10's of microseconds
+//waits until the interrupt pin is triggered and records how long the device waited for a response in us
 int wait_until_change()
 {
 	int count = 0;
@@ -44,7 +50,7 @@ int wait_until_change()
 	}
 	change = FALSE;
 	GIMSK &= ~_BV(INT0);
-	return count;
+	return count / 10;
 }
 
 //Record the length of 1 pulse of a square wave
@@ -56,9 +62,82 @@ int record_square_wave()
 	return length;	
 }
 
+//Read in a single bit of the IR code based on the length of the square wave
+char read_bit()
+{
+	int length;
+	length = record_square_wave();
+	if(length < ONE_PULSE)
+		return 0x00;
+	else
+		return 0x01;
+}
+
+char read_byte()
+{
+	char output = 0x00;
+	for(int i = 0; i < 8; i++)
+		output |= read_bit() << (7 - i);
+
+	return output;
+}
+
 IR_cmd IR_Recv()
 {
+	int length;
+	IR_cmd output;
+	IR_cmd inv_output;
+
+	//Wait for the beginning of the AGC pulse
+	length = record_square_wave();
 	
+	//Reject command if nothing the AGC isn't long enough
+	if(length < AGC_PULSE)
+	{
+		output.addr = 0;
+		output.cmd = 0;
+		return output;
+	}
+	
+	//Record the length of the pause
+	length = wait_until_change();
+
+	//Return 0, 0 for repeat commands 
+	//TODO: implement repeat commands
+	if(length < LONG_PULSE)
+	{
+		//wait until the stop bit ends
+		wait_until_change();
+
+		output.addr = 0;
+		output.cmd = 0;
+		return output;
+	}
+
+	//Read the address
+	output.addr = read_byte();
+
+	//Read the inverted address 
+	inv_output.addr = read_byte();
+	
+	//Read the command
+	output.cmd = read_byte();
+
+	//Read the inverted output
+	inv_output.cmd = read_byte();
+	
+	//Wait until the stop bit ends
+	length = wait_until_change();
+
+	//Check for error conditions regarding the inverted bits & the length of the stop bit
+	if(output.addr != ~(inv_output.addr) || output.cmd != ~(inv_output.cmd) || length < 400)
+	{
+		output.addr = 0;
+		output.cmd = 0;
+		return output;
+	}
+	
+	return output;
 }
 
 int main(void)
