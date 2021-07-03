@@ -17,7 +17,7 @@
 #define AGC_PULSE 8000
 #define LONG_PULSE 3500
 #define ONE_PULSE 1350
-#define STOP_BIT
+#define STOP_BIT 500
 
 struct IR_cmd
 {
@@ -99,11 +99,11 @@ IR_cmd IR_Recv()
 		return output;
 	}
 	
-	//Record the length of the pause
+	//Record the length of the pause & set scanning mode from active high to active low
 	length = wait_until_change();
 
 	//Return 0, 0 for repeat commands 
-	//TODO: implement repeat commands
+	//TODO: implement code to read repeat commands
 	if(length < LONG_PULSE)
 	{
 		//wait until the stop bit ends
@@ -130,7 +130,12 @@ IR_cmd IR_Recv()
 	length = wait_until_change();
 
 	//Check for error conditions regarding the inverted bits & the length of the stop bit
-	if(output.addr != ~(inv_output.addr) || output.cmd != ~(inv_output.cmd) || length < 400)
+	if
+	(
+		output.addr != ~(inv_output.addr) || 
+		output.cmd != ~(inv_output.cmd) || 
+		length < STOP_BIT
+	)
 	{
 		output.addr = 0;
 		output.cmd = 0;
@@ -140,17 +145,51 @@ IR_cmd IR_Recv()
 	return output;
 }
 
+void USI_init()
+{
+	//Set Two-Wire mode
+	USICR |= _BV(USIWM1);
+
+	//Set software clock mode for simplicity
+	USICR |= _BV(USICLK);
+}
+
+void USI_Write(char data)
+{
+	USIDR = data;
+	
+	for(int i = 0; i < 8; i++)
+	{
+		//Send a bit
+		USICR |= _BV(USICLK);
+
+		//Pulse a square wave on the SCL line
+		USICR |= _BV(USITC);
+		_delay_us(100);
+		USICR |= _BV(USITC);
+		_delay_us(100);
+	}
+}
+
 int main(void)
 {
 	DDRB = 0x02; 
 	MCUCR |= _BV(ISC00);
-	int length = 0;
+	IR_cmd remote_cmd;
+	remote_cmd.addr = 0x00;
+	remote_cmd.cmd = 0x00;
+
+	USI_init();
+
 	sei();
 
 	while(1)
 	{
-		length = wait_until_change();
-		if(length > 10) blink();
+		remote_cmd = IR_Recv();
+		if(remote_cmd.cmd == 0x16) blink();
+		cli();
+		USI_Write(remote_cmd.cmd);
+		sei();
 	}
 }
 
