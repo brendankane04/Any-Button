@@ -3,7 +3,7 @@
 //PB3,PB4 : Alternate Operation
 
 #ifndef F_CPU
-#define F_CPU 1000000UL
+#define F_CPU 8000000UL
 #endif 
 
 #include <avr/io.h>
@@ -13,11 +13,14 @@
 #define FALSE 0
 #define TRUE  1
 
+#define SCL 0x08
+#define SDA 0x10
+
 //Constants for reading in the IR command
-#define AGC_PULSE 8000
-#define LONG_PULSE 3500
-#define ONE_PULSE 1350
-#define STOP_BIT 500
+#define AGC_PULSE 7500
+#define LONG_PULSE 3000
+#define ONE_PULSE 1200
+#define STOP_BIT 400
 
 struct IR_cmd
 {
@@ -25,32 +28,31 @@ struct IR_cmd
 	char cmd;
 };
 
+void Write(char);
+
 const int delay = 1000;
-int change = 0;
 
 void blink()
 {
 	PORTB |= 0x02;
 	_delay_ms(delay);
 	PORTB &= ~0x02;
+	_delay_ms(delay);
 }
 
 //waits until the interrupt pin is triggered and records how long the device waited for a response in us
 int wait_until_change()
 {
 	int count = 0;
-	GIMSK |= _BV(INT0);
-	while(!change)
+	GIFR |= _BV(INTF0); //Clear the flag before starting
+	while((GIFR & _BV(INTF0)) == 0)
 	{
 		//Increment & reset when it's been increasing for too long
 		count++;
-		if(count == 1500) count = 0;
-
 		_delay_us(10);
 	}
-	change = FALSE;
-	GIMSK &= ~_BV(INT0);
-	return count / 10;
+	GIFR |= _BV(INTF0); //Clear the flag after its use
+	return count * 10;
 }
 
 //Record the length of 1 pulse of a square wave
@@ -73,6 +75,7 @@ char read_bit()
 		return 0x01;
 }
 
+//Read in a byte
 char read_byte()
 {
 	char output = 0x00;
@@ -82,6 +85,7 @@ char read_byte()
 	return output;
 }
 
+//Read in an IR command & address
 IR_cmd IR_Recv()
 {
 	int length;
@@ -90,12 +94,12 @@ IR_cmd IR_Recv()
 
 	//Wait for the beginning of the AGC pulse
 	length = record_square_wave();
-	
+
 	//Reject command if nothing the AGC isn't long enough
 	if(length < AGC_PULSE)
 	{
 		output.addr = 0;
-		output.cmd = 0;
+		output.cmd = 1;
 		return output;
 	}
 	
@@ -110,12 +114,15 @@ IR_cmd IR_Recv()
 		wait_until_change();
 
 		output.addr = 0;
-		output.cmd = 0;
+		output.cmd = 2;
 		return output;
 	}
 
 	//Read the address
 	output.addr = read_byte();
+	
+	Write(output.addr);
+	return output;
 
 	//Read the inverted address 
 	inv_output.addr = read_byte();
@@ -129,71 +136,96 @@ IR_cmd IR_Recv()
 	//Wait until the stop bit ends
 	length = wait_until_change();
 
+	Write(output.addr);
+	_delay_ms(500);
+	Write(inv_output.addr);
+
+	_delay_ms(1000);
+
+	Write(output.cmd);
+	_delay_ms(500);
+	Write(inv_output.cmd);
+
 	//Check for error conditions regarding the inverted bits & the length of the stop bit
 	if
 	(
 		output.addr != ~(inv_output.addr) || 
-		output.cmd != ~(inv_output.cmd) || 
-		length < STOP_BIT
+		output.cmd != ~(inv_output.cmd)  
+		//length < STOP_BIT
 	)
 	{
 		output.addr = 0;
-		output.cmd = 0;
+		output.cmd = 3;
 		return output;
 	}
 	
 	return output;
 }
 
-void USI_init()
+void Write(char data)
 {
-	//Set Two-Wire mode
-	USICR |= _BV(USIWM1);
-
-	//Set software clock mode for simplicity
-	USICR |= _BV(USICLK);
-}
-
-void USI_Write(char data)
-{
-	USIDR = data;
-	
+	char curr;
 	for(int i = 0; i < 8; i++)
 	{
-		//Send a bit
-		USICR |= _BV(USICLK);
+		//Get the current bit
+		curr = (data >> (7 - i)) & 0x01;
 
-		//Pulse a square wave on the SCL line
-		USICR |= _BV(USITC);
+		//Send out the bit
+		if(curr)
+			PORTB |= SDA;
+		else
+			PORTB &= ~SDA;
+
+		PORTB |= SCL;
 		_delay_us(100);
-		USICR |= _BV(USITC);
+		PORTB &= ~SCL & ~SDA;
 		_delay_us(100);
 	}
+
+	//Clear data line
+	PORTB &= ~SDA;
+}
+
+void interrupt_init()
+{
+	//Initialize the interrupt mode for INT0
+	MCUCR |= _BV(ISC00); 
+	//GIMSK |= _BV(INT0);
+}
+
+void timer_init()
+{
+	//Normal mode of counting
+	
+
+	//Set the prescaler to 1024
+	TCCR0B |= _BV(CS02) | _BV(CS00);
+
 }
 
 int main(void)
 {
-	DDRB = 0x02; 
-	MCUCR |= _BV(ISC00);
+	//Set LED pin as an output
+	DDRB |= 0x02; 
+
+	interrupt_init();
+
+	//Initialize an empty IR command
 	IR_cmd remote_cmd;
 	remote_cmd.addr = 0x00;
 	remote_cmd.cmd = 0x00;
 
-	USI_init();
+	//Initialize the bit-bang write command
+	DDRB |= SDA | SCL;
+	PORTB |= SCL;
 
 	sei();
 
+	int length = 0;
 	while(1)
 	{
 		remote_cmd = IR_Recv();
 		if(remote_cmd.cmd == 0x16) blink();
-		cli();
-		USI_Write(remote_cmd.cmd);
-		sei();
+		blink();
 	}
-}
-
-ISR(INT0_vect)
-{
-	change = TRUE;
 }
