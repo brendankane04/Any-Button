@@ -3,29 +3,29 @@ Firmware.elf:     file format elf32-avr
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .text         00000442  00000000  00000000  00000054  2**1
+  0 .text         0000040e  00000000  00000000  00000054  2**1
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  1 .data         00000000  00800060  00800060  00000496  2**0
+  1 .data         00000000  00800060  00800060  00000462  2**0
                   CONTENTS, ALLOC, LOAD, DATA
-  2 .comment      00000030  00000000  00000000  00000496  2**0
+  2 .comment      00000030  00000000  00000000  00000462  2**0
                   CONTENTS, READONLY
-  3 .note.gnu.avr.deviceinfo 0000003c  00000000  00000000  000004c8  2**2
+  3 .note.gnu.avr.deviceinfo 0000003c  00000000  00000000  00000494  2**2
                   CONTENTS, READONLY
-  4 .debug_aranges 00000038  00000000  00000000  00000504  2**0
+  4 .debug_aranges 00000030  00000000  00000000  000004d0  2**0
                   CONTENTS, READONLY, DEBUGGING
-  5 .debug_info   000011ca  00000000  00000000  0000053c  2**0
+  5 .debug_info   000011f8  00000000  00000000  00000500  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_abbrev 00000676  00000000  00000000  00001706  2**0
+  6 .debug_abbrev 000006b5  00000000  00000000  000016f8  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_line   00000606  00000000  00000000  00001d7c  2**0
+  7 .debug_line   000005db  00000000  00000000  00001dad  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_frame  00000064  00000000  00000000  00002384  2**2
+  8 .debug_frame  00000044  00000000  00000000  00002388  2**2
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_str    000004e5  00000000  00000000  000023e8  2**0
+  9 .debug_str    00000514  00000000  00000000  000023cc  2**0
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_loc    00000a63  00000000  00000000  000028cd  2**0
+ 10 .debug_loc    00000989  00000000  00000000  000028e0  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_ranges 00000088  00000000  00000000  00003330  2**0
+ 11 .debug_ranges 00000068  00000000  00000000  00003269  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -54,1029 +54,985 @@ Disassembly of section .text:
   24:	d2 e0       	ldi	r29, 0x02	; 2
   26:	de bf       	out	0x3e, r29	; 62
   28:	cd bf       	out	0x3d, r28	; 61
-  2a:	51 d0       	rcall	.+162    	; 0xce <main>
-  2c:	08 c2       	rjmp	.+1040   	; 0x43e <_exit>
+  2a:	06 d0       	rcall	.+12     	; 0x38 <main>
+  2c:	ee c1       	rjmp	.+988    	; 0x40a <_exit>
 
 0000002e <__bad_interrupt>:
   2e:	e8 cf       	rjmp	.-48     	; 0x0 <__vectors>
 
-00000030 <_Z5blinkv>:
-};
-
-void blink()
-{
-	int delay = 1000;
-	PORTB |= 0x02;
-  30:	88 b3       	in	r24, 0x18	; 24
-  32:	82 60       	ori	r24, 0x02	; 2
-  34:	88 bb       	out	0x18, r24	; 24
-	#else
-		//round up by default
-		__ticks_dc = (uint32_t)(ceil(fabs(__tmp)));
-	#endif
-
-	__builtin_avr_delay_cycles(__ticks_dc);
-  36:	2f ef       	ldi	r18, 0xFF	; 255
-  38:	89 e6       	ldi	r24, 0x69	; 105
-  3a:	98 e1       	ldi	r25, 0x18	; 24
-  3c:	21 50       	subi	r18, 0x01	; 1
-  3e:	80 40       	sbci	r24, 0x00	; 0
-  40:	90 40       	sbci	r25, 0x00	; 0
-  42:	e1 f7       	brne	.-8      	; 0x3c <_Z5blinkv+0xc>
-  44:	00 c0       	rjmp	.+0      	; 0x46 <__SREG__+0x7>
-  46:	00 00       	nop
-	_delay_ms(delay);
-	PORTB &= ~0x02;
-  48:	88 b3       	in	r24, 0x18	; 24
-  4a:	8d 7f       	andi	r24, 0xFD	; 253
-  4c:	88 bb       	out	0x18, r24	; 24
-  4e:	2f ef       	ldi	r18, 0xFF	; 255
-  50:	89 e6       	ldi	r24, 0x69	; 105
-  52:	98 e1       	ldi	r25, 0x18	; 24
-  54:	21 50       	subi	r18, 0x01	; 1
-  56:	80 40       	sbci	r24, 0x00	; 0
-  58:	90 40       	sbci	r25, 0x00	; 0
-  5a:	e1 f7       	brne	.-8      	; 0x54 <__SREG__+0x15>
-  5c:	00 c0       	rjmp	.+0      	; 0x5e <__SREG__+0x1f>
-  5e:	00 00       	nop
-  60:	08 95       	ret
-
-00000062 <_Z10Write_initv>:
-
-//Initialize the bit-bang write command
-void Write_init()
-{
-	//Set the SDA & SCL pins as outputs
-	DDRB |= SDA | SCL;
-  62:	87 b3       	in	r24, 0x17	; 23
-  64:	88 61       	ori	r24, 0x18	; 24
-  66:	87 bb       	out	0x17, r24	; 23
-  68:	08 95       	ret
-
-0000006a <_Z5Writec>:
-
-//VERY Rudimentary bit-banged I2C function for debugging
-void Write(char data)
-{
-	char curr;
-	for(int i = 0; i < 8; i++)
-  6a:	20 e0       	ldi	r18, 0x00	; 0
-  6c:	30 e0       	ldi	r19, 0x00	; 0
-  6e:	28 30       	cpi	r18, 0x08	; 8
-  70:	31 05       	cpc	r19, r1
-  72:	4c f5       	brge	.+82     	; 0xc6 <_Z5Writec+0x5c>
-	{
-		//Get the current bit
-		curr = (data >> (7 - i)) & 0x01;
-  74:	67 e0       	ldi	r22, 0x07	; 7
-  76:	70 e0       	ldi	r23, 0x00	; 0
-  78:	62 1b       	sub	r22, r18
-  7a:	73 0b       	sbc	r23, r19
-  7c:	48 2f       	mov	r20, r24
-  7e:	50 e0       	ldi	r21, 0x00	; 0
-  80:	02 c0       	rjmp	.+4      	; 0x86 <_Z5Writec+0x1c>
-  82:	55 95       	asr	r21
-  84:	47 95       	ror	r20
-  86:	6a 95       	dec	r22
-  88:	e2 f7       	brpl	.-8      	; 0x82 <_Z5Writec+0x18>
-
-		//Send out the bit
-		if(curr)
-  8a:	40 ff       	sbrs	r20, 0
-  8c:	04 c0       	rjmp	.+8      	; 0x96 <_Z5Writec+0x2c>
-			PORTB |= SDA;
-  8e:	98 b3       	in	r25, 0x18	; 24
-  90:	90 61       	ori	r25, 0x10	; 16
-  92:	98 bb       	out	0x18, r25	; 24
-  94:	03 c0       	rjmp	.+6      	; 0x9c <_Z5Writec+0x32>
-		else
-			PORTB &= ~SDA;
-  96:	98 b3       	in	r25, 0x18	; 24
-  98:	9f 7e       	andi	r25, 0xEF	; 239
-  9a:	98 bb       	out	0x18, r25	; 24
-
-		PORTB |= SCL;
-  9c:	98 b3       	in	r25, 0x18	; 24
-  9e:	98 60       	ori	r25, 0x08	; 8
-  a0:	98 bb       	out	0x18, r25	; 24
-	#else
-		//round up by default
-		__ticks_dc = (uint32_t)(ceil(fabs(__tmp)));
-	#endif
-
-	__builtin_avr_delay_cycles(__ticks_dc);
-  a2:	e7 ec       	ldi	r30, 0xC7	; 199
-  a4:	f0 e0       	ldi	r31, 0x00	; 0
-  a6:	31 97       	sbiw	r30, 0x01	; 1
-  a8:	f1 f7       	brne	.-4      	; 0xa6 <_Z5Writec+0x3c>
-  aa:	00 c0       	rjmp	.+0      	; 0xac <_Z5Writec+0x42>
-  ac:	00 00       	nop
-		_delay_us(100);
-		PORTB &= ~SCL & ~SDA;
-  ae:	98 b3       	in	r25, 0x18	; 24
-  b0:	97 7e       	andi	r25, 0xE7	; 231
-  b2:	98 bb       	out	0x18, r25	; 24
-  b4:	e7 ec       	ldi	r30, 0xC7	; 199
-  b6:	f0 e0       	ldi	r31, 0x00	; 0
-  b8:	31 97       	sbiw	r30, 0x01	; 1
-  ba:	f1 f7       	brne	.-4      	; 0xb8 <_Z5Writec+0x4e>
-  bc:	00 c0       	rjmp	.+0      	; 0xbe <_Z5Writec+0x54>
-  be:	00 00       	nop
-
-//VERY Rudimentary bit-banged I2C function for debugging
-void Write(char data)
-{
-	char curr;
-	for(int i = 0; i < 8; i++)
-  c0:	2f 5f       	subi	r18, 0xFF	; 255
-  c2:	3f 4f       	sbci	r19, 0xFF	; 255
-  c4:	d4 cf       	rjmp	.-88     	; 0x6e <_Z5Writec+0x4>
+00000030 <_Z10Write_initv>:
 		PORTB &= ~SCL & ~SDA;
 		_delay_us(100);
 	}
 
 	//Clear data line
 	PORTB &= ~SDA;
-  c6:	88 b3       	in	r24, 0x18	; 24
-  c8:	8f 7e       	andi	r24, 0xEF	; 239
-  ca:	88 bb       	out	0x18, r24	; 24
-  cc:	08 95       	ret
+  30:	87 b3       	in	r24, 0x17	; 23
+  32:	88 61       	ori	r24, 0x18	; 24
+  34:	87 bb       	out	0x17, r24	; 23
+  36:	08 95       	ret
 
-000000ce <main>:
+00000038 <main>:
 }
 
 int main(void)
 {
-  ce:	cf 93       	push	r28
-  d0:	df 93       	push	r29
-  d2:	00 d0       	rcall	.+0      	; 0xd4 <main+0x6>
-  d4:	00 d0       	rcall	.+0      	; 0xd6 <main+0x8>
-  d6:	00 d0       	rcall	.+0      	; 0xd8 <main+0xa>
-  d8:	cd b7       	in	r28, 0x3d	; 61
-  da:	de b7       	in	r29, 0x3e	; 62
-	//Set LED pin as an output
-	DDRB |= 0x02; 
-  dc:	87 b3       	in	r24, 0x17	; 23
-  de:	82 60       	ori	r24, 0x02	; 2
-  e0:	87 bb       	out	0x17, r24	; 23
-
 	Write_init();
-  e2:	bf df       	rcall	.-130    	; 0x62 <_Z10Write_initv>
-
-	public:
-
+  38:	fb df       	rcall	.-10     	; 0x30 <_Z10Write_initv>
 		//Constructor
 		IR_Receiver()
 		{
-  e4:	8c e4       	ldi	r24, 0x4C	; 76
-  e6:	9d e1       	ldi	r25, 0x1D	; 29
-  e8:	9a 83       	std	Y+2, r25	; 0x02
-  ea:	89 83       	std	Y+1, r24	; 0x01
-  ec:	88 eb       	ldi	r24, 0xB8	; 184
-  ee:	9b e0       	ldi	r25, 0x0B	; 11
-  f0:	9c 83       	std	Y+4, r25	; 0x04
-  f2:	8b 83       	std	Y+3, r24	; 0x03
-  f4:	80 eb       	ldi	r24, 0xB0	; 176
-  f6:	94 e0       	ldi	r25, 0x04	; 4
-  f8:	9e 83       	std	Y+6, r25	; 0x06
-  fa:	8d 83       	std	Y+5, r24	; 0x05
 			//Set up the interrupt on the INT0 pin to receive the IR signal
 			//Initialize the interrupt mode for INT0
 			MCUCR |= _BV(ISC00); 
-  fc:	85 b7       	in	r24, 0x35	; 53
-  fe:	81 60       	ori	r24, 0x01	; 1
- 100:	85 bf       	out	0x35, r24	; 53
+  3a:	85 b7       	in	r24, 0x35	; 53
+  3c:	81 60       	ori	r24, 0x01	; 1
+  3e:	85 bf       	out	0x35, r24	; 53
+			//Initialize the state as off
+			state = 0;
+
+			//Ensure the pin is one of the 5 possibilities & set the pin for this relay
+			if(0 <= pin && pin <= 5) 
+				this->pin = pin;
+  40:	40 e0       	ldi	r20, 0x00	; 0
+  42:	50 e0       	ldi	r21, 0x00	; 0
+  44:	61 e0       	ldi	r22, 0x01	; 1
+  46:	70 e0       	ldi	r23, 0x00	; 0
+			else
+				this->pin = 1; //1 is the default pin
+
+			//Set the pin as an output
+			DDRB |= _BV(pin);
+  48:	87 b3       	in	r24, 0x17	; 23
+  4a:	82 60       	ori	r24, 0x02	; 2
+  4c:	87 bb       	out	0x17, r24	; 23
 	//Initialize an empty IR command
-	IR_cmd remote_cmd;
+	IR_Receiver::IR_cmd remote_cmd;
 	remote_cmd.addr = 0x00;
 	remote_cmd.cmd = 0x00;
 
 	sei();
- 102:	78 94       	sei
+  4e:	78 94       	sei
 
 		//waits until the interrupt pin is triggered to continue and records how long the device waited for a response in microseconds
 		int wait_until_change()
 		{
 			int count = 0;
 			GIFR |= _BV(INTF0); //Clear the flag before starting
- 104:	8a b7       	in	r24, 0x3a	; 58
- 106:	80 64       	ori	r24, 0x40	; 64
- 108:	8a bf       	out	0x3a, r24	; 58
+  50:	8a b7       	in	r24, 0x3a	; 58
+  52:	80 64       	ori	r24, 0x40	; 64
+  54:	8a bf       	out	0x3a, r24	; 58
 			while((GIFR & _BV(INTF0)) == 0)
- 10a:	0a b6       	in	r0, 0x3a	; 58
- 10c:	06 fc       	sbrc	r0, 6
- 10e:	05 c0       	rjmp	.+10     	; 0x11a <main+0x4c>
- 110:	2a e1       	ldi	r18, 0x1A	; 26
- 112:	2a 95       	dec	r18
- 114:	f1 f7       	brne	.-4      	; 0x112 <main+0x44>
- 116:	00 c0       	rjmp	.+0      	; 0x118 <main+0x4a>
- 118:	f8 cf       	rjmp	.-16     	; 0x10a <main+0x3c>
-			{
-				//Increment
-				count++;
-				_delay_us(10);
-			}
-			GIFR |= _BV(INTF0); //Clear the flag after its use
- 11a:	8a b7       	in	r24, 0x3a	; 58
- 11c:	80 64       	ori	r24, 0x40	; 64
- 11e:	8a bf       	out	0x3a, r24	; 58
-
-		//waits until the interrupt pin is triggered to continue and records how long the device waited for a response in microseconds
-		int wait_until_change()
-		{
-			int count = 0;
-			GIFR |= _BV(INTF0); //Clear the flag before starting
- 120:	8a b7       	in	r24, 0x3a	; 58
- 122:	80 64       	ori	r24, 0x40	; 64
- 124:	8a bf       	out	0x3a, r24	; 58
-		const int ONE_PULSE = 1200;
-
-		//waits until the interrupt pin is triggered to continue and records how long the device waited for a response in microseconds
-		int wait_until_change()
-		{
-			int count = 0;
- 126:	80 e0       	ldi	r24, 0x00	; 0
- 128:	90 e0       	ldi	r25, 0x00	; 0
-			GIFR |= _BV(INTF0); //Clear the flag before starting
-			while((GIFR & _BV(INTF0)) == 0)
- 12a:	0a b6       	in	r0, 0x3a	; 58
- 12c:	06 fc       	sbrc	r0, 6
- 12e:	06 c0       	rjmp	.+12     	; 0x13c <main+0x6e>
-			{
-				//Increment
-				count++;
- 130:	01 96       	adiw	r24, 0x01	; 1
- 132:	2a e1       	ldi	r18, 0x1A	; 26
- 134:	2a 95       	dec	r18
- 136:	f1 f7       	brne	.-4      	; 0x134 <main+0x66>
- 138:	00 c0       	rjmp	.+0      	; 0x13a <main+0x6c>
- 13a:	f7 cf       	rjmp	.-18     	; 0x12a <main+0x5c>
-				_delay_us(10);
-			}
-			GIFR |= _BV(INTF0); //Clear the flag after its use
- 13c:	2a b7       	in	r18, 0x3a	; 58
- 13e:	20 64       	ori	r18, 0x40	; 64
- 140:	2a bf       	out	0x3a, r18	; 58
-			return count * 10;
- 142:	9c 01       	movw	r18, r24
- 144:	22 0f       	add	r18, r18
- 146:	33 1f       	adc	r19, r19
- 148:	22 0f       	add	r18, r18
- 14a:	33 1f       	adc	r19, r19
- 14c:	82 0f       	add	r24, r18
- 14e:	93 1f       	adc	r25, r19
- 150:	88 0f       	add	r24, r24
- 152:	99 1f       	adc	r25, r25
-
-			//Wait for the beginning of the AGC pulse
-			length = measure_square_wave();
-
-			//Reject command if nothing the AGC isn't long enough
-			if(length < AGC_PULSE)
- 154:	29 81       	ldd	r18, Y+1	; 0x01
- 156:	3a 81       	ldd	r19, Y+2	; 0x02
- 158:	82 17       	cp	r24, r18
- 15a:	93 07       	cpc	r25, r19
- 15c:	14 f4       	brge	.+4      	; 0x162 <main+0x94>
-			{
-				output.addr = 0;
-				output.cmd = 0;
-				return output;
- 15e:	10 e0       	ldi	r17, 0x00	; 0
- 160:	68 c1       	rjmp	.+720    	; 0x432 <__LOCK_REGION_LENGTH__+0x32>
-
-		//waits until the interrupt pin is triggered to continue and records how long the device waited for a response in microseconds
-		int wait_until_change()
-		{
-			int count = 0;
-			GIFR |= _BV(INTF0); //Clear the flag before starting
- 162:	8a b7       	in	r24, 0x3a	; 58
- 164:	80 64       	ori	r24, 0x40	; 64
- 166:	8a bf       	out	0x3a, r24	; 58
-		const int ONE_PULSE = 1200;
-
-		//waits until the interrupt pin is triggered to continue and records how long the device waited for a response in microseconds
-		int wait_until_change()
-		{
-			int count = 0;
- 168:	80 e0       	ldi	r24, 0x00	; 0
- 16a:	90 e0       	ldi	r25, 0x00	; 0
-			GIFR |= _BV(INTF0); //Clear the flag before starting
-			while((GIFR & _BV(INTF0)) == 0)
- 16c:	0a b6       	in	r0, 0x3a	; 58
- 16e:	06 fc       	sbrc	r0, 6
- 170:	06 c0       	rjmp	.+12     	; 0x17e <main+0xb0>
-			{
-				//Increment
-				count++;
- 172:	01 96       	adiw	r24, 0x01	; 1
- 174:	2a e1       	ldi	r18, 0x1A	; 26
- 176:	2a 95       	dec	r18
- 178:	f1 f7       	brne	.-4      	; 0x176 <main+0xa8>
- 17a:	00 c0       	rjmp	.+0      	; 0x17c <main+0xae>
- 17c:	f7 cf       	rjmp	.-18     	; 0x16c <main+0x9e>
-				_delay_us(10);
-			}
-			GIFR |= _BV(INTF0); //Clear the flag after its use
- 17e:	2a b7       	in	r18, 0x3a	; 58
- 180:	20 64       	ori	r18, 0x40	; 64
- 182:	2a bf       	out	0x3a, r18	; 58
-			return count * 10;
- 184:	9c 01       	movw	r18, r24
- 186:	22 0f       	add	r18, r18
- 188:	33 1f       	adc	r19, r19
- 18a:	22 0f       	add	r18, r18
- 18c:	33 1f       	adc	r19, r19
- 18e:	82 0f       	add	r24, r18
- 190:	93 1f       	adc	r25, r19
- 192:	88 0f       	add	r24, r24
- 194:	99 1f       	adc	r25, r25
-			//Record the length of the pause & set scanning mode from active high to active low
-			length = wait_until_change();
-
-			//Return 0, 0 for repeat commands 
-			//TODO: implement code to read repeat commands
-			if(length < LONG_PULSE)
- 196:	2b 81       	ldd	r18, Y+3	; 0x03
- 198:	3c 81       	ldd	r19, Y+4	; 0x04
- 19a:	82 17       	cp	r24, r18
- 19c:	93 07       	cpc	r25, r19
- 19e:	84 f4       	brge	.+32     	; 0x1c0 <main+0xf2>
-
-		//waits until the interrupt pin is triggered to continue and records how long the device waited for a response in microseconds
-		int wait_until_change()
-		{
-			int count = 0;
-			GIFR |= _BV(INTF0); //Clear the flag before starting
- 1a0:	8a b7       	in	r24, 0x3a	; 58
- 1a2:	80 64       	ori	r24, 0x40	; 64
- 1a4:	8a bf       	out	0x3a, r24	; 58
-			while((GIFR & _BV(INTF0)) == 0)
- 1a6:	0a b6       	in	r0, 0x3a	; 58
- 1a8:	06 fc       	sbrc	r0, 6
- 1aa:	05 c0       	rjmp	.+10     	; 0x1b6 <main+0xe8>
- 1ac:	8a e1       	ldi	r24, 0x1A	; 26
- 1ae:	8a 95       	dec	r24
- 1b0:	f1 f7       	brne	.-4      	; 0x1ae <main+0xe0>
- 1b2:	00 c0       	rjmp	.+0      	; 0x1b4 <main+0xe6>
- 1b4:	f8 cf       	rjmp	.-16     	; 0x1a6 <main+0xd8>
-			{
-				//Increment
-				count++;
-				_delay_us(10);
-			}
-			GIFR |= _BV(INTF0); //Clear the flag after its use
- 1b6:	8a b7       	in	r24, 0x3a	; 58
- 1b8:	80 64       	ori	r24, 0x40	; 64
- 1ba:	8a bf       	out	0x3a, r24	; 58
-				//wait until the stop bit ends
-				wait_until_change();
-
-				output.addr = 0;
-				output.cmd = 0;
-				return output;
- 1bc:	10 e0       	ldi	r17, 0x00	; 0
- 1be:	39 c1       	rjmp	.+626    	; 0x432 <__LOCK_REGION_LENGTH__+0x32>
-
-		//Read in a byte from LSB to MSB
-		char read_byte()
-		{
-			char output = 0x00;
-			for(int i = 0; i < 8; i++)
- 1c0:	40 e0       	ldi	r20, 0x00	; 0
- 1c2:	50 e0       	ldi	r21, 0x00	; 0
-		}
-
-		//Read in a byte from LSB to MSB
-		char read_byte()
-		{
-			char output = 0x00;
- 1c4:	80 e0       	ldi	r24, 0x00	; 0
-			for(int i = 0; i < 8; i++)
- 1c6:	48 30       	cpi	r20, 0x08	; 8
- 1c8:	51 05       	cpc	r21, r1
- 1ca:	e4 f5       	brge	.+120    	; 0x244 <__DATA_REGION_LENGTH__+0x44>
-
-		//waits until the interrupt pin is triggered to continue and records how long the device waited for a response in microseconds
-		int wait_until_change()
-		{
-			int count = 0;
-			GIFR |= _BV(INTF0); //Clear the flag before starting
- 1cc:	9a b7       	in	r25, 0x3a	; 58
- 1ce:	90 64       	ori	r25, 0x40	; 64
- 1d0:	9a bf       	out	0x3a, r25	; 58
-			while((GIFR & _BV(INTF0)) == 0)
- 1d2:	0a b6       	in	r0, 0x3a	; 58
- 1d4:	06 fc       	sbrc	r0, 6
- 1d6:	05 c0       	rjmp	.+10     	; 0x1e2 <main+0x114>
- 1d8:	9a e1       	ldi	r25, 0x1A	; 26
- 1da:	9a 95       	dec	r25
- 1dc:	f1 f7       	brne	.-4      	; 0x1da <main+0x10c>
- 1de:	00 c0       	rjmp	.+0      	; 0x1e0 <main+0x112>
- 1e0:	f8 cf       	rjmp	.-16     	; 0x1d2 <main+0x104>
-			{
-				//Increment
-				count++;
-				_delay_us(10);
-			}
-			GIFR |= _BV(INTF0); //Clear the flag after its use
- 1e2:	9a b7       	in	r25, 0x3a	; 58
- 1e4:	90 64       	ori	r25, 0x40	; 64
- 1e6:	9a bf       	out	0x3a, r25	; 58
-
-		//waits until the interrupt pin is triggered to continue and records how long the device waited for a response in microseconds
-		int wait_until_change()
-		{
-			int count = 0;
-			GIFR |= _BV(INTF0); //Clear the flag before starting
- 1e8:	9a b7       	in	r25, 0x3a	; 58
- 1ea:	90 64       	ori	r25, 0x40	; 64
- 1ec:	9a bf       	out	0x3a, r25	; 58
-		const int ONE_PULSE = 1200;
-
-		//waits until the interrupt pin is triggered to continue and records how long the device waited for a response in microseconds
-		int wait_until_change()
-		{
-			int count = 0;
- 1ee:	20 e0       	ldi	r18, 0x00	; 0
- 1f0:	30 e0       	ldi	r19, 0x00	; 0
-			GIFR |= _BV(INTF0); //Clear the flag before starting
-			while((GIFR & _BV(INTF0)) == 0)
- 1f2:	0a b6       	in	r0, 0x3a	; 58
- 1f4:	06 fc       	sbrc	r0, 6
- 1f6:	07 c0       	rjmp	.+14     	; 0x206 <__DATA_REGION_LENGTH__+0x6>
-			{
-				//Increment
-				count++;
- 1f8:	2f 5f       	subi	r18, 0xFF	; 255
- 1fa:	3f 4f       	sbci	r19, 0xFF	; 255
- 1fc:	9a e1       	ldi	r25, 0x1A	; 26
- 1fe:	9a 95       	dec	r25
- 200:	f1 f7       	brne	.-4      	; 0x1fe <main+0x130>
- 202:	00 c0       	rjmp	.+0      	; 0x204 <__DATA_REGION_LENGTH__+0x4>
- 204:	f6 cf       	rjmp	.-20     	; 0x1f2 <main+0x124>
-				_delay_us(10);
-			}
-			GIFR |= _BV(INTF0); //Clear the flag after its use
- 206:	9a b7       	in	r25, 0x3a	; 58
- 208:	90 64       	ori	r25, 0x40	; 64
- 20a:	9a bf       	out	0x3a, r25	; 58
-			return count * 10;
- 20c:	b9 01       	movw	r22, r18
- 20e:	66 0f       	add	r22, r22
- 210:	77 1f       	adc	r23, r23
- 212:	66 0f       	add	r22, r22
- 214:	77 1f       	adc	r23, r23
- 216:	26 0f       	add	r18, r22
- 218:	37 1f       	adc	r19, r23
- 21a:	22 0f       	add	r18, r18
- 21c:	33 1f       	adc	r19, r19
-		//Read in a single bit of the IR code based on the length of the square wave
-		char read_bit()
-		{
-			int length;
-			length = measure_square_wave();
-			if(length < ONE_PULSE)
- 21e:	6d 81       	ldd	r22, Y+5	; 0x05
- 220:	7e 81       	ldd	r23, Y+6	; 0x06
- 222:	26 17       	cp	r18, r22
- 224:	37 07       	cpc	r19, r23
- 226:	14 f4       	brge	.+4      	; 0x22c <__DATA_REGION_LENGTH__+0x2c>
-				return 0x00;
- 228:	20 e0       	ldi	r18, 0x00	; 0
- 22a:	01 c0       	rjmp	.+2      	; 0x22e <__DATA_REGION_LENGTH__+0x2e>
-			else
-				return 0x01;
- 22c:	21 e0       	ldi	r18, 0x01	; 1
-		//Read in a byte from LSB to MSB
-		char read_byte()
-		{
-			char output = 0x00;
-			for(int i = 0; i < 8; i++)
-				output |= read_bit() << i;
- 22e:	30 e0       	ldi	r19, 0x00	; 0
- 230:	04 2e       	mov	r0, r20
- 232:	02 c0       	rjmp	.+4      	; 0x238 <__DATA_REGION_LENGTH__+0x38>
- 234:	22 0f       	add	r18, r18
- 236:	33 1f       	adc	r19, r19
- 238:	0a 94       	dec	r0
- 23a:	e2 f7       	brpl	.-8      	; 0x234 <__DATA_REGION_LENGTH__+0x34>
- 23c:	82 2b       	or	r24, r18
-
-		//Read in a byte from LSB to MSB
-		char read_byte()
-		{
-			char output = 0x00;
-			for(int i = 0; i < 8; i++)
- 23e:	4f 5f       	subi	r20, 0xFF	; 255
- 240:	5f 4f       	sbci	r21, 0xFF	; 255
- 242:	c1 cf       	rjmp	.-126    	; 0x1c6 <main+0xf8>
- 244:	40 e0       	ldi	r20, 0x00	; 0
- 246:	50 e0       	ldi	r21, 0x00	; 0
-		}
-
-		//Read in a byte from LSB to MSB
-		char read_byte()
-		{
-			char output = 0x00;
- 248:	10 e0       	ldi	r17, 0x00	; 0
-			for(int i = 0; i < 8; i++)
- 24a:	48 30       	cpi	r20, 0x08	; 8
- 24c:	51 05       	cpc	r21, r1
- 24e:	e4 f5       	brge	.+120    	; 0x2c8 <__stack+0x69>
-
-		//waits until the interrupt pin is triggered to continue and records how long the device waited for a response in microseconds
-		int wait_until_change()
-		{
-			int count = 0;
-			GIFR |= _BV(INTF0); //Clear the flag before starting
- 250:	9a b7       	in	r25, 0x3a	; 58
- 252:	90 64       	ori	r25, 0x40	; 64
- 254:	9a bf       	out	0x3a, r25	; 58
-			while((GIFR & _BV(INTF0)) == 0)
- 256:	0a b6       	in	r0, 0x3a	; 58
- 258:	06 fc       	sbrc	r0, 6
- 25a:	05 c0       	rjmp	.+10     	; 0x266 <__stack+0x7>
- 25c:	2a e1       	ldi	r18, 0x1A	; 26
- 25e:	2a 95       	dec	r18
- 260:	f1 f7       	brne	.-4      	; 0x25e <__DATA_REGION_LENGTH__+0x5e>
- 262:	00 c0       	rjmp	.+0      	; 0x264 <__stack+0x5>
- 264:	f8 cf       	rjmp	.-16     	; 0x256 <__DATA_REGION_LENGTH__+0x56>
-			{
-				//Increment
-				count++;
-				_delay_us(10);
-			}
-			GIFR |= _BV(INTF0); //Clear the flag after its use
- 266:	9a b7       	in	r25, 0x3a	; 58
- 268:	90 64       	ori	r25, 0x40	; 64
- 26a:	9a bf       	out	0x3a, r25	; 58
-
-		//waits until the interrupt pin is triggered to continue and records how long the device waited for a response in microseconds
-		int wait_until_change()
-		{
-			int count = 0;
-			GIFR |= _BV(INTF0); //Clear the flag before starting
- 26c:	9a b7       	in	r25, 0x3a	; 58
- 26e:	90 64       	ori	r25, 0x40	; 64
- 270:	9a bf       	out	0x3a, r25	; 58
-		const int ONE_PULSE = 1200;
-
-		//waits until the interrupt pin is triggered to continue and records how long the device waited for a response in microseconds
-		int wait_until_change()
-		{
-			int count = 0;
- 272:	20 e0       	ldi	r18, 0x00	; 0
- 274:	30 e0       	ldi	r19, 0x00	; 0
-			GIFR |= _BV(INTF0); //Clear the flag before starting
-			while((GIFR & _BV(INTF0)) == 0)
- 276:	0a b6       	in	r0, 0x3a	; 58
- 278:	06 fc       	sbrc	r0, 6
- 27a:	07 c0       	rjmp	.+14     	; 0x28a <__stack+0x2b>
-			{
-				//Increment
-				count++;
- 27c:	2f 5f       	subi	r18, 0xFF	; 255
- 27e:	3f 4f       	sbci	r19, 0xFF	; 255
- 280:	9a e1       	ldi	r25, 0x1A	; 26
- 282:	9a 95       	dec	r25
- 284:	f1 f7       	brne	.-4      	; 0x282 <__stack+0x23>
- 286:	00 c0       	rjmp	.+0      	; 0x288 <__stack+0x29>
- 288:	f6 cf       	rjmp	.-20     	; 0x276 <__stack+0x17>
-				_delay_us(10);
-			}
-			GIFR |= _BV(INTF0); //Clear the flag after its use
- 28a:	9a b7       	in	r25, 0x3a	; 58
- 28c:	90 64       	ori	r25, 0x40	; 64
- 28e:	9a bf       	out	0x3a, r25	; 58
-			return count * 10;
- 290:	b9 01       	movw	r22, r18
- 292:	66 0f       	add	r22, r22
- 294:	77 1f       	adc	r23, r23
- 296:	66 0f       	add	r22, r22
- 298:	77 1f       	adc	r23, r23
- 29a:	26 0f       	add	r18, r22
- 29c:	37 1f       	adc	r19, r23
- 29e:	22 0f       	add	r18, r18
- 2a0:	33 1f       	adc	r19, r19
-		//Read in a single bit of the IR code based on the length of the square wave
-		char read_bit()
-		{
-			int length;
-			length = measure_square_wave();
-			if(length < ONE_PULSE)
- 2a2:	6d 81       	ldd	r22, Y+5	; 0x05
- 2a4:	7e 81       	ldd	r23, Y+6	; 0x06
- 2a6:	26 17       	cp	r18, r22
- 2a8:	37 07       	cpc	r19, r23
- 2aa:	14 f4       	brge	.+4      	; 0x2b0 <__stack+0x51>
-				return 0x00;
- 2ac:	20 e0       	ldi	r18, 0x00	; 0
- 2ae:	01 c0       	rjmp	.+2      	; 0x2b2 <__stack+0x53>
-			else
-				return 0x01;
- 2b0:	21 e0       	ldi	r18, 0x01	; 1
-		//Read in a byte from LSB to MSB
-		char read_byte()
-		{
-			char output = 0x00;
-			for(int i = 0; i < 8; i++)
-				output |= read_bit() << i;
- 2b2:	30 e0       	ldi	r19, 0x00	; 0
- 2b4:	04 2e       	mov	r0, r20
- 2b6:	02 c0       	rjmp	.+4      	; 0x2bc <__stack+0x5d>
- 2b8:	22 0f       	add	r18, r18
- 2ba:	33 1f       	adc	r19, r19
- 2bc:	0a 94       	dec	r0
- 2be:	e2 f7       	brpl	.-8      	; 0x2b8 <__stack+0x59>
- 2c0:	12 2b       	or	r17, r18
-
-		//Read in a byte from LSB to MSB
-		char read_byte()
-		{
-			char output = 0x00;
-			for(int i = 0; i < 8; i++)
- 2c2:	4f 5f       	subi	r20, 0xFF	; 255
- 2c4:	5f 4f       	sbci	r21, 0xFF	; 255
- 2c6:	c1 cf       	rjmp	.-126    	; 0x24a <__DATA_REGION_LENGTH__+0x4a>
- 2c8:	40 e0       	ldi	r20, 0x00	; 0
- 2ca:	50 e0       	ldi	r21, 0x00	; 0
-		}
-
-		//Read in a byte from LSB to MSB
-		char read_byte()
-		{
-			char output = 0x00;
- 2cc:	00 e0       	ldi	r16, 0x00	; 0
-			for(int i = 0; i < 8; i++)
- 2ce:	48 30       	cpi	r20, 0x08	; 8
- 2d0:	51 05       	cpc	r21, r1
- 2d2:	e4 f5       	brge	.+120    	; 0x34c <__stack+0xed>
-
-		//waits until the interrupt pin is triggered to continue and records how long the device waited for a response in microseconds
-		int wait_until_change()
-		{
-			int count = 0;
-			GIFR |= _BV(INTF0); //Clear the flag before starting
- 2d4:	9a b7       	in	r25, 0x3a	; 58
- 2d6:	90 64       	ori	r25, 0x40	; 64
- 2d8:	9a bf       	out	0x3a, r25	; 58
-			while((GIFR & _BV(INTF0)) == 0)
- 2da:	0a b6       	in	r0, 0x3a	; 58
- 2dc:	06 fc       	sbrc	r0, 6
- 2de:	05 c0       	rjmp	.+10     	; 0x2ea <__stack+0x8b>
- 2e0:	2a e1       	ldi	r18, 0x1A	; 26
- 2e2:	2a 95       	dec	r18
- 2e4:	f1 f7       	brne	.-4      	; 0x2e2 <__stack+0x83>
- 2e6:	00 c0       	rjmp	.+0      	; 0x2e8 <__stack+0x89>
- 2e8:	f8 cf       	rjmp	.-16     	; 0x2da <__stack+0x7b>
-			{
-				//Increment
-				count++;
-				_delay_us(10);
-			}
-			GIFR |= _BV(INTF0); //Clear the flag after its use
- 2ea:	9a b7       	in	r25, 0x3a	; 58
- 2ec:	90 64       	ori	r25, 0x40	; 64
- 2ee:	9a bf       	out	0x3a, r25	; 58
-
-		//waits until the interrupt pin is triggered to continue and records how long the device waited for a response in microseconds
-		int wait_until_change()
-		{
-			int count = 0;
-			GIFR |= _BV(INTF0); //Clear the flag before starting
- 2f0:	9a b7       	in	r25, 0x3a	; 58
- 2f2:	90 64       	ori	r25, 0x40	; 64
- 2f4:	9a bf       	out	0x3a, r25	; 58
-		const int ONE_PULSE = 1200;
-
-		//waits until the interrupt pin is triggered to continue and records how long the device waited for a response in microseconds
-		int wait_until_change()
-		{
-			int count = 0;
- 2f6:	20 e0       	ldi	r18, 0x00	; 0
- 2f8:	30 e0       	ldi	r19, 0x00	; 0
-			GIFR |= _BV(INTF0); //Clear the flag before starting
-			while((GIFR & _BV(INTF0)) == 0)
- 2fa:	0a b6       	in	r0, 0x3a	; 58
- 2fc:	06 fc       	sbrc	r0, 6
- 2fe:	07 c0       	rjmp	.+14     	; 0x30e <__stack+0xaf>
-			{
-				//Increment
-				count++;
- 300:	2f 5f       	subi	r18, 0xFF	; 255
- 302:	3f 4f       	sbci	r19, 0xFF	; 255
- 304:	9a e1       	ldi	r25, 0x1A	; 26
- 306:	9a 95       	dec	r25
- 308:	f1 f7       	brne	.-4      	; 0x306 <__stack+0xa7>
- 30a:	00 c0       	rjmp	.+0      	; 0x30c <__stack+0xad>
- 30c:	f6 cf       	rjmp	.-20     	; 0x2fa <__stack+0x9b>
-				_delay_us(10);
-			}
-			GIFR |= _BV(INTF0); //Clear the flag after its use
- 30e:	9a b7       	in	r25, 0x3a	; 58
- 310:	90 64       	ori	r25, 0x40	; 64
- 312:	9a bf       	out	0x3a, r25	; 58
-			return count * 10;
- 314:	b9 01       	movw	r22, r18
- 316:	66 0f       	add	r22, r22
- 318:	77 1f       	adc	r23, r23
- 31a:	66 0f       	add	r22, r22
- 31c:	77 1f       	adc	r23, r23
- 31e:	26 0f       	add	r18, r22
- 320:	37 1f       	adc	r19, r23
- 322:	22 0f       	add	r18, r18
- 324:	33 1f       	adc	r19, r19
-		//Read in a single bit of the IR code based on the length of the square wave
-		char read_bit()
-		{
-			int length;
-			length = measure_square_wave();
-			if(length < ONE_PULSE)
- 326:	6d 81       	ldd	r22, Y+5	; 0x05
- 328:	7e 81       	ldd	r23, Y+6	; 0x06
- 32a:	26 17       	cp	r18, r22
- 32c:	37 07       	cpc	r19, r23
- 32e:	14 f4       	brge	.+4      	; 0x334 <__stack+0xd5>
-				return 0x00;
- 330:	20 e0       	ldi	r18, 0x00	; 0
- 332:	01 c0       	rjmp	.+2      	; 0x336 <__stack+0xd7>
-			else
-				return 0x01;
- 334:	21 e0       	ldi	r18, 0x01	; 1
-		//Read in a byte from LSB to MSB
-		char read_byte()
-		{
-			char output = 0x00;
-			for(int i = 0; i < 8; i++)
-				output |= read_bit() << i;
- 336:	30 e0       	ldi	r19, 0x00	; 0
- 338:	04 2e       	mov	r0, r20
- 33a:	02 c0       	rjmp	.+4      	; 0x340 <__stack+0xe1>
- 33c:	22 0f       	add	r18, r18
- 33e:	33 1f       	adc	r19, r19
- 340:	0a 94       	dec	r0
- 342:	e2 f7       	brpl	.-8      	; 0x33c <__stack+0xdd>
- 344:	02 2b       	or	r16, r18
-
-		//Read in a byte from LSB to MSB
-		char read_byte()
-		{
-			char output = 0x00;
-			for(int i = 0; i < 8; i++)
- 346:	4f 5f       	subi	r20, 0xFF	; 255
- 348:	5f 4f       	sbci	r21, 0xFF	; 255
- 34a:	c1 cf       	rjmp	.-126    	; 0x2ce <__stack+0x6f>
- 34c:	40 e0       	ldi	r20, 0x00	; 0
- 34e:	50 e0       	ldi	r21, 0x00	; 0
-		}
-
-		//Read in a byte from LSB to MSB
-		char read_byte()
-		{
-			char output = 0x00;
- 350:	f1 2c       	mov	r15, r1
-			for(int i = 0; i < 8; i++)
- 352:	48 30       	cpi	r20, 0x08	; 8
- 354:	51 05       	cpc	r21, r1
- 356:	e4 f5       	brge	.+120    	; 0x3d0 <__stack+0x171>
-
-		//waits until the interrupt pin is triggered to continue and records how long the device waited for a response in microseconds
-		int wait_until_change()
-		{
-			int count = 0;
-			GIFR |= _BV(INTF0); //Clear the flag before starting
- 358:	9a b7       	in	r25, 0x3a	; 58
- 35a:	90 64       	ori	r25, 0x40	; 64
- 35c:	9a bf       	out	0x3a, r25	; 58
-			while((GIFR & _BV(INTF0)) == 0)
- 35e:	0a b6       	in	r0, 0x3a	; 58
- 360:	06 fc       	sbrc	r0, 6
- 362:	05 c0       	rjmp	.+10     	; 0x36e <__stack+0x10f>
- 364:	2a e1       	ldi	r18, 0x1A	; 26
- 366:	2a 95       	dec	r18
- 368:	f1 f7       	brne	.-4      	; 0x366 <__stack+0x107>
- 36a:	00 c0       	rjmp	.+0      	; 0x36c <__stack+0x10d>
- 36c:	f8 cf       	rjmp	.-16     	; 0x35e <__stack+0xff>
-			{
-				//Increment
-				count++;
-				_delay_us(10);
-			}
-			GIFR |= _BV(INTF0); //Clear the flag after its use
- 36e:	9a b7       	in	r25, 0x3a	; 58
- 370:	90 64       	ori	r25, 0x40	; 64
- 372:	9a bf       	out	0x3a, r25	; 58
-
-		//waits until the interrupt pin is triggered to continue and records how long the device waited for a response in microseconds
-		int wait_until_change()
-		{
-			int count = 0;
-			GIFR |= _BV(INTF0); //Clear the flag before starting
- 374:	9a b7       	in	r25, 0x3a	; 58
- 376:	90 64       	ori	r25, 0x40	; 64
- 378:	9a bf       	out	0x3a, r25	; 58
-		const int ONE_PULSE = 1200;
-
-		//waits until the interrupt pin is triggered to continue and records how long the device waited for a response in microseconds
-		int wait_until_change()
-		{
-			int count = 0;
- 37a:	20 e0       	ldi	r18, 0x00	; 0
- 37c:	30 e0       	ldi	r19, 0x00	; 0
-			GIFR |= _BV(INTF0); //Clear the flag before starting
-			while((GIFR & _BV(INTF0)) == 0)
- 37e:	0a b6       	in	r0, 0x3a	; 58
- 380:	06 fc       	sbrc	r0, 6
- 382:	07 c0       	rjmp	.+14     	; 0x392 <__stack+0x133>
-			{
-				//Increment
-				count++;
- 384:	2f 5f       	subi	r18, 0xFF	; 255
- 386:	3f 4f       	sbci	r19, 0xFF	; 255
- 388:	9a e1       	ldi	r25, 0x1A	; 26
- 38a:	9a 95       	dec	r25
- 38c:	f1 f7       	brne	.-4      	; 0x38a <__stack+0x12b>
- 38e:	00 c0       	rjmp	.+0      	; 0x390 <__stack+0x131>
- 390:	f6 cf       	rjmp	.-20     	; 0x37e <__stack+0x11f>
-				_delay_us(10);
-			}
-			GIFR |= _BV(INTF0); //Clear the flag after its use
- 392:	9a b7       	in	r25, 0x3a	; 58
- 394:	90 64       	ori	r25, 0x40	; 64
- 396:	9a bf       	out	0x3a, r25	; 58
-			return count * 10;
- 398:	b9 01       	movw	r22, r18
- 39a:	66 0f       	add	r22, r22
- 39c:	77 1f       	adc	r23, r23
- 39e:	66 0f       	add	r22, r22
- 3a0:	77 1f       	adc	r23, r23
- 3a2:	26 0f       	add	r18, r22
- 3a4:	37 1f       	adc	r19, r23
- 3a6:	22 0f       	add	r18, r18
- 3a8:	33 1f       	adc	r19, r19
-		//Read in a single bit of the IR code based on the length of the square wave
-		char read_bit()
-		{
-			int length;
-			length = measure_square_wave();
-			if(length < ONE_PULSE)
- 3aa:	6d 81       	ldd	r22, Y+5	; 0x05
- 3ac:	7e 81       	ldd	r23, Y+6	; 0x06
- 3ae:	26 17       	cp	r18, r22
- 3b0:	37 07       	cpc	r19, r23
- 3b2:	14 f4       	brge	.+4      	; 0x3b8 <__stack+0x159>
-				return 0x00;
- 3b4:	20 e0       	ldi	r18, 0x00	; 0
- 3b6:	01 c0       	rjmp	.+2      	; 0x3ba <__stack+0x15b>
-			else
-				return 0x01;
- 3b8:	21 e0       	ldi	r18, 0x01	; 1
-		//Read in a byte from LSB to MSB
-		char read_byte()
-		{
-			char output = 0x00;
-			for(int i = 0; i < 8; i++)
-				output |= read_bit() << i;
- 3ba:	30 e0       	ldi	r19, 0x00	; 0
- 3bc:	04 2e       	mov	r0, r20
- 3be:	02 c0       	rjmp	.+4      	; 0x3c4 <__stack+0x165>
- 3c0:	22 0f       	add	r18, r18
- 3c2:	33 1f       	adc	r19, r19
- 3c4:	0a 94       	dec	r0
- 3c6:	e2 f7       	brpl	.-8      	; 0x3c0 <__stack+0x161>
- 3c8:	f2 2a       	or	r15, r18
-
-		//Read in a byte from LSB to MSB
-		char read_byte()
-		{
-			char output = 0x00;
-			for(int i = 0; i < 8; i++)
- 3ca:	4f 5f       	subi	r20, 0xFF	; 255
- 3cc:	5f 4f       	sbci	r21, 0xFF	; 255
- 3ce:	c1 cf       	rjmp	.-126    	; 0x352 <__stack+0xf3>
-
-		//waits until the interrupt pin is triggered to continue and records how long the device waited for a response in microseconds
-		int wait_until_change()
-		{
-			int count = 0;
-			GIFR |= _BV(INTF0); //Clear the flag before starting
- 3d0:	9a b7       	in	r25, 0x3a	; 58
- 3d2:	90 64       	ori	r25, 0x40	; 64
- 3d4:	9a bf       	out	0x3a, r25	; 58
-			while((GIFR & _BV(INTF0)) == 0)
- 3d6:	0a b6       	in	r0, 0x3a	; 58
- 3d8:	06 fc       	sbrc	r0, 6
- 3da:	05 c0       	rjmp	.+10     	; 0x3e6 <__stack+0x187>
- 3dc:	2a e1       	ldi	r18, 0x1A	; 26
- 3de:	2a 95       	dec	r18
- 3e0:	f1 f7       	brne	.-4      	; 0x3de <__stack+0x17f>
- 3e2:	00 c0       	rjmp	.+0      	; 0x3e4 <__stack+0x185>
- 3e4:	f8 cf       	rjmp	.-16     	; 0x3d6 <__stack+0x177>
-			{
-				//Increment
-				count++;
-				_delay_us(10);
-			}
-			GIFR |= _BV(INTF0); //Clear the flag after its use
- 3e6:	9a b7       	in	r25, 0x3a	; 58
- 3e8:	90 64       	ori	r25, 0x40	; 64
- 3ea:	9a bf       	out	0x3a, r25	; 58
-			inv_output_cmd = read_byte();
-			
-			//Wait until the stop bit ends
-			wait_until_change();
-
-			Write(output.addr);
- 3ec:	e8 2e       	mov	r14, r24
- 3ee:	3d de       	rcall	.-902    	; 0x6a <_Z5Writec>
+  56:	0a b6       	in	r0, 0x3a	; 58
+  58:	06 fc       	sbrc	r0, 6
+  5a:	05 c0       	rjmp	.+10     	; 0x66 <__SREG__+0x27>
 	#else
 		//round up by default
 		__ticks_dc = (uint32_t)(ceil(fabs(__tmp)));
 	#endif
 
 	__builtin_avr_delay_cycles(__ticks_dc);
- 3f0:	8f ec       	ldi	r24, 0xCF	; 207
- 3f2:	97 e0       	ldi	r25, 0x07	; 7
- 3f4:	01 97       	sbiw	r24, 0x01	; 1
- 3f6:	f1 f7       	brne	.-4      	; 0x3f4 <__stack+0x195>
- 3f8:	00 c0       	rjmp	.+0      	; 0x3fa <__stack+0x19b>
- 3fa:	00 00       	nop
-			_delay_ms(1);
-			Write(inv_output_addr);
- 3fc:	81 2f       	mov	r24, r17
- 3fe:	35 de       	rcall	.-918    	; 0x6a <_Z5Writec>
- 400:	8f ec       	ldi	r24, 0xCF	; 207
- 402:	97 e0       	ldi	r25, 0x07	; 7
- 404:	01 97       	sbiw	r24, 0x01	; 1
- 406:	f1 f7       	brne	.-4      	; 0x404 <__LOCK_REGION_LENGTH__+0x4>
- 408:	00 c0       	rjmp	.+0      	; 0x40a <__LOCK_REGION_LENGTH__+0xa>
- 40a:	00 00       	nop
-			_delay_ms(1);
-			Write(output.addr == ((unsigned char) ~inv_output_addr));
- 40c:	10 95       	com	r17
- 40e:	81 e0       	ldi	r24, 0x01	; 1
- 410:	e1 12       	cpse	r14, r17
- 412:	80 e0       	ldi	r24, 0x00	; 0
- 414:	2a de       	rcall	.-940    	; 0x6a <_Z5Writec>
- 416:	8f e1       	ldi	r24, 0x1F	; 31
- 418:	9e e4       	ldi	r25, 0x4E	; 78
- 41a:	01 97       	sbiw	r24, 0x01	; 1
- 41c:	f1 f7       	brne	.-4      	; 0x41a <__LOCK_REGION_LENGTH__+0x1a>
- 41e:	00 c0       	rjmp	.+0      	; 0x420 <__LOCK_REGION_LENGTH__+0x20>
- 420:	00 00       	nop
-			_delay_ms(10);
+  5c:	2a e1       	ldi	r18, 0x1A	; 26
+  5e:	2a 95       	dec	r18
+  60:	f1 f7       	brne	.-4      	; 0x5e <__SREG__+0x1f>
+  62:	00 c0       	rjmp	.+0      	; 0x64 <__SREG__+0x25>
+  64:	f8 cf       	rjmp	.-16     	; 0x56 <__SREG__+0x17>
+			{
+				//Increment
+				count++;
+				_delay_us(10);
+			}
+			GIFR |= _BV(INTF0); //Clear the flag after its use
+  66:	8a b7       	in	r24, 0x3a	; 58
+  68:	80 64       	ori	r24, 0x40	; 64
+  6a:	8a bf       	out	0x3a, r24	; 58
+
+		//waits until the interrupt pin is triggered to continue and records how long the device waited for a response in microseconds
+		int wait_until_change()
+		{
+			int count = 0;
+			GIFR |= _BV(INTF0); //Clear the flag before starting
+  6c:	8a b7       	in	r24, 0x3a	; 58
+  6e:	80 64       	ori	r24, 0x40	; 64
+  70:	8a bf       	out	0x3a, r24	; 58
+		static const int ONE_PULSE = 1200;
+
+		//waits until the interrupt pin is triggered to continue and records how long the device waited for a response in microseconds
+		int wait_until_change()
+		{
+			int count = 0;
+  72:	80 e0       	ldi	r24, 0x00	; 0
+  74:	90 e0       	ldi	r25, 0x00	; 0
+			GIFR |= _BV(INTF0); //Clear the flag before starting
+			while((GIFR & _BV(INTF0)) == 0)
+  76:	0a b6       	in	r0, 0x3a	; 58
+  78:	06 fc       	sbrc	r0, 6
+  7a:	06 c0       	rjmp	.+12     	; 0x88 <__SREG__+0x49>
+			{
+				//Increment
+				count++;
+  7c:	01 96       	adiw	r24, 0x01	; 1
+  7e:	3a e1       	ldi	r19, 0x1A	; 26
+  80:	3a 95       	dec	r19
+  82:	f1 f7       	brne	.-4      	; 0x80 <__SREG__+0x41>
+  84:	00 c0       	rjmp	.+0      	; 0x86 <__SREG__+0x47>
+  86:	f7 cf       	rjmp	.-18     	; 0x76 <__SREG__+0x37>
+				_delay_us(10);
+			}
+			GIFR |= _BV(INTF0); //Clear the flag after its use
+  88:	2a b7       	in	r18, 0x3a	; 58
+  8a:	20 64       	ori	r18, 0x40	; 64
+  8c:	2a bf       	out	0x3a, r18	; 58
+			return count * 10;
+  8e:	9c 01       	movw	r18, r24
+  90:	22 0f       	add	r18, r18
+  92:	33 1f       	adc	r19, r19
+  94:	22 0f       	add	r18, r18
+  96:	33 1f       	adc	r19, r19
+  98:	82 0f       	add	r24, r18
+  9a:	93 1f       	adc	r25, r19
+  9c:	88 0f       	add	r24, r24
+  9e:	99 1f       	adc	r25, r25
+
+			//Wait for the beginning of the AGC pulse
+			length = measure_square_wave();
+
+			//Reject command if nothing the AGC isn't long enough
+			if(length < AGC_PULSE)
+  a0:	8c 34       	cpi	r24, 0x4C	; 76
+  a2:	9d 41       	sbci	r25, 0x1D	; 29
+  a4:	14 f4       	brge	.+4      	; 0xaa <__SREG__+0x6b>
+			{
+				output.addr = 0;
+				output.cmd = 0;
+				return output;
+  a6:	a0 e0       	ldi	r26, 0x00	; 0
+  a8:	39 c1       	rjmp	.+626    	; 0x31c <__stack+0xbd>
+
+		//waits until the interrupt pin is triggered to continue and records how long the device waited for a response in microseconds
+		int wait_until_change()
+		{
+			int count = 0;
+			GIFR |= _BV(INTF0); //Clear the flag before starting
+  aa:	8a b7       	in	r24, 0x3a	; 58
+  ac:	80 64       	ori	r24, 0x40	; 64
+  ae:	8a bf       	out	0x3a, r24	; 58
+		static const int ONE_PULSE = 1200;
+
+		//waits until the interrupt pin is triggered to continue and records how long the device waited for a response in microseconds
+		int wait_until_change()
+		{
+			int count = 0;
+  b0:	80 e0       	ldi	r24, 0x00	; 0
+  b2:	90 e0       	ldi	r25, 0x00	; 0
+			GIFR |= _BV(INTF0); //Clear the flag before starting
+			while((GIFR & _BV(INTF0)) == 0)
+  b4:	0a b6       	in	r0, 0x3a	; 58
+  b6:	06 fc       	sbrc	r0, 6
+  b8:	06 c0       	rjmp	.+12     	; 0xc6 <__SREG__+0x87>
+			{
+				//Increment
+				count++;
+  ba:	01 96       	adiw	r24, 0x01	; 1
+  bc:	ba e1       	ldi	r27, 0x1A	; 26
+  be:	ba 95       	dec	r27
+  c0:	f1 f7       	brne	.-4      	; 0xbe <__SREG__+0x7f>
+  c2:	00 c0       	rjmp	.+0      	; 0xc4 <__SREG__+0x85>
+  c4:	f7 cf       	rjmp	.-18     	; 0xb4 <__SREG__+0x75>
+				_delay_us(10);
+			}
+			GIFR |= _BV(INTF0); //Clear the flag after its use
+  c6:	2a b7       	in	r18, 0x3a	; 58
+  c8:	20 64       	ori	r18, 0x40	; 64
+  ca:	2a bf       	out	0x3a, r18	; 58
+			return count * 10;
+  cc:	9c 01       	movw	r18, r24
+  ce:	22 0f       	add	r18, r18
+  d0:	33 1f       	adc	r19, r19
+  d2:	22 0f       	add	r18, r18
+  d4:	33 1f       	adc	r19, r19
+  d6:	82 0f       	add	r24, r18
+  d8:	93 1f       	adc	r25, r19
+  da:	88 0f       	add	r24, r24
+  dc:	99 1f       	adc	r25, r25
+			
+			//Record the length of the pause & set scanning mode from active high to active low
+			length = wait_until_change();
+
+			//Return 0, 0 for repeat commands 
+			if(length < LONG_PULSE)
+  de:	88 3b       	cpi	r24, 0xB8	; 184
+  e0:	9b 40       	sbci	r25, 0x0B	; 11
+  e2:	84 f4       	brge	.+32     	; 0x104 <__SREG__+0xc5>
+
+		//waits until the interrupt pin is triggered to continue and records how long the device waited for a response in microseconds
+		int wait_until_change()
+		{
+			int count = 0;
+			GIFR |= _BV(INTF0); //Clear the flag before starting
+  e4:	8a b7       	in	r24, 0x3a	; 58
+  e6:	80 64       	ori	r24, 0x40	; 64
+  e8:	8a bf       	out	0x3a, r24	; 58
+			while((GIFR & _BV(INTF0)) == 0)
+  ea:	0a b6       	in	r0, 0x3a	; 58
+  ec:	06 fc       	sbrc	r0, 6
+  ee:	05 c0       	rjmp	.+10     	; 0xfa <__SREG__+0xbb>
+  f0:	3a e1       	ldi	r19, 0x1A	; 26
+  f2:	3a 95       	dec	r19
+  f4:	f1 f7       	brne	.-4      	; 0xf2 <__SREG__+0xb3>
+  f6:	00 c0       	rjmp	.+0      	; 0xf8 <__SREG__+0xb9>
+  f8:	f8 cf       	rjmp	.-16     	; 0xea <__SREG__+0xab>
+			{
+				//Increment
+				count++;
+				_delay_us(10);
+			}
+			GIFR |= _BV(INTF0); //Clear the flag after its use
+  fa:	8a b7       	in	r24, 0x3a	; 58
+  fc:	80 64       	ori	r24, 0x40	; 64
+  fe:	8a bf       	out	0x3a, r24	; 58
+				//wait until the stop bit ends
+				wait_until_change();
+
+				output.addr = 0;
+				output.cmd = 0;
+				return output;
+ 100:	a0 e0       	ldi	r26, 0x00	; 0
+ 102:	0c c1       	rjmp	.+536    	; 0x31c <__stack+0xbd>
+			
+			//Record the length of the pause & set scanning mode from active high to active low
+			length = wait_until_change();
+
+			//Return 0, 0 for repeat commands 
+			if(length < LONG_PULSE)
+ 104:	e0 e0       	ldi	r30, 0x00	; 0
+ 106:	f0 e0       	ldi	r31, 0x00	; 0
+ 108:	20 e0       	ldi	r18, 0x00	; 0
+
+		//Read in a byte from LSB to MSB
+		char read_byte()
+		{
+			char output = 0x00;
+			for(int i = 0; i < 8; i++)
+ 10a:	e8 30       	cpi	r30, 0x08	; 8
+ 10c:	f1 05       	cpc	r31, r1
+ 10e:	c4 f5       	brge	.+112    	; 0x180 <__SREG__+0x141>
+
+		//waits until the interrupt pin is triggered to continue and records how long the device waited for a response in microseconds
+		int wait_until_change()
+		{
+			int count = 0;
+			GIFR |= _BV(INTF0); //Clear the flag before starting
+ 110:	8a b7       	in	r24, 0x3a	; 58
+ 112:	80 64       	ori	r24, 0x40	; 64
+ 114:	8a bf       	out	0x3a, r24	; 58
+			while((GIFR & _BV(INTF0)) == 0)
+ 116:	0a b6       	in	r0, 0x3a	; 58
+ 118:	06 fc       	sbrc	r0, 6
+ 11a:	05 c0       	rjmp	.+10     	; 0x126 <__SREG__+0xe7>
+ 11c:	8a e1       	ldi	r24, 0x1A	; 26
+ 11e:	8a 95       	dec	r24
+ 120:	f1 f7       	brne	.-4      	; 0x11e <__SREG__+0xdf>
+ 122:	00 c0       	rjmp	.+0      	; 0x124 <__SREG__+0xe5>
+ 124:	f8 cf       	rjmp	.-16     	; 0x116 <__SREG__+0xd7>
+			{
+				//Increment
+				count++;
+				_delay_us(10);
+			}
+			GIFR |= _BV(INTF0); //Clear the flag after its use
+ 126:	8a b7       	in	r24, 0x3a	; 58
+ 128:	80 64       	ori	r24, 0x40	; 64
+ 12a:	8a bf       	out	0x3a, r24	; 58
+
+		//waits until the interrupt pin is triggered to continue and records how long the device waited for a response in microseconds
+		int wait_until_change()
+		{
+			int count = 0;
+			GIFR |= _BV(INTF0); //Clear the flag before starting
+ 12c:	8a b7       	in	r24, 0x3a	; 58
+ 12e:	80 64       	ori	r24, 0x40	; 64
+ 130:	8a bf       	out	0x3a, r24	; 58
+		static const int ONE_PULSE = 1200;
+
+		//waits until the interrupt pin is triggered to continue and records how long the device waited for a response in microseconds
+		int wait_until_change()
+		{
+			int count = 0;
+ 132:	80 e0       	ldi	r24, 0x00	; 0
+ 134:	90 e0       	ldi	r25, 0x00	; 0
+			GIFR |= _BV(INTF0); //Clear the flag before starting
+			while((GIFR & _BV(INTF0)) == 0)
+ 136:	0a b6       	in	r0, 0x3a	; 58
+ 138:	06 fc       	sbrc	r0, 6
+ 13a:	06 c0       	rjmp	.+12     	; 0x148 <__SREG__+0x109>
+			{
+				//Increment
+				count++;
+ 13c:	01 96       	adiw	r24, 0x01	; 1
+ 13e:	aa e1       	ldi	r26, 0x1A	; 26
+ 140:	aa 95       	dec	r26
+ 142:	f1 f7       	brne	.-4      	; 0x140 <__SREG__+0x101>
+ 144:	00 c0       	rjmp	.+0      	; 0x146 <__SREG__+0x107>
+ 146:	f7 cf       	rjmp	.-18     	; 0x136 <__SREG__+0xf7>
+				_delay_us(10);
+			}
+			GIFR |= _BV(INTF0); //Clear the flag after its use
+ 148:	3a b7       	in	r19, 0x3a	; 58
+ 14a:	30 64       	ori	r19, 0x40	; 64
+ 14c:	3a bf       	out	0x3a, r19	; 58
+			return count * 10;
+ 14e:	dc 01       	movw	r26, r24
+ 150:	aa 0f       	add	r26, r26
+ 152:	bb 1f       	adc	r27, r27
+ 154:	aa 0f       	add	r26, r26
+ 156:	bb 1f       	adc	r27, r27
+ 158:	8a 0f       	add	r24, r26
+ 15a:	9b 1f       	adc	r25, r27
+ 15c:	88 0f       	add	r24, r24
+ 15e:	99 1f       	adc	r25, r25
+		//Read in a single bit of the IR code based on the length of the square wave
+		char read_bit()
+		{
+			int length;
+			length = measure_square_wave();
+			if(length < ONE_PULSE)
+ 160:	80 3b       	cpi	r24, 0xB0	; 176
+ 162:	94 40       	sbci	r25, 0x04	; 4
+ 164:	14 f4       	brge	.+4      	; 0x16a <__SREG__+0x12b>
+				return 0x00;
+ 166:	80 e0       	ldi	r24, 0x00	; 0
+ 168:	01 c0       	rjmp	.+2      	; 0x16c <__SREG__+0x12d>
+			else
+				return 0x01;
+ 16a:	81 e0       	ldi	r24, 0x01	; 1
+		//Read in a byte from LSB to MSB
+		char read_byte()
+		{
+			char output = 0x00;
+			for(int i = 0; i < 8; i++)
+				output |= read_bit() << i;
+ 16c:	90 e0       	ldi	r25, 0x00	; 0
+ 16e:	0e 2e       	mov	r0, r30
+ 170:	02 c0       	rjmp	.+4      	; 0x176 <__SREG__+0x137>
+ 172:	88 0f       	add	r24, r24
+ 174:	99 1f       	adc	r25, r25
+ 176:	0a 94       	dec	r0
+ 178:	e2 f7       	brpl	.-8      	; 0x172 <__SREG__+0x133>
+ 17a:	28 2b       	or	r18, r24
+
+		//Read in a byte from LSB to MSB
+		char read_byte()
+		{
+			char output = 0x00;
+			for(int i = 0; i < 8; i++)
+ 17c:	31 96       	adiw	r30, 0x01	; 1
+ 17e:	c5 cf       	rjmp	.-118    	; 0x10a <__SREG__+0xcb>
+ 180:	e0 e0       	ldi	r30, 0x00	; 0
+ 182:	f0 e0       	ldi	r31, 0x00	; 0
+		}
+
+		//Read in a byte from LSB to MSB
+		char read_byte()
+		{
+			char output = 0x00;
+ 184:	30 e0       	ldi	r19, 0x00	; 0
+			for(int i = 0; i < 8; i++)
+ 186:	e8 30       	cpi	r30, 0x08	; 8
+ 188:	f1 05       	cpc	r31, r1
+ 18a:	c4 f5       	brge	.+112    	; 0x1fc <__SREG__+0x1bd>
+
+		//waits until the interrupt pin is triggered to continue and records how long the device waited for a response in microseconds
+		int wait_until_change()
+		{
+			int count = 0;
+			GIFR |= _BV(INTF0); //Clear the flag before starting
+ 18c:	8a b7       	in	r24, 0x3a	; 58
+ 18e:	80 64       	ori	r24, 0x40	; 64
+ 190:	8a bf       	out	0x3a, r24	; 58
+			while((GIFR & _BV(INTF0)) == 0)
+ 192:	0a b6       	in	r0, 0x3a	; 58
+ 194:	06 fc       	sbrc	r0, 6
+ 196:	05 c0       	rjmp	.+10     	; 0x1a2 <__SREG__+0x163>
+ 198:	8a e1       	ldi	r24, 0x1A	; 26
+ 19a:	8a 95       	dec	r24
+ 19c:	f1 f7       	brne	.-4      	; 0x19a <__SREG__+0x15b>
+ 19e:	00 c0       	rjmp	.+0      	; 0x1a0 <__SREG__+0x161>
+ 1a0:	f8 cf       	rjmp	.-16     	; 0x192 <__SREG__+0x153>
+			{
+				//Increment
+				count++;
+				_delay_us(10);
+			}
+			GIFR |= _BV(INTF0); //Clear the flag after its use
+ 1a2:	8a b7       	in	r24, 0x3a	; 58
+ 1a4:	80 64       	ori	r24, 0x40	; 64
+ 1a6:	8a bf       	out	0x3a, r24	; 58
+
+		//waits until the interrupt pin is triggered to continue and records how long the device waited for a response in microseconds
+		int wait_until_change()
+		{
+			int count = 0;
+			GIFR |= _BV(INTF0); //Clear the flag before starting
+ 1a8:	8a b7       	in	r24, 0x3a	; 58
+ 1aa:	80 64       	ori	r24, 0x40	; 64
+ 1ac:	8a bf       	out	0x3a, r24	; 58
+		static const int ONE_PULSE = 1200;
+
+		//waits until the interrupt pin is triggered to continue and records how long the device waited for a response in microseconds
+		int wait_until_change()
+		{
+			int count = 0;
+ 1ae:	80 e0       	ldi	r24, 0x00	; 0
+ 1b0:	90 e0       	ldi	r25, 0x00	; 0
+			GIFR |= _BV(INTF0); //Clear the flag before starting
+			while((GIFR & _BV(INTF0)) == 0)
+ 1b2:	0a b6       	in	r0, 0x3a	; 58
+ 1b4:	06 fc       	sbrc	r0, 6
+ 1b6:	06 c0       	rjmp	.+12     	; 0x1c4 <__SREG__+0x185>
+			{
+				//Increment
+				count++;
+ 1b8:	01 96       	adiw	r24, 0x01	; 1
+ 1ba:	aa e1       	ldi	r26, 0x1A	; 26
+ 1bc:	aa 95       	dec	r26
+ 1be:	f1 f7       	brne	.-4      	; 0x1bc <__SREG__+0x17d>
+ 1c0:	00 c0       	rjmp	.+0      	; 0x1c2 <__SREG__+0x183>
+ 1c2:	f7 cf       	rjmp	.-18     	; 0x1b2 <__SREG__+0x173>
+				_delay_us(10);
+			}
+			GIFR |= _BV(INTF0); //Clear the flag after its use
+ 1c4:	aa b7       	in	r26, 0x3a	; 58
+ 1c6:	a0 64       	ori	r26, 0x40	; 64
+ 1c8:	aa bf       	out	0x3a, r26	; 58
+			return count * 10;
+ 1ca:	dc 01       	movw	r26, r24
+ 1cc:	aa 0f       	add	r26, r26
+ 1ce:	bb 1f       	adc	r27, r27
+ 1d0:	aa 0f       	add	r26, r26
+ 1d2:	bb 1f       	adc	r27, r27
+ 1d4:	8a 0f       	add	r24, r26
+ 1d6:	9b 1f       	adc	r25, r27
+ 1d8:	88 0f       	add	r24, r24
+ 1da:	99 1f       	adc	r25, r25
+		//Read in a single bit of the IR code based on the length of the square wave
+		char read_bit()
+		{
+			int length;
+			length = measure_square_wave();
+			if(length < ONE_PULSE)
+ 1dc:	80 3b       	cpi	r24, 0xB0	; 176
+ 1de:	94 40       	sbci	r25, 0x04	; 4
+ 1e0:	14 f4       	brge	.+4      	; 0x1e6 <__SREG__+0x1a7>
+				return 0x00;
+ 1e2:	80 e0       	ldi	r24, 0x00	; 0
+ 1e4:	01 c0       	rjmp	.+2      	; 0x1e8 <__SREG__+0x1a9>
+			else
+				return 0x01;
+ 1e6:	81 e0       	ldi	r24, 0x01	; 1
+		//Read in a byte from LSB to MSB
+		char read_byte()
+		{
+			char output = 0x00;
+			for(int i = 0; i < 8; i++)
+				output |= read_bit() << i;
+ 1e8:	90 e0       	ldi	r25, 0x00	; 0
+ 1ea:	0e 2e       	mov	r0, r30
+ 1ec:	02 c0       	rjmp	.+4      	; 0x1f2 <__SREG__+0x1b3>
+ 1ee:	88 0f       	add	r24, r24
+ 1f0:	99 1f       	adc	r25, r25
+ 1f2:	0a 94       	dec	r0
+ 1f4:	e2 f7       	brpl	.-8      	; 0x1ee <__SREG__+0x1af>
+ 1f6:	38 2b       	or	r19, r24
+
+		//Read in a byte from LSB to MSB
+		char read_byte()
+		{
+			char output = 0x00;
+			for(int i = 0; i < 8; i++)
+ 1f8:	31 96       	adiw	r30, 0x01	; 1
+ 1fa:	c5 cf       	rjmp	.-118    	; 0x186 <__SREG__+0x147>
+ 1fc:	e0 e0       	ldi	r30, 0x00	; 0
+ 1fe:	f0 e0       	ldi	r31, 0x00	; 0
+		}
+
+		//Read in a byte from LSB to MSB
+		char read_byte()
+		{
+			char output = 0x00;
+ 200:	a0 e0       	ldi	r26, 0x00	; 0
+			for(int i = 0; i < 8; i++)
+ 202:	e8 30       	cpi	r30, 0x08	; 8
+ 204:	f1 05       	cpc	r31, r1
+ 206:	c4 f5       	brge	.+112    	; 0x278 <__stack+0x19>
+
+		//waits until the interrupt pin is triggered to continue and records how long the device waited for a response in microseconds
+		int wait_until_change()
+		{
+			int count = 0;
+			GIFR |= _BV(INTF0); //Clear the flag before starting
+ 208:	8a b7       	in	r24, 0x3a	; 58
+ 20a:	80 64       	ori	r24, 0x40	; 64
+ 20c:	8a bf       	out	0x3a, r24	; 58
+			while((GIFR & _BV(INTF0)) == 0)
+ 20e:	0a b6       	in	r0, 0x3a	; 58
+ 210:	06 fc       	sbrc	r0, 6
+ 212:	05 c0       	rjmp	.+10     	; 0x21e <__DATA_REGION_LENGTH__+0x1e>
+ 214:	8a e1       	ldi	r24, 0x1A	; 26
+ 216:	8a 95       	dec	r24
+ 218:	f1 f7       	brne	.-4      	; 0x216 <__DATA_REGION_LENGTH__+0x16>
+ 21a:	00 c0       	rjmp	.+0      	; 0x21c <__DATA_REGION_LENGTH__+0x1c>
+ 21c:	f8 cf       	rjmp	.-16     	; 0x20e <__DATA_REGION_LENGTH__+0xe>
+			{
+				//Increment
+				count++;
+				_delay_us(10);
+			}
+			GIFR |= _BV(INTF0); //Clear the flag after its use
+ 21e:	8a b7       	in	r24, 0x3a	; 58
+ 220:	80 64       	ori	r24, 0x40	; 64
+ 222:	8a bf       	out	0x3a, r24	; 58
+
+		//waits until the interrupt pin is triggered to continue and records how long the device waited for a response in microseconds
+		int wait_until_change()
+		{
+			int count = 0;
+			GIFR |= _BV(INTF0); //Clear the flag before starting
+ 224:	8a b7       	in	r24, 0x3a	; 58
+ 226:	80 64       	ori	r24, 0x40	; 64
+ 228:	8a bf       	out	0x3a, r24	; 58
+		static const int ONE_PULSE = 1200;
+
+		//waits until the interrupt pin is triggered to continue and records how long the device waited for a response in microseconds
+		int wait_until_change()
+		{
+			int count = 0;
+ 22a:	80 e0       	ldi	r24, 0x00	; 0
+ 22c:	90 e0       	ldi	r25, 0x00	; 0
+			GIFR |= _BV(INTF0); //Clear the flag before starting
+			while((GIFR & _BV(INTF0)) == 0)
+ 22e:	0a b6       	in	r0, 0x3a	; 58
+ 230:	06 fc       	sbrc	r0, 6
+ 232:	06 c0       	rjmp	.+12     	; 0x240 <__DATA_REGION_LENGTH__+0x40>
+			{
+				//Increment
+				count++;
+ 234:	01 96       	adiw	r24, 0x01	; 1
+ 236:	ba e1       	ldi	r27, 0x1A	; 26
+ 238:	ba 95       	dec	r27
+ 23a:	f1 f7       	brne	.-4      	; 0x238 <__DATA_REGION_LENGTH__+0x38>
+ 23c:	00 c0       	rjmp	.+0      	; 0x23e <__DATA_REGION_LENGTH__+0x3e>
+ 23e:	f7 cf       	rjmp	.-18     	; 0x22e <__DATA_REGION_LENGTH__+0x2e>
+				_delay_us(10);
+			}
+			GIFR |= _BV(INTF0); //Clear the flag after its use
+ 240:	ba b7       	in	r27, 0x3a	; 58
+ 242:	b0 64       	ori	r27, 0x40	; 64
+ 244:	ba bf       	out	0x3a, r27	; 58
+			return count * 10;
+ 246:	8c 01       	movw	r16, r24
+ 248:	00 0f       	add	r16, r16
+ 24a:	11 1f       	adc	r17, r17
+ 24c:	00 0f       	add	r16, r16
+ 24e:	11 1f       	adc	r17, r17
+ 250:	80 0f       	add	r24, r16
+ 252:	91 1f       	adc	r25, r17
+ 254:	88 0f       	add	r24, r24
+ 256:	99 1f       	adc	r25, r25
+		//Read in a single bit of the IR code based on the length of the square wave
+		char read_bit()
+		{
+			int length;
+			length = measure_square_wave();
+			if(length < ONE_PULSE)
+ 258:	80 3b       	cpi	r24, 0xB0	; 176
+ 25a:	94 40       	sbci	r25, 0x04	; 4
+ 25c:	14 f4       	brge	.+4      	; 0x262 <__stack+0x3>
+				return 0x00;
+ 25e:	80 e0       	ldi	r24, 0x00	; 0
+ 260:	01 c0       	rjmp	.+2      	; 0x264 <__stack+0x5>
+			else
+				return 0x01;
+ 262:	81 e0       	ldi	r24, 0x01	; 1
+		//Read in a byte from LSB to MSB
+		char read_byte()
+		{
+			char output = 0x00;
+			for(int i = 0; i < 8; i++)
+				output |= read_bit() << i;
+ 264:	90 e0       	ldi	r25, 0x00	; 0
+ 266:	0e 2e       	mov	r0, r30
+ 268:	02 c0       	rjmp	.+4      	; 0x26e <__stack+0xf>
+ 26a:	88 0f       	add	r24, r24
+ 26c:	99 1f       	adc	r25, r25
+ 26e:	0a 94       	dec	r0
+ 270:	e2 f7       	brpl	.-8      	; 0x26a <__stack+0xb>
+ 272:	a8 2b       	or	r26, r24
+
+		//Read in a byte from LSB to MSB
+		char read_byte()
+		{
+			char output = 0x00;
+			for(int i = 0; i < 8; i++)
+ 274:	31 96       	adiw	r30, 0x01	; 1
+ 276:	c5 cf       	rjmp	.-118    	; 0x202 <__DATA_REGION_LENGTH__+0x2>
+ 278:	e0 e0       	ldi	r30, 0x00	; 0
+ 27a:	f0 e0       	ldi	r31, 0x00	; 0
+		}
+
+		//Read in a byte from LSB to MSB
+		char read_byte()
+		{
+			char output = 0x00;
+ 27c:	c0 e0       	ldi	r28, 0x00	; 0
+			for(int i = 0; i < 8; i++)
+ 27e:	e8 30       	cpi	r30, 0x08	; 8
+ 280:	f1 05       	cpc	r31, r1
+ 282:	c4 f5       	brge	.+112    	; 0x2f4 <__stack+0x95>
+
+		//waits until the interrupt pin is triggered to continue and records how long the device waited for a response in microseconds
+		int wait_until_change()
+		{
+			int count = 0;
+			GIFR |= _BV(INTF0); //Clear the flag before starting
+ 284:	8a b7       	in	r24, 0x3a	; 58
+ 286:	80 64       	ori	r24, 0x40	; 64
+ 288:	8a bf       	out	0x3a, r24	; 58
+			while((GIFR & _BV(INTF0)) == 0)
+ 28a:	0a b6       	in	r0, 0x3a	; 58
+ 28c:	06 fc       	sbrc	r0, 6
+ 28e:	05 c0       	rjmp	.+10     	; 0x29a <__stack+0x3b>
+ 290:	8a e1       	ldi	r24, 0x1A	; 26
+ 292:	8a 95       	dec	r24
+ 294:	f1 f7       	brne	.-4      	; 0x292 <__stack+0x33>
+ 296:	00 c0       	rjmp	.+0      	; 0x298 <__stack+0x39>
+ 298:	f8 cf       	rjmp	.-16     	; 0x28a <__stack+0x2b>
+			{
+				//Increment
+				count++;
+				_delay_us(10);
+			}
+			GIFR |= _BV(INTF0); //Clear the flag after its use
+ 29a:	8a b7       	in	r24, 0x3a	; 58
+ 29c:	80 64       	ori	r24, 0x40	; 64
+ 29e:	8a bf       	out	0x3a, r24	; 58
+
+		//waits until the interrupt pin is triggered to continue and records how long the device waited for a response in microseconds
+		int wait_until_change()
+		{
+			int count = 0;
+			GIFR |= _BV(INTF0); //Clear the flag before starting
+ 2a0:	8a b7       	in	r24, 0x3a	; 58
+ 2a2:	80 64       	ori	r24, 0x40	; 64
+ 2a4:	8a bf       	out	0x3a, r24	; 58
+		static const int ONE_PULSE = 1200;
+
+		//waits until the interrupt pin is triggered to continue and records how long the device waited for a response in microseconds
+		int wait_until_change()
+		{
+			int count = 0;
+ 2a6:	80 e0       	ldi	r24, 0x00	; 0
+ 2a8:	90 e0       	ldi	r25, 0x00	; 0
+			GIFR |= _BV(INTF0); //Clear the flag before starting
+			while((GIFR & _BV(INTF0)) == 0)
+ 2aa:	0a b6       	in	r0, 0x3a	; 58
+ 2ac:	06 fc       	sbrc	r0, 6
+ 2ae:	06 c0       	rjmp	.+12     	; 0x2bc <__stack+0x5d>
+			{
+				//Increment
+				count++;
+ 2b0:	01 96       	adiw	r24, 0x01	; 1
+ 2b2:	ba e1       	ldi	r27, 0x1A	; 26
+ 2b4:	ba 95       	dec	r27
+ 2b6:	f1 f7       	brne	.-4      	; 0x2b4 <__stack+0x55>
+ 2b8:	00 c0       	rjmp	.+0      	; 0x2ba <__stack+0x5b>
+ 2ba:	f7 cf       	rjmp	.-18     	; 0x2aa <__stack+0x4b>
+				_delay_us(10);
+			}
+			GIFR |= _BV(INTF0); //Clear the flag after its use
+ 2bc:	ba b7       	in	r27, 0x3a	; 58
+ 2be:	b0 64       	ori	r27, 0x40	; 64
+ 2c0:	ba bf       	out	0x3a, r27	; 58
+			return count * 10;
+ 2c2:	8c 01       	movw	r16, r24
+ 2c4:	00 0f       	add	r16, r16
+ 2c6:	11 1f       	adc	r17, r17
+ 2c8:	00 0f       	add	r16, r16
+ 2ca:	11 1f       	adc	r17, r17
+ 2cc:	80 0f       	add	r24, r16
+ 2ce:	91 1f       	adc	r25, r17
+ 2d0:	88 0f       	add	r24, r24
+ 2d2:	99 1f       	adc	r25, r25
+		//Read in a single bit of the IR code based on the length of the square wave
+		char read_bit()
+		{
+			int length;
+			length = measure_square_wave();
+			if(length < ONE_PULSE)
+ 2d4:	80 3b       	cpi	r24, 0xB0	; 176
+ 2d6:	94 40       	sbci	r25, 0x04	; 4
+ 2d8:	14 f4       	brge	.+4      	; 0x2de <__stack+0x7f>
+				return 0x00;
+ 2da:	80 e0       	ldi	r24, 0x00	; 0
+ 2dc:	01 c0       	rjmp	.+2      	; 0x2e0 <__stack+0x81>
+			else
+				return 0x01;
+ 2de:	81 e0       	ldi	r24, 0x01	; 1
+		//Read in a byte from LSB to MSB
+		char read_byte()
+		{
+			char output = 0x00;
+			for(int i = 0; i < 8; i++)
+				output |= read_bit() << i;
+ 2e0:	90 e0       	ldi	r25, 0x00	; 0
+ 2e2:	0e 2e       	mov	r0, r30
+ 2e4:	02 c0       	rjmp	.+4      	; 0x2ea <__stack+0x8b>
+ 2e6:	88 0f       	add	r24, r24
+ 2e8:	99 1f       	adc	r25, r25
+ 2ea:	0a 94       	dec	r0
+ 2ec:	e2 f7       	brpl	.-8      	; 0x2e6 <__stack+0x87>
+ 2ee:	c8 2b       	or	r28, r24
+
+		//Read in a byte from LSB to MSB
+		char read_byte()
+		{
+			char output = 0x00;
+			for(int i = 0; i < 8; i++)
+ 2f0:	31 96       	adiw	r30, 0x01	; 1
+ 2f2:	c5 cf       	rjmp	.-118    	; 0x27e <__stack+0x1f>
+
+		//waits until the interrupt pin is triggered to continue and records how long the device waited for a response in microseconds
+		int wait_until_change()
+		{
+			int count = 0;
+			GIFR |= _BV(INTF0); //Clear the flag before starting
+ 2f4:	8a b7       	in	r24, 0x3a	; 58
+ 2f6:	80 64       	ori	r24, 0x40	; 64
+ 2f8:	8a bf       	out	0x3a, r24	; 58
+			while((GIFR & _BV(INTF0)) == 0)
+ 2fa:	0a b6       	in	r0, 0x3a	; 58
+ 2fc:	06 fc       	sbrc	r0, 6
+ 2fe:	05 c0       	rjmp	.+10     	; 0x30a <__stack+0xab>
+ 300:	8a e1       	ldi	r24, 0x1A	; 26
+ 302:	8a 95       	dec	r24
+ 304:	f1 f7       	brne	.-4      	; 0x302 <__stack+0xa3>
+ 306:	00 c0       	rjmp	.+0      	; 0x308 <__stack+0xa9>
+ 308:	f8 cf       	rjmp	.-16     	; 0x2fa <__stack+0x9b>
+			{
+				//Increment
+				count++;
+				_delay_us(10);
+			}
+			GIFR |= _BV(INTF0); //Clear the flag after its use
+ 30a:	8a b7       	in	r24, 0x3a	; 58
+ 30c:	80 64       	ori	r24, 0x40	; 64
+ 30e:	8a bf       	out	0x3a, r24	; 58
+			wait_until_change();
 
 			//Check for error conditions regarding the inverted bits
 			if
- 422:	e1 12       	cpse	r14, r17
- 424:	03 c0       	rjmp	.+6      	; 0x42c <__LOCK_REGION_LENGTH__+0x2c>
 			(
-				output.addr != ((unsigned char) ~inv_output_addr) || 
-				output.cmd != ((unsigned char) ~inv_output_cmd) 
- 426:	f0 94       	com	r15
-			_delay_ms(10);
+				output.addr != ((unsigned char) ~inv_output.addr) || 
+ 310:	30 95       	com	r19
+			
+			//Wait until the stop bit ends
+			wait_until_change();
+
+			//Check for error conditions regarding the inverted bits
+			if
+ 312:	23 13       	cpse	r18, r19
+ 314:	02 c0       	rjmp	.+4      	; 0x31a <__stack+0xbb>
+			(
+				output.addr != ((unsigned char) ~inv_output.addr) || 
+				output.cmd != ((unsigned char) ~inv_output.cmd) 
+ 316:	c0 95       	com	r28
+			wait_until_change();
 
 			//Check for error conditions regarding the inverted bits
 			if
 			(
-				output.addr != ((unsigned char) ~inv_output_addr) || 
- 428:	0f 15       	cp	r16, r15
- 42a:	11 f0       	breq	.+4      	; 0x430 <__LOCK_REGION_LENGTH__+0x30>
-				output.cmd != ((unsigned char) ~inv_output_cmd) 
+				output.addr != ((unsigned char) ~inv_output.addr) || 
+ 318:	ac 13       	cpse	r26, r28
+				output.cmd != ((unsigned char) ~inv_output.cmd) 
 			)
 			{
 				output.addr = 0;
 				output.cmd = -1;
 				return output;
- 42c:	1f ef       	ldi	r17, 0xFF	; 255
- 42e:	01 c0       	rjmp	.+2      	; 0x432 <__LOCK_REGION_LENGTH__+0x32>
-			}
-			
-			return output;
- 430:	10 2f       	mov	r17, r16
+ 31a:	af ef       	ldi	r26, 0xFF	; 255
 	sei();
 
 	while(1)
 	{
 		remote_cmd = sensor1.recv();
-		if(remote_cmd.cmd == 0x16) blink();
- 432:	16 31       	cpi	r17, 0x16	; 22
- 434:	09 f4       	brne	.+2      	; 0x438 <__LOCK_REGION_LENGTH__+0x38>
- 436:	fc dd       	rcall	.-1032   	; 0x30 <_Z5blinkv>
-		Write(remote_cmd.cmd);
- 438:	81 2f       	mov	r24, r17
- 43a:	17 de       	rcall	.-978    	; 0x6a <_Z5Writec>
-	remote_cmd.addr = 0x00;
-	remote_cmd.cmd = 0x00;
+		switch(remote_cmd.cmd)
+ 31c:	a6 31       	cpi	r26, 0x16	; 22
+ 31e:	49 f1       	breq	.+82     	; 0x372 <__stack+0x113>
+ 320:	a5 34       	cpi	r26, 0x45	; 69
+ 322:	21 f0       	breq	.+8      	; 0x32c <__stack+0xcd>
+ 324:	ac 30       	cpi	r26, 0x0C	; 12
+ 326:	09 f0       	breq	.+2      	; 0x32a <__stack+0xcb>
+ 328:	93 ce       	rjmp	.-730    	; 0x50 <__SREG__+0x11>
+ 32a:	48 c0       	rjmp	.+144    	; 0x3bc <__stack+0x15d>
+			DDRB |= _BV(pin);
+		}	
 
-	sei();
+		void toggle()
+		{
+			if(state)
+ 32c:	41 15       	cp	r20, r1
+ 32e:	51 05       	cpc	r21, r1
+ 330:	69 f0       	breq	.+26     	; 0x34c <__stack+0xed>
+				PORTB &= ~_BV(pin);
+ 332:	28 b3       	in	r18, 0x18	; 24
+ 334:	81 e0       	ldi	r24, 0x01	; 1
+ 336:	90 e0       	ldi	r25, 0x00	; 0
+ 338:	06 2e       	mov	r0, r22
+ 33a:	02 c0       	rjmp	.+4      	; 0x340 <__stack+0xe1>
+ 33c:	88 0f       	add	r24, r24
+ 33e:	99 1f       	adc	r25, r25
+ 340:	0a 94       	dec	r0
+ 342:	e2 f7       	brpl	.-8      	; 0x33c <__stack+0xdd>
+ 344:	80 95       	com	r24
+ 346:	82 23       	and	r24, r18
+ 348:	88 bb       	out	0x18, r24	; 24
+ 34a:	0b c0       	rjmp	.+22     	; 0x362 <__stack+0x103>
+			else
+				PORTB |= _BV(pin);
+ 34c:	28 b3       	in	r18, 0x18	; 24
+ 34e:	81 e0       	ldi	r24, 0x01	; 1
+ 350:	90 e0       	ldi	r25, 0x00	; 0
+ 352:	06 2e       	mov	r0, r22
+ 354:	02 c0       	rjmp	.+4      	; 0x35a <__stack+0xfb>
+ 356:	88 0f       	add	r24, r24
+ 358:	99 1f       	adc	r25, r25
+ 35a:	0a 94       	dec	r0
+ 35c:	e2 f7       	brpl	.-8      	; 0x356 <__stack+0xf7>
+ 35e:	82 2b       	or	r24, r18
+ 360:	88 bb       	out	0x18, r24	; 24
 
-	while(1)
- 43c:	63 ce       	rjmp	.-826    	; 0x104 <main+0x36>
+			state = !state;
+ 362:	81 e0       	ldi	r24, 0x01	; 1
+ 364:	90 e0       	ldi	r25, 0x00	; 0
+ 366:	45 2b       	or	r20, r21
+ 368:	11 f0       	breq	.+4      	; 0x36e <__stack+0x10f>
+ 36a:	80 e0       	ldi	r24, 0x00	; 0
+ 36c:	90 e0       	ldi	r25, 0x00	; 0
+ 36e:	ac 01       	movw	r20, r24
+ 370:	6f ce       	rjmp	.-802    	; 0x50 <__SREG__+0x11>
+		}
 
-0000043e <_exit>:
- 43e:	f8 94       	cli
+		void set(int input)
+		{
+			input = !!input; //Normalize the input to 1 or 0
+			if(input != state) toggle(); //Toggle the pin if the goal & current setting are different
+ 372:	ca 01       	movw	r24, r20
+ 374:	00 97       	sbiw	r24, 0x00	; 0
+ 376:	09 f4       	brne	.+2      	; 0x37a <__stack+0x11b>
+ 378:	6b ce       	rjmp	.-810    	; 0x50 <__SREG__+0x11>
+			DDRB |= _BV(pin);
+		}	
 
-00000440 <__stop_program>:
- 440:	ff cf       	rjmp	.-2      	; 0x440 <__stop_program>
+		void toggle()
+		{
+			if(state)
+ 37a:	69 f0       	breq	.+26     	; 0x396 <__stack+0x137>
+				PORTB &= ~_BV(pin);
+ 37c:	28 b3       	in	r18, 0x18	; 24
+ 37e:	81 e0       	ldi	r24, 0x01	; 1
+ 380:	90 e0       	ldi	r25, 0x00	; 0
+ 382:	06 2e       	mov	r0, r22
+ 384:	02 c0       	rjmp	.+4      	; 0x38a <__stack+0x12b>
+ 386:	88 0f       	add	r24, r24
+ 388:	99 1f       	adc	r25, r25
+ 38a:	0a 94       	dec	r0
+ 38c:	e2 f7       	brpl	.-8      	; 0x386 <__stack+0x127>
+ 38e:	80 95       	com	r24
+ 390:	82 23       	and	r24, r18
+ 392:	88 bb       	out	0x18, r24	; 24
+ 394:	0b c0       	rjmp	.+22     	; 0x3ac <__stack+0x14d>
+			else
+				PORTB |= _BV(pin);
+ 396:	28 b3       	in	r18, 0x18	; 24
+ 398:	81 e0       	ldi	r24, 0x01	; 1
+ 39a:	90 e0       	ldi	r25, 0x00	; 0
+ 39c:	06 2e       	mov	r0, r22
+ 39e:	02 c0       	rjmp	.+4      	; 0x3a4 <__stack+0x145>
+ 3a0:	88 0f       	add	r24, r24
+ 3a2:	99 1f       	adc	r25, r25
+ 3a4:	0a 94       	dec	r0
+ 3a6:	e2 f7       	brpl	.-8      	; 0x3a0 <__stack+0x141>
+ 3a8:	82 2b       	or	r24, r18
+ 3aa:	88 bb       	out	0x18, r24	; 24
+
+			state = !state;
+ 3ac:	81 e0       	ldi	r24, 0x01	; 1
+ 3ae:	90 e0       	ldi	r25, 0x00	; 0
+ 3b0:	45 2b       	or	r20, r21
+ 3b2:	11 f0       	breq	.+4      	; 0x3b8 <__stack+0x159>
+ 3b4:	80 e0       	ldi	r24, 0x00	; 0
+ 3b6:	90 e0       	ldi	r25, 0x00	; 0
+ 3b8:	ac 01       	movw	r20, r24
+ 3ba:	4a ce       	rjmp	.-876    	; 0x50 <__SREG__+0x11>
+		}
+
+		void set(int input)
+		{
+			input = !!input; //Normalize the input to 1 or 0
+			if(input != state) toggle(); //Toggle the pin if the goal & current setting are different
+ 3bc:	ca 01       	movw	r24, r20
+ 3be:	41 30       	cpi	r20, 0x01	; 1
+ 3c0:	51 05       	cpc	r21, r1
+ 3c2:	09 f4       	brne	.+2      	; 0x3c6 <__stack+0x167>
+ 3c4:	45 ce       	rjmp	.-886    	; 0x50 <__SREG__+0x11>
+			DDRB |= _BV(pin);
+		}	
+
+		void toggle()
+		{
+			if(state)
+ 3c6:	89 2b       	or	r24, r25
+ 3c8:	69 f0       	breq	.+26     	; 0x3e4 <__stack+0x185>
+				PORTB &= ~_BV(pin);
+ 3ca:	28 b3       	in	r18, 0x18	; 24
+ 3cc:	81 e0       	ldi	r24, 0x01	; 1
+ 3ce:	90 e0       	ldi	r25, 0x00	; 0
+ 3d0:	06 2e       	mov	r0, r22
+ 3d2:	02 c0       	rjmp	.+4      	; 0x3d8 <__stack+0x179>
+ 3d4:	88 0f       	add	r24, r24
+ 3d6:	99 1f       	adc	r25, r25
+ 3d8:	0a 94       	dec	r0
+ 3da:	e2 f7       	brpl	.-8      	; 0x3d4 <__stack+0x175>
+ 3dc:	80 95       	com	r24
+ 3de:	82 23       	and	r24, r18
+ 3e0:	88 bb       	out	0x18, r24	; 24
+ 3e2:	0b c0       	rjmp	.+22     	; 0x3fa <__stack+0x19b>
+			else
+				PORTB |= _BV(pin);
+ 3e4:	28 b3       	in	r18, 0x18	; 24
+ 3e6:	81 e0       	ldi	r24, 0x01	; 1
+ 3e8:	90 e0       	ldi	r25, 0x00	; 0
+ 3ea:	06 2e       	mov	r0, r22
+ 3ec:	02 c0       	rjmp	.+4      	; 0x3f2 <__stack+0x193>
+ 3ee:	88 0f       	add	r24, r24
+ 3f0:	99 1f       	adc	r25, r25
+ 3f2:	0a 94       	dec	r0
+ 3f4:	e2 f7       	brpl	.-8      	; 0x3ee <__stack+0x18f>
+ 3f6:	82 2b       	or	r24, r18
+ 3f8:	88 bb       	out	0x18, r24	; 24
+
+			state = !state;
+ 3fa:	81 e0       	ldi	r24, 0x01	; 1
+ 3fc:	90 e0       	ldi	r25, 0x00	; 0
+ 3fe:	45 2b       	or	r20, r21
+ 400:	11 f0       	breq	.+4      	; 0x406 <__LOCK_REGION_LENGTH__+0x6>
+ 402:	80 e0       	ldi	r24, 0x00	; 0
+ 404:	90 e0       	ldi	r25, 0x00	; 0
+ 406:	ac 01       	movw	r20, r24
+ 408:	23 ce       	rjmp	.-954    	; 0x50 <__SREG__+0x11>
+
+0000040a <_exit>:
+ 40a:	f8 94       	cli
+
+0000040c <__stop_program>:
+ 40c:	ff cf       	rjmp	.-2      	; 0x40c <__stop_program>

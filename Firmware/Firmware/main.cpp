@@ -16,23 +16,17 @@
 #define SCL 0x08
 #define SDA 0x10
 
-struct IR_cmd
-{
-	unsigned char addr;
-	unsigned char cmd;
-};
 
 void Write(char);
-void blink();
 
-//
+//Class which reads the input of an IR receiver on the INT0 pin
 class IR_Receiver
 {
 	private:
 		//Constants for reading in the IR command 
-		const int AGC_PULSE = 7500;
-		const int LONG_PULSE = 3000;
-		const int ONE_PULSE = 1200;
+		static const int AGC_PULSE = 7500;
+		static const int LONG_PULSE = 3000;
+		static const int ONE_PULSE = 1200;
 
 		//waits until the interrupt pin is triggered to continue and records how long the device waited for a response in microseconds
 		int wait_until_change()
@@ -80,6 +74,16 @@ class IR_Receiver
 		}
 
 	public:
+		//Constants which define the command numbers
+		static const char POWER = 0x45;
+		static const char ZERO  = 0x16;
+		static const char ONE   = 0x0C;
+
+		struct IR_cmd
+		{
+			unsigned char addr;
+			unsigned char cmd;
+		};
 
 		//Constructor
 		IR_Receiver()
@@ -94,7 +98,7 @@ class IR_Receiver
 		{
 			int length;
 			IR_cmd output;
-			unsigned char inv_output_addr, inv_output_cmd;
+			IR_cmd inv_output;
 
 			//Wait for the beginning of the AGC pulse
 			length = measure_square_wave();
@@ -111,7 +115,6 @@ class IR_Receiver
 			length = wait_until_change();
 
 			//Return 0, 0 for repeat commands 
-			//TODO: implement code to read repeat commands
 			if(length < LONG_PULSE)
 			{
 				//wait until the stop bit ends
@@ -126,13 +129,13 @@ class IR_Receiver
 			output.addr = read_byte();
 			
 			//Read the inverted address 
-			inv_output_addr = read_byte();
+			inv_output.addr = read_byte();
 			
 			//Read the command
 			output.cmd = read_byte();
 
 			//Read the inverted output
-			inv_output_cmd = read_byte();
+			inv_output.cmd = read_byte();
 			
 			//Wait until the stop bit ends
 			wait_until_change();
@@ -140,8 +143,8 @@ class IR_Receiver
 			//Check for error conditions regarding the inverted bits
 			if
 			(
-				output.addr != ((unsigned char) ~inv_output_addr) || 
-				output.cmd != ((unsigned char) ~inv_output_cmd) 
+				output.addr != ((unsigned char) ~inv_output.addr) || 
+				output.cmd != ((unsigned char) ~inv_output.cmd) 
 			)
 			{
 				output.addr = 0;
@@ -153,14 +156,52 @@ class IR_Receiver
 		}
 };
 
-void blink()
+//Class which controls a relay for toggle & setting configuration
+class Relay
 {
-	int delay = 1000;
-	PORTB |= 0x02;
-	_delay_ms(delay);
-	PORTB &= ~0x02;
-	_delay_ms(delay);
-}
+	private:
+		int state;
+		int pin;
+
+	public:
+		//Default Constructor
+		Relay()
+		{
+			Relay(1);
+		}
+
+		//pin: which pin on PORTB the relay is connected to
+		Relay(int pin)
+		{
+			//Initialize the state as off
+			state = 0;
+
+			//Ensure the pin is one of the 5 possibilities & set the pin for this relay
+			if(0 <= pin && pin <= 5) 
+				this->pin = pin;
+			else
+				this->pin = 1; //1 is the default pin
+
+			//Set the pin as an output
+			DDRB |= _BV(pin);
+		}	
+
+		void toggle()
+		{
+			if(state)
+				PORTB &= ~_BV(pin);
+			else
+				PORTB |= _BV(pin);
+
+			state = !state;
+		}
+
+		void set(int input)
+		{
+			input = !!input; //Normalize the input to 1 or 0
+			if(input != state) toggle(); //Toggle the pin if the goal & current setting are different
+		}
+};
 
 //Initialize the bit-bang write command
 void Write_init()
@@ -196,15 +237,13 @@ void Write(char data)
 
 int main(void)
 {
-	//Set LED pin as an output
-	DDRB |= 0x02; 
-
 	Write_init();
 
 	IR_Receiver sensor1;
+	Relay relay1(1);
 
 	//Initialize an empty IR command
-	IR_cmd remote_cmd;
+	IR_Receiver::IR_cmd remote_cmd;
 	remote_cmd.addr = 0x00;
 	remote_cmd.cmd = 0x00;
 
@@ -213,7 +252,19 @@ int main(void)
 	while(1)
 	{
 		remote_cmd = sensor1.recv();
-		if(remote_cmd.cmd == 0x16) blink();
-		Write(remote_cmd.cmd);
+		switch(remote_cmd.cmd)
+		{
+			case IR_Receiver::POWER:
+				relay1.toggle();
+				break;
+			case IR_Receiver::ZERO:
+				relay1.set(FALSE);
+				break;
+			case IR_Receiver::ONE:
+				relay1.set(TRUE);
+				break;
+			default:
+				break;
+		}
 	}
 }
