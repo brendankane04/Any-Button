@@ -247,8 +247,6 @@ int main(void)
 	remote_cmd.addr = 0x00;
 	remote_cmd.cmd = 0x00;
 
-	sei();
-
 	while(1)
 	{
 		remote_cmd = sensor1.recv();
