@@ -13,12 +13,6 @@
 #define FALSE 0
 #define TRUE  1
 
-#define SCL 0x08
-#define SDA 0x10
-
-
-void Write(char);
-
 //Class which reads the input of an IR receiver on the INT0 pin
 class IR_Receiver
 {
@@ -75,6 +69,7 @@ class IR_Receiver
 
 	public:
 		//Constants which define the command numbers
+		//It varies by remote
 		static const char POWER = 0x45;
 		static const char ZERO  = 0x16;
 		static const char ONE   = 0x0C;
@@ -186,6 +181,7 @@ class Relay
 			DDRB |= _BV(pin);
 		}	
 
+		//Change the relay's current state
 		void toggle()
 		{
 			if(state)
@@ -196,6 +192,7 @@ class Relay
 			state = !state;
 		}
 
+		//Set the relay to the target 'input'
 		void set(int input)
 		{
 			input = !!input; //Normalize the input to 1 or 0
@@ -203,49 +200,71 @@ class Relay
 		}
 };
 
-//Initialize the bit-bang write command
-void Write_init()
+//Class which controls a bit-bang I2C-like protocol for writing bytes out for debugging
+//It's VERY rudimentary
+class BB_I2C
 {
-	//Set the SDA & SCL pins as outputs
-	DDRB |= SDA | SCL;
-}
+	private:
+		//pins on the PORTB line which correspond to the SDA & SCL pins
+		char SDA;
+		char SCL;
+	
+	public:
+		BB_I2C(int sda, int scl)
+		{
+			//Set the pins which the interface is using
+			this->SDA = _BV(sda);
+			this->SCL = _BV(scl);
 
-//VERY Rudimentary bit-banged I2C function for debugging
-void Write(char data)
-{
-	char curr;
-	for(int i = 0; i < 8; i++)
-	{
-		//Get the current bit
-		curr = (data >> (7 - i)) & 0x01;
+			//Set the SDA & SCL pins on PORTB as outputs
+			DDRB |= SDA | SCL;
 
-		//Send out the bit
-		if(curr)
-			PORTB |= SDA;
-		else
+			//Set SCL to high
+			PORTB |= SCL;
+		}	
+
+		//Rudimentary bit-banged I2C function for debugging
+		void write(char data)
+		{
+			char curr;
+
+			//Start bit
+			PORTB &= ~SCL;
+			_delay_us(100);
+
+			for(int i = 0; i < 8; i++)
+			{
+				//Get the current bit
+				curr = (data >> (7 - i)) & 0x01;
+
+				//Turn on the clock cycle
+				PORTB |= SCL;
+
+				//Send out the bit
+				if(curr) PORTB |= SDA;
+				else	 PORTB &= ~SDA;
+				_delay_us(100);
+
+				//Pull the data bit & clock cycle to low
+				PORTB &= ~SCL & ~SDA;
+				_delay_us(100);
+			}
+
+			//Clear data line
 			PORTB &= ~SDA;
-
-		PORTB |= SCL;
-		_delay_us(100);
-		PORTB &= ~SCL & ~SDA;
-		_delay_us(100);
-	}
-
-	//Clear data line
-	PORTB &= ~SDA;
-}
+			//Start bit
+			PORTB |= SCL;
+		}
+};
 
 int main(void)
 {
-	Write_init();
-
 	IR_Receiver sensor1;
 	Relay relay1(1);
+	BB_I2C writer(4, 3);
 
 	//Initialize an empty IR command
 	IR_Receiver::IR_cmd remote_cmd;
-	remote_cmd.addr = 0x00;
-	remote_cmd.cmd = 0x00;
 
 	while(1)
 	{
