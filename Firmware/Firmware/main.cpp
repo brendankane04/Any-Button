@@ -18,11 +18,12 @@
 
 struct IR_cmd
 {
-	char addr;
-	char cmd;
+	unsigned char addr;
+	unsigned char cmd;
 };
 
 void Write(char);
+void blink();
 
 //
 class IR_Receiver
@@ -32,7 +33,6 @@ class IR_Receiver
 		const int AGC_PULSE = 7500;
 		const int LONG_PULSE = 3000;
 		const int ONE_PULSE = 1200;
-		const int STOP_BIT = 400;
 
 		//waits until the interrupt pin is triggered to continue and records how long the device waited for a response in microseconds
 		int wait_until_change()
@@ -94,7 +94,7 @@ class IR_Receiver
 		{
 			int length;
 			IR_cmd output;
-			IR_cmd inv_output;
+			unsigned char inv_output_addr, inv_output_cmd;
 
 			//Wait for the beginning of the AGC pulse
 			length = measure_square_wave();
@@ -126,27 +126,26 @@ class IR_Receiver
 			output.addr = read_byte();
 			
 			//Read the inverted address 
-			inv_output.addr = read_byte();
+			inv_output_addr = read_byte();
 			
 			//Read the command
 			output.cmd = read_byte();
 
 			//Read the inverted output
-			inv_output.cmd = read_byte();
+			inv_output_cmd = read_byte();
 			
 			//Wait until the stop bit ends
-			length = wait_until_change();
+			wait_until_change();
 
-			//Check for error conditions regarding the inverted bits & the length of the stop bit
+			//Check for error conditions regarding the inverted bits
 			if
 			(
-				output.addr != ~(inv_output.addr) || 
-				output.cmd != ~(inv_output.cmd) ||
-				length < STOP_BIT
+				output.addr != ((unsigned char) ~inv_output_addr) || 
+				output.cmd != ((unsigned char) ~inv_output_cmd) 
 			)
 			{
 				output.addr = 0;
-				output.cmd = 0;
+				output.cmd = -1;
 				return output;
 			}
 			
@@ -213,9 +212,8 @@ int main(void)
 
 	while(1)
 	{
-		sensor1.recv();
+		remote_cmd = sensor1.recv();
 		if(remote_cmd.cmd == 0x16) blink();
 		Write(remote_cmd.cmd);
-		_delay_ms(500);
 	}
 }
