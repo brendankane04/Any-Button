@@ -195,13 +195,25 @@
     </ToolchainSettings>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="IR_NEC.cpp">
+    <Compile Include="BB_I2C.cpp">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="IR_NEC.h">
+    <Compile Include="BB_I2C.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="IR_Receiver.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="IR_Receiver.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="main.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Relay.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Relay.h">
       <SubType>compile</SubType>
     </Compile>
   </ItemGroup>

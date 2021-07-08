@@ -3,29 +3,29 @@ Firmware.elf:     file format elf32-avr
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .text         0000040e  00000000  00000000  00000054  2**1
+  0 .text         0000028c  00000000  00000000  00000054  2**1
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  1 .data         00000000  00800060  00800060  00000462  2**0
+  1 .data         00000000  00800060  00800060  000002e0  2**0
                   CONTENTS, ALLOC, LOAD, DATA
-  2 .comment      00000030  00000000  00000000  00000462  2**0
+  2 .comment      00000030  00000000  00000000  000002e0  2**0
                   CONTENTS, READONLY
-  3 .note.gnu.avr.deviceinfo 0000003c  00000000  00000000  00000494  2**2
+  3 .note.gnu.avr.deviceinfo 0000003c  00000000  00000000  00000310  2**2
                   CONTENTS, READONLY
-  4 .debug_aranges 00000020  00000000  00000000  000004d0  2**0
+  4 .debug_aranges 000000c8  00000000  00000000  0000034c  2**0
                   CONTENTS, READONLY, DEBUGGING
-  5 .debug_info   000011f9  00000000  00000000  000004f0  2**0
+  5 .debug_info   000012cc  00000000  00000000  00000414  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_abbrev 0000066c  00000000  00000000  000016e9  2**0
+  6 .debug_abbrev 00000bc1  00000000  00000000  000016e0  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_line   00000549  00000000  00000000  00001d55  2**0
+  7 .debug_line   0000077c  00000000  00000000  000022a1  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_frame  00000024  00000000  00000000  000022a0  2**2
+  8 .debug_frame  00000188  00000000  00000000  00002a20  2**2
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_str    00000516  00000000  00000000  000022c4  2**0
+  9 .debug_str    000005a4  00000000  00000000  00002ba8  2**0
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_loc    000008a1  00000000  00000000  000027da  2**0
+ 10 .debug_loc    00000650  00000000  00000000  0000314c  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_ranges 00000058  00000000  00000000  0000307b  2**0
+ 11 .debug_ranges 000000a0  00000000  00000000  0000379c  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -54,975 +54,561 @@ Disassembly of section .text:
   24:	d2 e0       	ldi	r29, 0x02	; 2
   26:	de bf       	out	0x3e, r29	; 62
   28:	cd bf       	out	0x3d, r28	; 61
-  2a:	02 d0       	rcall	.+4      	; 0x30 <main>
-  2c:	ee c1       	rjmp	.+988    	; 0x40a <_exit>
+  2a:	a3 d0       	rcall	.+326    	; 0x172 <main>
+  2c:	2d c1       	rjmp	.+602    	; 0x288 <_exit>
 
 0000002e <__bad_interrupt>:
   2e:	e8 cf       	rjmp	.-48     	; 0x0 <__vectors>
 
-00000030 <main>:
-		//Constructor
-		IR_Receiver()
-		{
-			//Set up the interrupt on the INT0 pin to receive the IR signal
-			//Initialize the interrupt mode for INT0
-			MCUCR |= _BV(ISC00); 
-  30:	85 b7       	in	r24, 0x35	; 53
-  32:	81 60       	ori	r24, 0x01	; 1
-  34:	85 bf       	out	0x35, r24	; 53
-			//Initialize the state as off
-			state = 0;
+00000030 <_ZN6BB_I2CC1Eii>:
+#include <avr/io.h>
+#include <util/delay.h>
+#include "BB_I2C.h"
 
-			//Ensure the pin is one of the 5 possibilities & set the pin for this relay
-			if(0 <= pin && pin <= 5) 
-				this->pin = pin;
-  36:	40 e0       	ldi	r20, 0x00	; 0
-  38:	50 e0       	ldi	r21, 0x00	; 0
-  3a:	61 e0       	ldi	r22, 0x01	; 1
-  3c:	70 e0       	ldi	r23, 0x00	; 0
-			else
-				this->pin = 1; //1 is the default pin
+// default constructor
+BB_I2C::BB_I2C(int sda, int scl)
+  30:	fc 01       	movw	r30, r24
+{
+	//Set the pins which the interface is using
+	this->SDA = _BV(sda);
+  32:	21 e0       	ldi	r18, 0x01	; 1
+  34:	30 e0       	ldi	r19, 0x00	; 0
+  36:	c9 01       	movw	r24, r18
+  38:	02 c0       	rjmp	.+4      	; 0x3e <__SP_H__>
+  3a:	88 0f       	add	r24, r24
+  3c:	99 1f       	adc	r25, r25
+  3e:	6a 95       	dec	r22
+  40:	e2 f7       	brpl	.-8      	; 0x3a <_ZN6BB_I2CC1Eii+0xa>
+  42:	bc 01       	movw	r22, r24
+  44:	80 83       	st	Z, r24
+	this->SCL = _BV(scl);
+  46:	02 c0       	rjmp	.+4      	; 0x4c <__SREG__+0xd>
+  48:	22 0f       	add	r18, r18
+  4a:	33 1f       	adc	r19, r19
+  4c:	4a 95       	dec	r20
+  4e:	e2 f7       	brpl	.-8      	; 0x48 <__SREG__+0x9>
+  50:	21 83       	std	Z+1, r18	; 0x01
 
-			//Set the pin as an output
-			DDRB |= _BV(pin);
-  3e:	87 b3       	in	r24, 0x17	; 23
-  40:	82 60       	ori	r24, 0x02	; 2
-  42:	87 bb       	out	0x17, r24	; 23
-			//Set the pins which the interface is using
-			this->SDA = _BV(sda);
-			this->SCL = _BV(scl);
+	//Set the SDA & SCL pins on PORTB as outputs
+	DDRB |= SDA | SCL;
+  52:	87 b3       	in	r24, 0x17	; 23
+  54:	26 2b       	or	r18, r22
+  56:	28 2b       	or	r18, r24
+  58:	27 bb       	out	0x17, r18	; 23
 
-			//Set the SDA & SCL pins on PORTB as outputs
-			DDRB |= SDA | SCL;
-  44:	87 b3       	in	r24, 0x17	; 23
-  46:	88 61       	ori	r24, 0x18	; 24
-  48:	87 bb       	out	0x17, r24	; 23
+	//Set SCL to high
+	PORTB |= SCL;
+  5a:	98 b3       	in	r25, 0x18	; 24
+  5c:	81 81       	ldd	r24, Z+1	; 0x01
+  5e:	89 2b       	or	r24, r25
+  60:	88 bb       	out	0x18, r24	; 24
+  62:	08 95       	ret
 
-			//Set SCL to high
-			PORTB |= SCL;
-  4a:	88 b3       	in	r24, 0x18	; 24
-  4c:	88 60       	ori	r24, 0x08	; 8
-  4e:	88 bb       	out	0x18, r24	; 24
+00000064 <_ZN11IR_Receiver17wait_until_changeEv>:
+#include "IR_Receiver.h"
 
-		//waits until the interrupt pin is triggered to continue and records how long the device waited for a response in microseconds
-		int wait_until_change()
-		{
-			int count = 0;
-			GIFR |= _BV(INTF0); //Clear the flag before starting
-  50:	8a b7       	in	r24, 0x3a	; 58
-  52:	80 64       	ori	r24, 0x40	; 64
-  54:	8a bf       	out	0x3a, r24	; 58
-			while((GIFR & _BV(INTF0)) == 0)
-  56:	0a b6       	in	r0, 0x3a	; 58
-  58:	06 fc       	sbrc	r0, 6
-  5a:	05 c0       	rjmp	.+10     	; 0x66 <__SREG__+0x27>
+int IR_Receiver::wait_until_change()
+{
+	int count = 0;
+	GIFR |= _BV(INTF0); //Clear the flag before starting
+  64:	8a b7       	in	r24, 0x3a	; 58
+  66:	80 64       	ori	r24, 0x40	; 64
+  68:	8a bf       	out	0x3a, r24	; 58
+#include <util/delay.h>
+#include "IR_Receiver.h"
+
+int IR_Receiver::wait_until_change()
+{
+	int count = 0;
+  6a:	80 e0       	ldi	r24, 0x00	; 0
+  6c:	90 e0       	ldi	r25, 0x00	; 0
+	GIFR |= _BV(INTF0); //Clear the flag before starting
+	while((GIFR & _BV(INTF0)) == 0)
+  6e:	0a b6       	in	r0, 0x3a	; 58
+  70:	06 fc       	sbrc	r0, 6
+  72:	06 c0       	rjmp	.+12     	; 0x80 <_ZN11IR_Receiver17wait_until_changeEv+0x1c>
+	{
+		//Increment
+		count++;
+  74:	01 96       	adiw	r24, 0x01	; 1
 	#else
 		//round up by default
 		__ticks_dc = (uint32_t)(ceil(fabs(__tmp)));
 	#endif
 
 	__builtin_avr_delay_cycles(__ticks_dc);
-  5c:	2a e1       	ldi	r18, 0x1A	; 26
-  5e:	2a 95       	dec	r18
-  60:	f1 f7       	brne	.-4      	; 0x5e <__SREG__+0x1f>
-  62:	00 c0       	rjmp	.+0      	; 0x64 <__SREG__+0x25>
-  64:	f8 cf       	rjmp	.-16     	; 0x56 <__SREG__+0x17>
-			{
-				//Increment
-				count++;
-				_delay_us(10);
-			}
-			GIFR |= _BV(INTF0); //Clear the flag after its use
-  66:	8a b7       	in	r24, 0x3a	; 58
-  68:	80 64       	ori	r24, 0x40	; 64
-  6a:	8a bf       	out	0x3a, r24	; 58
+  76:	2a e1       	ldi	r18, 0x1A	; 26
+  78:	2a 95       	dec	r18
+  7a:	f1 f7       	brne	.-4      	; 0x78 <_ZN11IR_Receiver17wait_until_changeEv+0x14>
+  7c:	00 c0       	rjmp	.+0      	; 0x7e <_ZN11IR_Receiver17wait_until_changeEv+0x1a>
+  7e:	f7 cf       	rjmp	.-18     	; 0x6e <_ZN11IR_Receiver17wait_until_changeEv+0xa>
+		_delay_us(10);
+	}
+	GIFR |= _BV(INTF0); //Clear the flag after its use
+  80:	2a b7       	in	r18, 0x3a	; 58
+  82:	20 64       	ori	r18, 0x40	; 64
+  84:	2a bf       	out	0x3a, r18	; 58
+	return count * 10;
+  86:	9c 01       	movw	r18, r24
+  88:	22 0f       	add	r18, r18
+  8a:	33 1f       	adc	r19, r19
+  8c:	22 0f       	add	r18, r18
+  8e:	33 1f       	adc	r19, r19
+  90:	82 0f       	add	r24, r18
+  92:	93 1f       	adc	r25, r19
+  94:	88 0f       	add	r24, r24
+  96:	99 1f       	adc	r25, r25
+}
+  98:	08 95       	ret
 
-		//waits until the interrupt pin is triggered to continue and records how long the device waited for a response in microseconds
-		int wait_until_change()
-		{
-			int count = 0;
-			GIFR |= _BV(INTF0); //Clear the flag before starting
-  6c:	8a b7       	in	r24, 0x3a	; 58
-  6e:	80 64       	ori	r24, 0x40	; 64
-  70:	8a bf       	out	0x3a, r24	; 58
-		static const int ONE_PULSE = 1200;
+0000009a <_ZN11IR_Receiver19measure_square_waveEv>:
 
-		//waits until the interrupt pin is triggered to continue and records how long the device waited for a response in microseconds
-		int wait_until_change()
-		{
-			int count = 0;
-  72:	80 e0       	ldi	r24, 0x00	; 0
-  74:	90 e0       	ldi	r25, 0x00	; 0
-			GIFR |= _BV(INTF0); //Clear the flag before starting
-			while((GIFR & _BV(INTF0)) == 0)
-  76:	0a b6       	in	r0, 0x3a	; 58
-  78:	06 fc       	sbrc	r0, 6
-  7a:	06 c0       	rjmp	.+12     	; 0x88 <__SREG__+0x49>
-			{
-				//Increment
-				count++;
-  7c:	01 96       	adiw	r24, 0x01	; 1
-  7e:	3a e1       	ldi	r19, 0x1A	; 26
-  80:	3a 95       	dec	r19
-  82:	f1 f7       	brne	.-4      	; 0x80 <__SREG__+0x41>
-  84:	00 c0       	rjmp	.+0      	; 0x86 <__SREG__+0x47>
-  86:	f7 cf       	rjmp	.-18     	; 0x76 <__SREG__+0x37>
-				_delay_us(10);
-			}
-			GIFR |= _BV(INTF0); //Clear the flag after its use
-  88:	2a b7       	in	r18, 0x3a	; 58
-  8a:	20 64       	ori	r18, 0x40	; 64
-  8c:	2a bf       	out	0x3a, r18	; 58
-			return count * 10;
-  8e:	9c 01       	movw	r18, r24
-  90:	22 0f       	add	r18, r18
-  92:	33 1f       	adc	r19, r19
-  94:	22 0f       	add	r18, r18
-  96:	33 1f       	adc	r19, r19
-  98:	82 0f       	add	r24, r18
-  9a:	93 1f       	adc	r25, r19
-  9c:	88 0f       	add	r24, r24
-  9e:	99 1f       	adc	r25, r25
+int IR_Receiver::measure_square_wave()
+{
+  9a:	cf 93       	push	r28
+  9c:	df 93       	push	r29
+  9e:	ec 01       	movw	r28, r24
+	int length;
+	wait_until_change();
+  a0:	e1 df       	rcall	.-62     	; 0x64 <_ZN11IR_Receiver17wait_until_changeEv>
+	length = wait_until_change();
+  a2:	ce 01       	movw	r24, r28
+  a4:	df df       	rcall	.-66     	; 0x64 <_ZN11IR_Receiver17wait_until_changeEv>
+	return length;	
+}
+  a6:	df 91       	pop	r29
+  a8:	cf 91       	pop	r28
+  aa:	08 95       	ret
 
-			//Wait for the beginning of the AGC pulse
-			length = measure_square_wave();
+000000ac <_ZN11IR_Receiver8read_bitEv>:
 
-			//Reject command if nothing the AGC isn't long enough
-			if(length < AGC_PULSE)
-  a0:	8c 34       	cpi	r24, 0x4C	; 76
-  a2:	9d 41       	sbci	r25, 0x1D	; 29
-  a4:	14 f4       	brge	.+4      	; 0xaa <__SREG__+0x6b>
-			{
-				output.addr = 0;
-				output.cmd = 0;
-				return output;
-  a6:	a0 e0       	ldi	r26, 0x00	; 0
-  a8:	39 c1       	rjmp	.+626    	; 0x31c <__stack+0xbd>
+char IR_Receiver::read_bit()
+{
+	int length;
+	length = measure_square_wave();
+  ac:	f6 df       	rcall	.-20     	; 0x9a <_ZN11IR_Receiver19measure_square_waveEv>
+	if(length < ONE_PULSE)
+  ae:	80 3b       	cpi	r24, 0xB0	; 176
+  b0:	94 40       	sbci	r25, 0x04	; 4
+  b2:	14 f4       	brge	.+4      	; 0xb8 <_ZN11IR_Receiver8read_bitEv+0xc>
+		return 0x00;
+  b4:	80 e0       	ldi	r24, 0x00	; 0
+  b6:	08 95       	ret
+	else
+		return 0x01;
+  b8:	81 e0       	ldi	r24, 0x01	; 1
+}
+  ba:	08 95       	ret
 
-		//waits until the interrupt pin is triggered to continue and records how long the device waited for a response in microseconds
-		int wait_until_change()
-		{
-			int count = 0;
-			GIFR |= _BV(INTF0); //Clear the flag before starting
-  aa:	8a b7       	in	r24, 0x3a	; 58
-  ac:	80 64       	ori	r24, 0x40	; 64
-  ae:	8a bf       	out	0x3a, r24	; 58
-		static const int ONE_PULSE = 1200;
+000000bc <_ZN11IR_Receiver9read_byteEv>:
 
-		//waits until the interrupt pin is triggered to continue and records how long the device waited for a response in microseconds
-		int wait_until_change()
-		{
-			int count = 0;
-  b0:	80 e0       	ldi	r24, 0x00	; 0
-  b2:	90 e0       	ldi	r25, 0x00	; 0
-			GIFR |= _BV(INTF0); //Clear the flag before starting
-			while((GIFR & _BV(INTF0)) == 0)
-  b4:	0a b6       	in	r0, 0x3a	; 58
-  b6:	06 fc       	sbrc	r0, 6
-  b8:	06 c0       	rjmp	.+12     	; 0xc6 <__SREG__+0x87>
-			{
-				//Increment
-				count++;
-  ba:	01 96       	adiw	r24, 0x01	; 1
-  bc:	ba e1       	ldi	r27, 0x1A	; 26
-  be:	ba 95       	dec	r27
-  c0:	f1 f7       	brne	.-4      	; 0xbe <__SREG__+0x7f>
-  c2:	00 c0       	rjmp	.+0      	; 0xc4 <__SREG__+0x85>
-  c4:	f7 cf       	rjmp	.-18     	; 0xb4 <__SREG__+0x75>
-				_delay_us(10);
-			}
-			GIFR |= _BV(INTF0); //Clear the flag after its use
-  c6:	2a b7       	in	r18, 0x3a	; 58
-  c8:	20 64       	ori	r18, 0x40	; 64
-  ca:	2a bf       	out	0x3a, r18	; 58
-			return count * 10;
-  cc:	9c 01       	movw	r18, r24
-  ce:	22 0f       	add	r18, r18
-  d0:	33 1f       	adc	r19, r19
-  d2:	22 0f       	add	r18, r18
-  d4:	33 1f       	adc	r19, r19
-  d6:	82 0f       	add	r24, r18
-  d8:	93 1f       	adc	r25, r19
-  da:	88 0f       	add	r24, r24
-  dc:	99 1f       	adc	r25, r25
-			
-			//Record the length of the pause & set scanning mode from active high to active low
-			length = wait_until_change();
+char IR_Receiver::read_byte()
+{
+  bc:	ef 92       	push	r14
+  be:	ff 92       	push	r15
+  c0:	1f 93       	push	r17
+  c2:	cf 93       	push	r28
+  c4:	df 93       	push	r29
+  c6:	7c 01       	movw	r14, r24
+	char output = 0x00;
+	for(int i = 0; i < 8; i++)
+  c8:	c0 e0       	ldi	r28, 0x00	; 0
+  ca:	d0 e0       	ldi	r29, 0x00	; 0
+		return 0x01;
+}
 
-			//Return 0, 0 for repeat commands 
-			if(length < LONG_PULSE)
-  de:	88 3b       	cpi	r24, 0xB8	; 184
-  e0:	9b 40       	sbci	r25, 0x0B	; 11
-  e2:	84 f4       	brge	.+32     	; 0x104 <__SREG__+0xc5>
+char IR_Receiver::read_byte()
+{
+	char output = 0x00;
+  cc:	10 e0       	ldi	r17, 0x00	; 0
+	for(int i = 0; i < 8; i++)
+  ce:	c8 30       	cpi	r28, 0x08	; 8
+  d0:	d1 05       	cpc	r29, r1
+  d2:	64 f4       	brge	.+24     	; 0xec <_ZN11IR_Receiver9read_byteEv+0x30>
+	output |= read_bit() << i;
+  d4:	c7 01       	movw	r24, r14
+  d6:	ea df       	rcall	.-44     	; 0xac <_ZN11IR_Receiver8read_bitEv>
+  d8:	90 e0       	ldi	r25, 0x00	; 0
+  da:	0c 2e       	mov	r0, r28
+  dc:	02 c0       	rjmp	.+4      	; 0xe2 <_ZN11IR_Receiver9read_byteEv+0x26>
+  de:	88 0f       	add	r24, r24
+  e0:	99 1f       	adc	r25, r25
+  e2:	0a 94       	dec	r0
+  e4:	e2 f7       	brpl	.-8      	; 0xde <_ZN11IR_Receiver9read_byteEv+0x22>
+  e6:	18 2b       	or	r17, r24
+}
 
-		//waits until the interrupt pin is triggered to continue and records how long the device waited for a response in microseconds
-		int wait_until_change()
-		{
-			int count = 0;
-			GIFR |= _BV(INTF0); //Clear the flag before starting
-  e4:	8a b7       	in	r24, 0x3a	; 58
-  e6:	80 64       	ori	r24, 0x40	; 64
-  e8:	8a bf       	out	0x3a, r24	; 58
-			while((GIFR & _BV(INTF0)) == 0)
-  ea:	0a b6       	in	r0, 0x3a	; 58
-  ec:	06 fc       	sbrc	r0, 6
-  ee:	05 c0       	rjmp	.+10     	; 0xfa <__SREG__+0xbb>
-  f0:	3a e1       	ldi	r19, 0x1A	; 26
-  f2:	3a 95       	dec	r19
-  f4:	f1 f7       	brne	.-4      	; 0xf2 <__SREG__+0xb3>
-  f6:	00 c0       	rjmp	.+0      	; 0xf8 <__SREG__+0xb9>
-  f8:	f8 cf       	rjmp	.-16     	; 0xea <__SREG__+0xab>
-			{
-				//Increment
-				count++;
-				_delay_us(10);
-			}
-			GIFR |= _BV(INTF0); //Clear the flag after its use
-  fa:	8a b7       	in	r24, 0x3a	; 58
-  fc:	80 64       	ori	r24, 0x40	; 64
-  fe:	8a bf       	out	0x3a, r24	; 58
-				//wait until the stop bit ends
-				wait_until_change();
+char IR_Receiver::read_byte()
+{
+	char output = 0x00;
+	for(int i = 0; i < 8; i++)
+  e8:	21 96       	adiw	r28, 0x01	; 1
+  ea:	f1 cf       	rjmp	.-30     	; 0xce <_ZN11IR_Receiver9read_byteEv+0x12>
+	output |= read_bit() << i;
 
-				output.addr = 0;
-				output.cmd = 0;
-				return output;
- 100:	a0 e0       	ldi	r26, 0x00	; 0
- 102:	0c c1       	rjmp	.+536    	; 0x31c <__stack+0xbd>
-			
-			//Record the length of the pause & set scanning mode from active high to active low
-			length = wait_until_change();
+	return output;
+}
+  ec:	81 2f       	mov	r24, r17
+  ee:	df 91       	pop	r29
+  f0:	cf 91       	pop	r28
+  f2:	1f 91       	pop	r17
+  f4:	ff 90       	pop	r15
+  f6:	ef 90       	pop	r14
+  f8:	08 95       	ret
 
-			//Return 0, 0 for repeat commands 
-			if(length < LONG_PULSE)
- 104:	e0 e0       	ldi	r30, 0x00	; 0
- 106:	f0 e0       	ldi	r31, 0x00	; 0
- 108:	20 e0       	ldi	r18, 0x00	; 0
+000000fa <_ZN11IR_ReceiverC1Ev>:
 
-		//Read in a byte from LSB to MSB
-		char read_byte()
-		{
-			char output = 0x00;
-			for(int i = 0; i < 8; i++)
- 10a:	e8 30       	cpi	r30, 0x08	; 8
- 10c:	f1 05       	cpc	r31, r1
- 10e:	c4 f5       	brge	.+112    	; 0x180 <__SREG__+0x141>
+IR_Receiver::IR_Receiver()
+{
+	//Set up the interrupt on the INT0 pin to receive the IR signal
+	//Initialize the interrupt mode for INT0
+	MCUCR |= _BV(ISC00);
+  fa:	85 b7       	in	r24, 0x35	; 53
+  fc:	81 60       	ori	r24, 0x01	; 1
+  fe:	85 bf       	out	0x35, r24	; 53
+ 100:	08 95       	ret
 
-		//waits until the interrupt pin is triggered to continue and records how long the device waited for a response in microseconds
-		int wait_until_change()
-		{
-			int count = 0;
-			GIFR |= _BV(INTF0); //Clear the flag before starting
- 110:	8a b7       	in	r24, 0x3a	; 58
- 112:	80 64       	ori	r24, 0x40	; 64
- 114:	8a bf       	out	0x3a, r24	; 58
-			while((GIFR & _BV(INTF0)) == 0)
- 116:	0a b6       	in	r0, 0x3a	; 58
- 118:	06 fc       	sbrc	r0, 6
- 11a:	05 c0       	rjmp	.+10     	; 0x126 <__SREG__+0xe7>
- 11c:	8a e1       	ldi	r24, 0x1A	; 26
- 11e:	8a 95       	dec	r24
- 120:	f1 f7       	brne	.-4      	; 0x11e <__SREG__+0xdf>
- 122:	00 c0       	rjmp	.+0      	; 0x124 <__SREG__+0xe5>
- 124:	f8 cf       	rjmp	.-16     	; 0x116 <__SREG__+0xd7>
-			{
-				//Increment
-				count++;
-				_delay_us(10);
-			}
-			GIFR |= _BV(INTF0); //Clear the flag after its use
- 126:	8a b7       	in	r24, 0x3a	; 58
- 128:	80 64       	ori	r24, 0x40	; 64
- 12a:	8a bf       	out	0x3a, r24	; 58
+00000102 <_ZN11IR_Receiver4recvEv>:
+}
 
-		//waits until the interrupt pin is triggered to continue and records how long the device waited for a response in microseconds
-		int wait_until_change()
-		{
-			int count = 0;
-			GIFR |= _BV(INTF0); //Clear the flag before starting
- 12c:	8a b7       	in	r24, 0x3a	; 58
- 12e:	80 64       	ori	r24, 0x40	; 64
- 130:	8a bf       	out	0x3a, r24	; 58
-		static const int ONE_PULSE = 1200;
+IR_Receiver::IR_cmd IR_Receiver::recv()
+{
+ 102:	ef 92       	push	r14
+ 104:	ff 92       	push	r15
+ 106:	0f 93       	push	r16
+ 108:	1f 93       	push	r17
+ 10a:	cf 93       	push	r28
+ 10c:	df 93       	push	r29
+ 10e:	ec 01       	movw	r28, r24
+	int length;
+	IR_cmd output;
+	IR_cmd inv_output;
 
-		//waits until the interrupt pin is triggered to continue and records how long the device waited for a response in microseconds
-		int wait_until_change()
-		{
-			int count = 0;
- 132:	80 e0       	ldi	r24, 0x00	; 0
- 134:	90 e0       	ldi	r25, 0x00	; 0
-			GIFR |= _BV(INTF0); //Clear the flag before starting
-			while((GIFR & _BV(INTF0)) == 0)
- 136:	0a b6       	in	r0, 0x3a	; 58
- 138:	06 fc       	sbrc	r0, 6
- 13a:	06 c0       	rjmp	.+12     	; 0x148 <__SREG__+0x109>
-			{
-				//Increment
-				count++;
- 13c:	01 96       	adiw	r24, 0x01	; 1
- 13e:	aa e1       	ldi	r26, 0x1A	; 26
- 140:	aa 95       	dec	r26
- 142:	f1 f7       	brne	.-4      	; 0x140 <__SREG__+0x101>
- 144:	00 c0       	rjmp	.+0      	; 0x146 <__SREG__+0x107>
- 146:	f7 cf       	rjmp	.-18     	; 0x136 <__SREG__+0xf7>
-				_delay_us(10);
-			}
-			GIFR |= _BV(INTF0); //Clear the flag after its use
- 148:	3a b7       	in	r19, 0x3a	; 58
- 14a:	30 64       	ori	r19, 0x40	; 64
- 14c:	3a bf       	out	0x3a, r19	; 58
-			return count * 10;
- 14e:	dc 01       	movw	r26, r24
- 150:	aa 0f       	add	r26, r26
- 152:	bb 1f       	adc	r27, r27
- 154:	aa 0f       	add	r26, r26
- 156:	bb 1f       	adc	r27, r27
- 158:	8a 0f       	add	r24, r26
- 15a:	9b 1f       	adc	r25, r27
- 15c:	88 0f       	add	r24, r24
- 15e:	99 1f       	adc	r25, r25
-		//Read in a single bit of the IR code based on the length of the square wave
-		char read_bit()
-		{
-			int length;
-			length = measure_square_wave();
-			if(length < ONE_PULSE)
- 160:	80 3b       	cpi	r24, 0xB0	; 176
- 162:	94 40       	sbci	r25, 0x04	; 4
- 164:	14 f4       	brge	.+4      	; 0x16a <__SREG__+0x12b>
-				return 0x00;
- 166:	80 e0       	ldi	r24, 0x00	; 0
- 168:	01 c0       	rjmp	.+2      	; 0x16c <__SREG__+0x12d>
-			else
-				return 0x01;
- 16a:	81 e0       	ldi	r24, 0x01	; 1
-		//Read in a byte from LSB to MSB
-		char read_byte()
-		{
-			char output = 0x00;
-			for(int i = 0; i < 8; i++)
-				output |= read_bit() << i;
- 16c:	90 e0       	ldi	r25, 0x00	; 0
- 16e:	0e 2e       	mov	r0, r30
- 170:	02 c0       	rjmp	.+4      	; 0x176 <__SREG__+0x137>
- 172:	88 0f       	add	r24, r24
- 174:	99 1f       	adc	r25, r25
- 176:	0a 94       	dec	r0
- 178:	e2 f7       	brpl	.-8      	; 0x172 <__SREG__+0x133>
- 17a:	28 2b       	or	r18, r24
+	//Wait for the beginning of the AGC pulse
+	length = measure_square_wave();
+ 110:	c4 df       	rcall	.-120    	; 0x9a <_ZN11IR_Receiver19measure_square_waveEv>
 
-		//Read in a byte from LSB to MSB
-		char read_byte()
-		{
-			char output = 0x00;
-			for(int i = 0; i < 8; i++)
- 17c:	31 96       	adiw	r30, 0x01	; 1
- 17e:	c5 cf       	rjmp	.-118    	; 0x10a <__SREG__+0xcb>
- 180:	e0 e0       	ldi	r30, 0x00	; 0
- 182:	f0 e0       	ldi	r31, 0x00	; 0
-		}
+	//Reject command if nothing the AGC isn't long enough
+	if(length < AGC_PULSE)
+ 112:	8c 34       	cpi	r24, 0x4C	; 76
+ 114:	9d 41       	sbci	r25, 0x1D	; 29
+ 116:	1c f4       	brge	.+6      	; 0x11e <_ZN11IR_Receiver4recvEv+0x1c>
+	{
+		output.addr = 0;
+		output.cmd = 0;
+		return output;
+ 118:	80 e0       	ldi	r24, 0x00	; 0
+ 11a:	90 e0       	ldi	r25, 0x00	; 0
+ 11c:	23 c0       	rjmp	.+70     	; 0x164 <_ZN11IR_Receiver4recvEv+0x62>
+	}
+	
+	//Record the length of the pause & set scanning mode from active high to active low
+	length = wait_until_change();
+ 11e:	ce 01       	movw	r24, r28
+ 120:	a1 df       	rcall	.-190    	; 0x64 <_ZN11IR_Receiver17wait_until_changeEv>
 
-		//Read in a byte from LSB to MSB
-		char read_byte()
-		{
-			char output = 0x00;
- 184:	30 e0       	ldi	r19, 0x00	; 0
-			for(int i = 0; i < 8; i++)
- 186:	e8 30       	cpi	r30, 0x08	; 8
- 188:	f1 05       	cpc	r31, r1
- 18a:	c4 f5       	brge	.+112    	; 0x1fc <__SREG__+0x1bd>
+	//Return 0, 0 for repeat commands
+	if(length < LONG_PULSE)
+ 122:	88 3b       	cpi	r24, 0xB8	; 184
+ 124:	9b 40       	sbci	r25, 0x0B	; 11
+ 126:	2c f4       	brge	.+10     	; 0x132 <_ZN11IR_Receiver4recvEv+0x30>
+	{
+		//wait until the stop bit ends
+		wait_until_change();
+ 128:	ce 01       	movw	r24, r28
+ 12a:	9c df       	rcall	.-200    	; 0x64 <_ZN11IR_Receiver17wait_until_changeEv>
 
-		//waits until the interrupt pin is triggered to continue and records how long the device waited for a response in microseconds
-		int wait_until_change()
-		{
-			int count = 0;
-			GIFR |= _BV(INTF0); //Clear the flag before starting
- 18c:	8a b7       	in	r24, 0x3a	; 58
- 18e:	80 64       	ori	r24, 0x40	; 64
- 190:	8a bf       	out	0x3a, r24	; 58
-			while((GIFR & _BV(INTF0)) == 0)
- 192:	0a b6       	in	r0, 0x3a	; 58
- 194:	06 fc       	sbrc	r0, 6
- 196:	05 c0       	rjmp	.+10     	; 0x1a2 <__SREG__+0x163>
- 198:	8a e1       	ldi	r24, 0x1A	; 26
- 19a:	8a 95       	dec	r24
- 19c:	f1 f7       	brne	.-4      	; 0x19a <__SREG__+0x15b>
- 19e:	00 c0       	rjmp	.+0      	; 0x1a0 <__SREG__+0x161>
- 1a0:	f8 cf       	rjmp	.-16     	; 0x192 <__SREG__+0x153>
-			{
-				//Increment
-				count++;
-				_delay_us(10);
-			}
-			GIFR |= _BV(INTF0); //Clear the flag after its use
- 1a2:	8a b7       	in	r24, 0x3a	; 58
- 1a4:	80 64       	ori	r24, 0x40	; 64
- 1a6:	8a bf       	out	0x3a, r24	; 58
+		output.addr = 0;
+		output.cmd = 0;
+		return output;
+ 12c:	80 e0       	ldi	r24, 0x00	; 0
+ 12e:	90 e0       	ldi	r25, 0x00	; 0
+ 130:	19 c0       	rjmp	.+50     	; 0x164 <_ZN11IR_Receiver4recvEv+0x62>
+	}
 
-		//waits until the interrupt pin is triggered to continue and records how long the device waited for a response in microseconds
-		int wait_until_change()
-		{
-			int count = 0;
-			GIFR |= _BV(INTF0); //Clear the flag before starting
- 1a8:	8a b7       	in	r24, 0x3a	; 58
- 1aa:	80 64       	ori	r24, 0x40	; 64
- 1ac:	8a bf       	out	0x3a, r24	; 58
-		static const int ONE_PULSE = 1200;
+	//Read the address
+	output.addr = read_byte();
+ 132:	ce 01       	movw	r24, r28
+ 134:	c3 df       	rcall	.-122    	; 0xbc <_ZN11IR_Receiver9read_byteEv>
+ 136:	18 2f       	mov	r17, r24
+	
+	//Read the inverted address
+	inv_output.addr = read_byte();
+ 138:	ce 01       	movw	r24, r28
+ 13a:	c0 df       	rcall	.-128    	; 0xbc <_ZN11IR_Receiver9read_byteEv>
+ 13c:	f8 2e       	mov	r15, r24
+	
+	//Read the command
+	output.cmd = read_byte();
+ 13e:	ce 01       	movw	r24, r28
+ 140:	bd df       	rcall	.-134    	; 0xbc <_ZN11IR_Receiver9read_byteEv>
+ 142:	08 2f       	mov	r16, r24
 
-		//waits until the interrupt pin is triggered to continue and records how long the device waited for a response in microseconds
-		int wait_until_change()
-		{
-			int count = 0;
- 1ae:	80 e0       	ldi	r24, 0x00	; 0
- 1b0:	90 e0       	ldi	r25, 0x00	; 0
-			GIFR |= _BV(INTF0); //Clear the flag before starting
-			while((GIFR & _BV(INTF0)) == 0)
- 1b2:	0a b6       	in	r0, 0x3a	; 58
- 1b4:	06 fc       	sbrc	r0, 6
- 1b6:	06 c0       	rjmp	.+12     	; 0x1c4 <__SREG__+0x185>
-			{
-				//Increment
-				count++;
- 1b8:	01 96       	adiw	r24, 0x01	; 1
- 1ba:	aa e1       	ldi	r26, 0x1A	; 26
- 1bc:	aa 95       	dec	r26
- 1be:	f1 f7       	brne	.-4      	; 0x1bc <__SREG__+0x17d>
- 1c0:	00 c0       	rjmp	.+0      	; 0x1c2 <__SREG__+0x183>
- 1c2:	f7 cf       	rjmp	.-18     	; 0x1b2 <__SREG__+0x173>
-				_delay_us(10);
-			}
-			GIFR |= _BV(INTF0); //Clear the flag after its use
- 1c4:	aa b7       	in	r26, 0x3a	; 58
- 1c6:	a0 64       	ori	r26, 0x40	; 64
- 1c8:	aa bf       	out	0x3a, r26	; 58
-			return count * 10;
- 1ca:	dc 01       	movw	r26, r24
- 1cc:	aa 0f       	add	r26, r26
- 1ce:	bb 1f       	adc	r27, r27
- 1d0:	aa 0f       	add	r26, r26
- 1d2:	bb 1f       	adc	r27, r27
- 1d4:	8a 0f       	add	r24, r26
- 1d6:	9b 1f       	adc	r25, r27
- 1d8:	88 0f       	add	r24, r24
- 1da:	99 1f       	adc	r25, r25
-		//Read in a single bit of the IR code based on the length of the square wave
-		char read_bit()
-		{
-			int length;
-			length = measure_square_wave();
-			if(length < ONE_PULSE)
- 1dc:	80 3b       	cpi	r24, 0xB0	; 176
- 1de:	94 40       	sbci	r25, 0x04	; 4
- 1e0:	14 f4       	brge	.+4      	; 0x1e6 <__SREG__+0x1a7>
-				return 0x00;
- 1e2:	80 e0       	ldi	r24, 0x00	; 0
- 1e4:	01 c0       	rjmp	.+2      	; 0x1e8 <__SREG__+0x1a9>
-			else
-				return 0x01;
- 1e6:	81 e0       	ldi	r24, 0x01	; 1
-		//Read in a byte from LSB to MSB
-		char read_byte()
-		{
-			char output = 0x00;
-			for(int i = 0; i < 8; i++)
-				output |= read_bit() << i;
- 1e8:	90 e0       	ldi	r25, 0x00	; 0
- 1ea:	0e 2e       	mov	r0, r30
- 1ec:	02 c0       	rjmp	.+4      	; 0x1f2 <__SREG__+0x1b3>
- 1ee:	88 0f       	add	r24, r24
- 1f0:	99 1f       	adc	r25, r25
- 1f2:	0a 94       	dec	r0
- 1f4:	e2 f7       	brpl	.-8      	; 0x1ee <__SREG__+0x1af>
- 1f6:	38 2b       	or	r19, r24
+	//Read the inverted output
+	inv_output.cmd = read_byte();
+ 144:	ce 01       	movw	r24, r28
+ 146:	ba df       	rcall	.-140    	; 0xbc <_ZN11IR_Receiver9read_byteEv>
+ 148:	e8 2e       	mov	r14, r24
+	
+	//Wait until the stop bit ends
+	wait_until_change();
+ 14a:	ce 01       	movw	r24, r28
+ 14c:	8b df       	rcall	.-234    	; 0x64 <_ZN11IR_Receiver17wait_until_changeEv>
 
-		//Read in a byte from LSB to MSB
-		char read_byte()
-		{
-			char output = 0x00;
-			for(int i = 0; i < 8; i++)
- 1f8:	31 96       	adiw	r30, 0x01	; 1
- 1fa:	c5 cf       	rjmp	.-118    	; 0x186 <__SREG__+0x147>
- 1fc:	e0 e0       	ldi	r30, 0x00	; 0
- 1fe:	f0 e0       	ldi	r31, 0x00	; 0
-		}
+	//Check for error conditions regarding the inverted bits
+	if
+	(
+	output.addr != ((unsigned char) ~inv_output.addr) ||
+ 14e:	f0 94       	com	r15
+	
+	//Wait until the stop bit ends
+	wait_until_change();
 
-		//Read in a byte from LSB to MSB
-		char read_byte()
-		{
-			char output = 0x00;
- 200:	a0 e0       	ldi	r26, 0x00	; 0
-			for(int i = 0; i < 8; i++)
- 202:	e8 30       	cpi	r30, 0x08	; 8
- 204:	f1 05       	cpc	r31, r1
- 206:	c4 f5       	brge	.+112    	; 0x278 <__stack+0x19>
+	//Check for error conditions regarding the inverted bits
+	if
+ 150:	1f 11       	cpse	r17, r15
+ 152:	03 c0       	rjmp	.+6      	; 0x15a <_ZN11IR_Receiver4recvEv+0x58>
+	(
+	output.addr != ((unsigned char) ~inv_output.addr) ||
+	output.cmd != ((unsigned char) ~inv_output.cmd)
+ 154:	e0 94       	com	r14
+	wait_until_change();
 
-		//waits until the interrupt pin is triggered to continue and records how long the device waited for a response in microseconds
-		int wait_until_change()
-		{
-			int count = 0;
-			GIFR |= _BV(INTF0); //Clear the flag before starting
- 208:	8a b7       	in	r24, 0x3a	; 58
- 20a:	80 64       	ori	r24, 0x40	; 64
- 20c:	8a bf       	out	0x3a, r24	; 58
-			while((GIFR & _BV(INTF0)) == 0)
- 20e:	0a b6       	in	r0, 0x3a	; 58
- 210:	06 fc       	sbrc	r0, 6
- 212:	05 c0       	rjmp	.+10     	; 0x21e <__DATA_REGION_LENGTH__+0x1e>
- 214:	8a e1       	ldi	r24, 0x1A	; 26
- 216:	8a 95       	dec	r24
- 218:	f1 f7       	brne	.-4      	; 0x216 <__DATA_REGION_LENGTH__+0x16>
- 21a:	00 c0       	rjmp	.+0      	; 0x21c <__DATA_REGION_LENGTH__+0x1c>
- 21c:	f8 cf       	rjmp	.-16     	; 0x20e <__DATA_REGION_LENGTH__+0xe>
-			{
-				//Increment
-				count++;
-				_delay_us(10);
-			}
-			GIFR |= _BV(INTF0); //Clear the flag after its use
- 21e:	8a b7       	in	r24, 0x3a	; 58
- 220:	80 64       	ori	r24, 0x40	; 64
- 222:	8a bf       	out	0x3a, r24	; 58
+	//Check for error conditions regarding the inverted bits
+	if
+	(
+	output.addr != ((unsigned char) ~inv_output.addr) ||
+ 156:	0e 15       	cp	r16, r14
+ 158:	19 f0       	breq	.+6      	; 0x160 <_ZN11IR_Receiver4recvEv+0x5e>
+	output.cmd != ((unsigned char) ~inv_output.cmd)
+	)
+	{
+		output.addr = 0;
+		output.cmd = -1;
+		return output;
+ 15a:	80 e0       	ldi	r24, 0x00	; 0
+ 15c:	9f ef       	ldi	r25, 0xFF	; 255
+ 15e:	02 c0       	rjmp	.+4      	; 0x164 <_ZN11IR_Receiver4recvEv+0x62>
+	}
+	
+	return output;
+ 160:	81 2f       	mov	r24, r17
+ 162:	90 2f       	mov	r25, r16
+ 164:	df 91       	pop	r29
+ 166:	cf 91       	pop	r28
+ 168:	1f 91       	pop	r17
+ 16a:	0f 91       	pop	r16
+ 16c:	ff 90       	pop	r15
+ 16e:	ef 90       	pop	r14
+ 170:	08 95       	ret
 
-		//waits until the interrupt pin is triggered to continue and records how long the device waited for a response in microseconds
-		int wait_until_change()
-		{
-			int count = 0;
-			GIFR |= _BV(INTF0); //Clear the flag before starting
- 224:	8a b7       	in	r24, 0x3a	; 58
- 226:	80 64       	ori	r24, 0x40	; 64
- 228:	8a bf       	out	0x3a, r24	; 58
-		static const int ONE_PULSE = 1200;
+00000172 <main>:
 
-		//waits until the interrupt pin is triggered to continue and records how long the device waited for a response in microseconds
-		int wait_until_change()
-		{
-			int count = 0;
- 22a:	80 e0       	ldi	r24, 0x00	; 0
- 22c:	90 e0       	ldi	r25, 0x00	; 0
-			GIFR |= _BV(INTF0); //Clear the flag before starting
-			while((GIFR & _BV(INTF0)) == 0)
- 22e:	0a b6       	in	r0, 0x3a	; 58
- 230:	06 fc       	sbrc	r0, 6
- 232:	06 c0       	rjmp	.+12     	; 0x240 <__DATA_REGION_LENGTH__+0x40>
-			{
-				//Increment
-				count++;
- 234:	01 96       	adiw	r24, 0x01	; 1
- 236:	ba e1       	ldi	r27, 0x1A	; 26
- 238:	ba 95       	dec	r27
- 23a:	f1 f7       	brne	.-4      	; 0x238 <__DATA_REGION_LENGTH__+0x38>
- 23c:	00 c0       	rjmp	.+0      	; 0x23e <__DATA_REGION_LENGTH__+0x3e>
- 23e:	f7 cf       	rjmp	.-18     	; 0x22e <__DATA_REGION_LENGTH__+0x2e>
-				_delay_us(10);
-			}
-			GIFR |= _BV(INTF0); //Clear the flag after its use
- 240:	ba b7       	in	r27, 0x3a	; 58
- 242:	b0 64       	ori	r27, 0x40	; 64
- 244:	ba bf       	out	0x3a, r27	; 58
-			return count * 10;
- 246:	8c 01       	movw	r16, r24
- 248:	00 0f       	add	r16, r16
- 24a:	11 1f       	adc	r17, r17
- 24c:	00 0f       	add	r16, r16
- 24e:	11 1f       	adc	r17, r17
- 250:	80 0f       	add	r24, r16
- 252:	91 1f       	adc	r25, r17
- 254:	88 0f       	add	r24, r24
- 256:	99 1f       	adc	r25, r25
-		//Read in a single bit of the IR code based on the length of the square wave
-		char read_bit()
-		{
-			int length;
-			length = measure_square_wave();
-			if(length < ONE_PULSE)
- 258:	80 3b       	cpi	r24, 0xB0	; 176
- 25a:	94 40       	sbci	r25, 0x04	; 4
- 25c:	14 f4       	brge	.+4      	; 0x262 <__stack+0x3>
-				return 0x00;
- 25e:	80 e0       	ldi	r24, 0x00	; 0
- 260:	01 c0       	rjmp	.+2      	; 0x264 <__stack+0x5>
-			else
-				return 0x01;
- 262:	81 e0       	ldi	r24, 0x01	; 1
-		//Read in a byte from LSB to MSB
-		char read_byte()
-		{
-			char output = 0x00;
-			for(int i = 0; i < 8; i++)
-				output |= read_bit() << i;
- 264:	90 e0       	ldi	r25, 0x00	; 0
- 266:	0e 2e       	mov	r0, r30
- 268:	02 c0       	rjmp	.+4      	; 0x26e <__stack+0xf>
- 26a:	88 0f       	add	r24, r24
- 26c:	99 1f       	adc	r25, r25
- 26e:	0a 94       	dec	r0
- 270:	e2 f7       	brpl	.-8      	; 0x26a <__stack+0xb>
- 272:	a8 2b       	or	r26, r24
+#define FALSE 0
+#define TRUE  1
 
-		//Read in a byte from LSB to MSB
-		char read_byte()
-		{
-			char output = 0x00;
-			for(int i = 0; i < 8; i++)
- 274:	31 96       	adiw	r30, 0x01	; 1
- 276:	c5 cf       	rjmp	.-118    	; 0x202 <__DATA_REGION_LENGTH__+0x2>
- 278:	e0 e0       	ldi	r30, 0x00	; 0
- 27a:	f0 e0       	ldi	r31, 0x00	; 0
-		}
-
-		//Read in a byte from LSB to MSB
-		char read_byte()
-		{
-			char output = 0x00;
- 27c:	c0 e0       	ldi	r28, 0x00	; 0
-			for(int i = 0; i < 8; i++)
- 27e:	e8 30       	cpi	r30, 0x08	; 8
- 280:	f1 05       	cpc	r31, r1
- 282:	c4 f5       	brge	.+112    	; 0x2f4 <__stack+0x95>
-
-		//waits until the interrupt pin is triggered to continue and records how long the device waited for a response in microseconds
-		int wait_until_change()
-		{
-			int count = 0;
-			GIFR |= _BV(INTF0); //Clear the flag before starting
- 284:	8a b7       	in	r24, 0x3a	; 58
- 286:	80 64       	ori	r24, 0x40	; 64
- 288:	8a bf       	out	0x3a, r24	; 58
-			while((GIFR & _BV(INTF0)) == 0)
- 28a:	0a b6       	in	r0, 0x3a	; 58
- 28c:	06 fc       	sbrc	r0, 6
- 28e:	05 c0       	rjmp	.+10     	; 0x29a <__stack+0x3b>
- 290:	8a e1       	ldi	r24, 0x1A	; 26
- 292:	8a 95       	dec	r24
- 294:	f1 f7       	brne	.-4      	; 0x292 <__stack+0x33>
- 296:	00 c0       	rjmp	.+0      	; 0x298 <__stack+0x39>
- 298:	f8 cf       	rjmp	.-16     	; 0x28a <__stack+0x2b>
-			{
-				//Increment
-				count++;
-				_delay_us(10);
-			}
-			GIFR |= _BV(INTF0); //Clear the flag after its use
- 29a:	8a b7       	in	r24, 0x3a	; 58
- 29c:	80 64       	ori	r24, 0x40	; 64
- 29e:	8a bf       	out	0x3a, r24	; 58
-
-		//waits until the interrupt pin is triggered to continue and records how long the device waited for a response in microseconds
-		int wait_until_change()
-		{
-			int count = 0;
-			GIFR |= _BV(INTF0); //Clear the flag before starting
- 2a0:	8a b7       	in	r24, 0x3a	; 58
- 2a2:	80 64       	ori	r24, 0x40	; 64
- 2a4:	8a bf       	out	0x3a, r24	; 58
-		static const int ONE_PULSE = 1200;
-
-		//waits until the interrupt pin is triggered to continue and records how long the device waited for a response in microseconds
-		int wait_until_change()
-		{
-			int count = 0;
- 2a6:	80 e0       	ldi	r24, 0x00	; 0
- 2a8:	90 e0       	ldi	r25, 0x00	; 0
-			GIFR |= _BV(INTF0); //Clear the flag before starting
-			while((GIFR & _BV(INTF0)) == 0)
- 2aa:	0a b6       	in	r0, 0x3a	; 58
- 2ac:	06 fc       	sbrc	r0, 6
- 2ae:	06 c0       	rjmp	.+12     	; 0x2bc <__stack+0x5d>
-			{
-				//Increment
-				count++;
- 2b0:	01 96       	adiw	r24, 0x01	; 1
- 2b2:	ba e1       	ldi	r27, 0x1A	; 26
- 2b4:	ba 95       	dec	r27
- 2b6:	f1 f7       	brne	.-4      	; 0x2b4 <__stack+0x55>
- 2b8:	00 c0       	rjmp	.+0      	; 0x2ba <__stack+0x5b>
- 2ba:	f7 cf       	rjmp	.-18     	; 0x2aa <__stack+0x4b>
-				_delay_us(10);
-			}
-			GIFR |= _BV(INTF0); //Clear the flag after its use
- 2bc:	ba b7       	in	r27, 0x3a	; 58
- 2be:	b0 64       	ori	r27, 0x40	; 64
- 2c0:	ba bf       	out	0x3a, r27	; 58
-			return count * 10;
- 2c2:	8c 01       	movw	r16, r24
- 2c4:	00 0f       	add	r16, r16
- 2c6:	11 1f       	adc	r17, r17
- 2c8:	00 0f       	add	r16, r16
- 2ca:	11 1f       	adc	r17, r17
- 2cc:	80 0f       	add	r24, r16
- 2ce:	91 1f       	adc	r25, r17
- 2d0:	88 0f       	add	r24, r24
- 2d2:	99 1f       	adc	r25, r25
-		//Read in a single bit of the IR code based on the length of the square wave
-		char read_bit()
-		{
-			int length;
-			length = measure_square_wave();
-			if(length < ONE_PULSE)
- 2d4:	80 3b       	cpi	r24, 0xB0	; 176
- 2d6:	94 40       	sbci	r25, 0x04	; 4
- 2d8:	14 f4       	brge	.+4      	; 0x2de <__stack+0x7f>
-				return 0x00;
- 2da:	80 e0       	ldi	r24, 0x00	; 0
- 2dc:	01 c0       	rjmp	.+2      	; 0x2e0 <__stack+0x81>
-			else
-				return 0x01;
- 2de:	81 e0       	ldi	r24, 0x01	; 1
-		//Read in a byte from LSB to MSB
-		char read_byte()
-		{
-			char output = 0x00;
-			for(int i = 0; i < 8; i++)
-				output |= read_bit() << i;
- 2e0:	90 e0       	ldi	r25, 0x00	; 0
- 2e2:	0e 2e       	mov	r0, r30
- 2e4:	02 c0       	rjmp	.+4      	; 0x2ea <__stack+0x8b>
- 2e6:	88 0f       	add	r24, r24
- 2e8:	99 1f       	adc	r25, r25
- 2ea:	0a 94       	dec	r0
- 2ec:	e2 f7       	brpl	.-8      	; 0x2e6 <__stack+0x87>
- 2ee:	c8 2b       	or	r28, r24
-
-		//Read in a byte from LSB to MSB
-		char read_byte()
-		{
-			char output = 0x00;
-			for(int i = 0; i < 8; i++)
- 2f0:	31 96       	adiw	r30, 0x01	; 1
- 2f2:	c5 cf       	rjmp	.-118    	; 0x27e <__stack+0x1f>
-
-		//waits until the interrupt pin is triggered to continue and records how long the device waited for a response in microseconds
-		int wait_until_change()
-		{
-			int count = 0;
-			GIFR |= _BV(INTF0); //Clear the flag before starting
- 2f4:	8a b7       	in	r24, 0x3a	; 58
- 2f6:	80 64       	ori	r24, 0x40	; 64
- 2f8:	8a bf       	out	0x3a, r24	; 58
-			while((GIFR & _BV(INTF0)) == 0)
- 2fa:	0a b6       	in	r0, 0x3a	; 58
- 2fc:	06 fc       	sbrc	r0, 6
- 2fe:	05 c0       	rjmp	.+10     	; 0x30a <__stack+0xab>
- 300:	8a e1       	ldi	r24, 0x1A	; 26
- 302:	8a 95       	dec	r24
- 304:	f1 f7       	brne	.-4      	; 0x302 <__stack+0xa3>
- 306:	00 c0       	rjmp	.+0      	; 0x308 <__stack+0xa9>
- 308:	f8 cf       	rjmp	.-16     	; 0x2fa <__stack+0x9b>
-			{
-				//Increment
-				count++;
-				_delay_us(10);
-			}
-			GIFR |= _BV(INTF0); //Clear the flag after its use
- 30a:	8a b7       	in	r24, 0x3a	; 58
- 30c:	80 64       	ori	r24, 0x40	; 64
- 30e:	8a bf       	out	0x3a, r24	; 58
-			wait_until_change();
-
-			//Check for error conditions regarding the inverted bits
-			if
-			(
-				output.addr != ((unsigned char) ~inv_output.addr) || 
- 310:	30 95       	com	r19
-			
-			//Wait until the stop bit ends
-			wait_until_change();
-
-			//Check for error conditions regarding the inverted bits
-			if
- 312:	23 13       	cpse	r18, r19
- 314:	02 c0       	rjmp	.+4      	; 0x31a <__stack+0xbb>
-			(
-				output.addr != ((unsigned char) ~inv_output.addr) || 
-				output.cmd != ((unsigned char) ~inv_output.cmd) 
- 316:	c0 95       	com	r28
-			wait_until_change();
-
-			//Check for error conditions regarding the inverted bits
-			if
-			(
-				output.addr != ((unsigned char) ~inv_output.addr) || 
- 318:	ac 13       	cpse	r26, r28
-				output.cmd != ((unsigned char) ~inv_output.cmd) 
-			)
-			{
-				output.addr = 0;
-				output.cmd = -1;
-				return output;
- 31a:	af ef       	ldi	r26, 0xFF	; 255
+int main(void)
+{
+ 172:	cf 93       	push	r28
+ 174:	df 93       	push	r29
+ 176:	cd b7       	in	r28, 0x3d	; 61
+ 178:	de b7       	in	r29, 0x3e	; 62
+ 17a:	27 97       	sbiw	r28, 0x07	; 7
+ 17c:	0f b6       	in	r0, 0x3f	; 63
+ 17e:	f8 94       	cli
+ 180:	de bf       	out	0x3e, r29	; 62
+ 182:	0f be       	out	0x3f, r0	; 63
+ 184:	cd bf       	out	0x3d, r28	; 61
+	IR_Receiver sensor1;
+ 186:	ce 01       	movw	r24, r28
+ 188:	01 96       	adiw	r24, 0x01	; 1
+ 18a:	b7 df       	rcall	.-146    	; 0xfa <_ZN11IR_ReceiverC1Ev>
+	Relay relay1(1);
+ 18c:	61 e0       	ldi	r22, 0x01	; 1
+ 18e:	70 e0       	ldi	r23, 0x00	; 0
+ 190:	ce 01       	movw	r24, r28
+ 192:	02 96       	adiw	r24, 0x02	; 2
+ 194:	2a d0       	rcall	.+84     	; 0x1ea <_ZN5RelayC1Ei>
+	BB_I2C writer(4, 3);
+ 196:	43 e0       	ldi	r20, 0x03	; 3
+ 198:	50 e0       	ldi	r21, 0x00	; 0
+ 19a:	64 e0       	ldi	r22, 0x04	; 4
+ 19c:	70 e0       	ldi	r23, 0x00	; 0
+ 19e:	ce 01       	movw	r24, r28
+ 1a0:	06 96       	adiw	r24, 0x06	; 6
+ 1a2:	46 df       	rcall	.-372    	; 0x30 <_ZN6BB_I2CC1Eii>
+	//Initialize an empty IR command
 	IR_Receiver::IR_cmd remote_cmd;
 
 	while(1)
 	{
 		remote_cmd = sensor1.recv();
+ 1a4:	ce 01       	movw	r24, r28
+ 1a6:	01 96       	adiw	r24, 0x01	; 1
+ 1a8:	ac df       	rcall	.-168    	; 0x102 <_ZN11IR_Receiver4recvEv>
 		switch(remote_cmd.cmd)
- 31c:	a6 31       	cpi	r26, 0x16	; 22
- 31e:	49 f1       	breq	.+82     	; 0x372 <__stack+0x113>
- 320:	a5 34       	cpi	r26, 0x45	; 69
- 322:	21 f0       	breq	.+8      	; 0x32c <__stack+0xcd>
- 324:	ac 30       	cpi	r26, 0x0C	; 12
- 326:	09 f0       	breq	.+2      	; 0x32a <__stack+0xcb>
- 328:	93 ce       	rjmp	.-730    	; 0x50 <__SREG__+0x11>
- 32a:	48 c0       	rjmp	.+144    	; 0x3bc <__stack+0x15d>
-		}	
-
-		//Change the relay's current state
-		void toggle()
+ 1aa:	96 31       	cpi	r25, 0x16	; 22
+ 1ac:	91 f0       	breq	.+36     	; 0x1d2 <main+0x60>
+ 1ae:	95 34       	cpi	r25, 0x45	; 69
+ 1b0:	19 f0       	breq	.+6      	; 0x1b8 <main+0x46>
+ 1b2:	9c 30       	cpi	r25, 0x0C	; 12
+ 1b4:	b9 f7       	brne	.-18     	; 0x1a4 <main+0x32>
+ 1b6:	13 c0       	rjmp	.+38     	; 0x1de <main+0x6c>
 		{
-			if(state)
- 32c:	41 15       	cp	r20, r1
- 32e:	51 05       	cpc	r21, r1
- 330:	69 f0       	breq	.+26     	; 0x34c <__stack+0xed>
-				PORTB &= ~_BV(pin);
- 332:	28 b3       	in	r18, 0x18	; 24
- 334:	81 e0       	ldi	r24, 0x01	; 1
- 336:	90 e0       	ldi	r25, 0x00	; 0
- 338:	06 2e       	mov	r0, r22
- 33a:	02 c0       	rjmp	.+4      	; 0x340 <__stack+0xe1>
- 33c:	88 0f       	add	r24, r24
- 33e:	99 1f       	adc	r25, r25
- 340:	0a 94       	dec	r0
- 342:	e2 f7       	brpl	.-8      	; 0x33c <__stack+0xdd>
- 344:	80 95       	com	r24
- 346:	82 23       	and	r24, r18
- 348:	88 bb       	out	0x18, r24	; 24
- 34a:	0b c0       	rjmp	.+22     	; 0x362 <__stack+0x103>
-			else
-				PORTB |= _BV(pin);
- 34c:	28 b3       	in	r18, 0x18	; 24
- 34e:	81 e0       	ldi	r24, 0x01	; 1
- 350:	90 e0       	ldi	r25, 0x00	; 0
- 352:	06 2e       	mov	r0, r22
- 354:	02 c0       	rjmp	.+4      	; 0x35a <__stack+0xfb>
- 356:	88 0f       	add	r24, r24
- 358:	99 1f       	adc	r25, r25
- 35a:	0a 94       	dec	r0
- 35c:	e2 f7       	brpl	.-8      	; 0x356 <__stack+0xf7>
- 35e:	82 2b       	or	r24, r18
- 360:	88 bb       	out	0x18, r24	; 24
+			case IR_Receiver::POWER:
+				relay1.toggle();
+ 1b8:	ce 01       	movw	r24, r28
+ 1ba:	02 96       	adiw	r24, 0x02	; 2
+ 1bc:	30 d0       	rcall	.+96     	; 0x21e <_ZN5Relay6toggleEv>
+	#else
+		//round up by default
+		__ticks_dc = (uint32_t)(ceil(fabs(__tmp)));
+	#endif
 
-			state = !state;
- 362:	81 e0       	ldi	r24, 0x01	; 1
- 364:	90 e0       	ldi	r25, 0x00	; 0
- 366:	45 2b       	or	r20, r21
- 368:	11 f0       	breq	.+4      	; 0x36e <__stack+0x10f>
- 36a:	80 e0       	ldi	r24, 0x00	; 0
- 36c:	90 e0       	ldi	r25, 0x00	; 0
- 36e:	ac 01       	movw	r20, r24
- 370:	6f ce       	rjmp	.-802    	; 0x50 <__SREG__+0x11>
+	__builtin_avr_delay_cycles(__ticks_dc);
+ 1be:	8f e1       	ldi	r24, 0x1F	; 31
+ 1c0:	9e e4       	ldi	r25, 0x4E	; 78
+ 1c2:	01 97       	sbiw	r24, 0x01	; 1
+ 1c4:	f1 f7       	brne	.-4      	; 0x1c2 <main+0x50>
+ 1c6:	00 c0       	rjmp	.+0      	; 0x1c8 <main+0x56>
+ 1c8:	00 00       	nop
+				_delay_ms(10);
+				relay1.toggle();
+ 1ca:	ce 01       	movw	r24, r28
+ 1cc:	02 96       	adiw	r24, 0x02	; 2
+ 1ce:	27 d0       	rcall	.+78     	; 0x21e <_ZN5Relay6toggleEv>
+				break;
+ 1d0:	e9 cf       	rjmp	.-46     	; 0x1a4 <main+0x32>
+			case IR_Receiver::ZERO:
+				relay1.set(FALSE);
+ 1d2:	60 e0       	ldi	r22, 0x00	; 0
+ 1d4:	70 e0       	ldi	r23, 0x00	; 0
+ 1d6:	ce 01       	movw	r24, r28
+ 1d8:	02 96       	adiw	r24, 0x02	; 2
+ 1da:	49 d0       	rcall	.+146    	; 0x26e <_ZN5Relay3setEi>
+				break;
+ 1dc:	e3 cf       	rjmp	.-58     	; 0x1a4 <main+0x32>
+			case IR_Receiver::ONE:
+				relay1.set(TRUE);
+ 1de:	61 e0       	ldi	r22, 0x01	; 1
+ 1e0:	70 e0       	ldi	r23, 0x00	; 0
+ 1e2:	ce 01       	movw	r24, r28
+ 1e4:	02 96       	adiw	r24, 0x02	; 2
+ 1e6:	43 d0       	rcall	.+134    	; 0x26e <_ZN5Relay3setEi>
+				break;
+ 1e8:	dd cf       	rjmp	.-70     	; 0x1a4 <main+0x32>
 
-		//Set the relay to the target 'input'
-		void set(int input)
-		{
-			input = !!input; //Normalize the input to 1 or 0
-			if(input != state) toggle(); //Toggle the pin if the goal & current setting are different
- 372:	ca 01       	movw	r24, r20
- 374:	00 97       	sbiw	r24, 0x00	; 0
- 376:	09 f4       	brne	.+2      	; 0x37a <__stack+0x11b>
- 378:	6b ce       	rjmp	.-810    	; 0x50 <__SREG__+0x11>
-		}	
+000001ea <_ZN5RelayC1Ei>:
 
-		//Change the relay's current state
-		void toggle()
-		{
-			if(state)
- 37a:	69 f0       	breq	.+26     	; 0x396 <__stack+0x137>
-				PORTB &= ~_BV(pin);
- 37c:	28 b3       	in	r18, 0x18	; 24
- 37e:	81 e0       	ldi	r24, 0x01	; 1
- 380:	90 e0       	ldi	r25, 0x00	; 0
- 382:	06 2e       	mov	r0, r22
- 384:	02 c0       	rjmp	.+4      	; 0x38a <__stack+0x12b>
- 386:	88 0f       	add	r24, r24
- 388:	99 1f       	adc	r25, r25
- 38a:	0a 94       	dec	r0
- 38c:	e2 f7       	brpl	.-8      	; 0x386 <__stack+0x127>
- 38e:	80 95       	com	r24
- 390:	82 23       	and	r24, r18
- 392:	88 bb       	out	0x18, r24	; 24
- 394:	0b c0       	rjmp	.+22     	; 0x3ac <__stack+0x14d>
-			else
-				PORTB |= _BV(pin);
- 396:	28 b3       	in	r18, 0x18	; 24
- 398:	81 e0       	ldi	r24, 0x01	; 1
- 39a:	90 e0       	ldi	r25, 0x00	; 0
- 39c:	06 2e       	mov	r0, r22
- 39e:	02 c0       	rjmp	.+4      	; 0x3a4 <__stack+0x145>
- 3a0:	88 0f       	add	r24, r24
- 3a2:	99 1f       	adc	r25, r25
- 3a4:	0a 94       	dec	r0
- 3a6:	e2 f7       	brpl	.-8      	; 0x3a0 <__stack+0x141>
- 3a8:	82 2b       	or	r24, r18
- 3aa:	88 bb       	out	0x18, r24	; 24
+// default constructor
+Relay::Relay()
+{
+	Relay(1);
+}
+ 1ea:	fc 01       	movw	r30, r24
+ 1ec:	11 82       	std	Z+1, r1	; 0x01
+ 1ee:	10 82       	st	Z, r1
+ 1f0:	26 2f       	mov	r18, r22
+ 1f2:	37 2f       	mov	r19, r23
+ 1f4:	26 30       	cpi	r18, 0x06	; 6
+ 1f6:	31 05       	cpc	r19, r1
+ 1f8:	18 f4       	brcc	.+6      	; 0x200 <__DATA_REGION_LENGTH__>
+ 1fa:	62 83       	std	Z+2, r22	; 0x02
+ 1fc:	73 83       	std	Z+3, r23	; 0x03
+ 1fe:	04 c0       	rjmp	.+8      	; 0x208 <__DATA_REGION_LENGTH__+0x8>
+ 200:	81 e0       	ldi	r24, 0x01	; 1
+ 202:	90 e0       	ldi	r25, 0x00	; 0
+ 204:	93 83       	std	Z+3, r25	; 0x03
+ 206:	82 83       	std	Z+2, r24	; 0x02
+ 208:	27 b3       	in	r18, 0x17	; 23
+ 20a:	81 e0       	ldi	r24, 0x01	; 1
+ 20c:	90 e0       	ldi	r25, 0x00	; 0
+ 20e:	02 c0       	rjmp	.+4      	; 0x214 <__DATA_REGION_LENGTH__+0x14>
+ 210:	88 0f       	add	r24, r24
+ 212:	99 1f       	adc	r25, r25
+ 214:	6a 95       	dec	r22
+ 216:	e2 f7       	brpl	.-8      	; 0x210 <__DATA_REGION_LENGTH__+0x10>
+ 218:	82 2b       	or	r24, r18
+ 21a:	87 bb       	out	0x17, r24	; 23
+ 21c:	08 95       	ret
 
-			state = !state;
- 3ac:	81 e0       	ldi	r24, 0x01	; 1
- 3ae:	90 e0       	ldi	r25, 0x00	; 0
- 3b0:	45 2b       	or	r20, r21
- 3b2:	11 f0       	breq	.+4      	; 0x3b8 <__stack+0x159>
- 3b4:	80 e0       	ldi	r24, 0x00	; 0
- 3b6:	90 e0       	ldi	r25, 0x00	; 0
- 3b8:	ac 01       	movw	r20, r24
- 3ba:	4a ce       	rjmp	.-876    	; 0x50 <__SREG__+0x11>
+0000021e <_ZN5Relay6toggleEv>:
+	//Set the pin as an output
+	DDRB |= _BV(pin);
+}
 
-		//Set the relay to the target 'input'
-		void set(int input)
-		{
-			input = !!input; //Normalize the input to 1 or 0
-			if(input != state) toggle(); //Toggle the pin if the goal & current setting are different
- 3bc:	ca 01       	movw	r24, r20
- 3be:	41 30       	cpi	r20, 0x01	; 1
- 3c0:	51 05       	cpc	r21, r1
- 3c2:	09 f4       	brne	.+2      	; 0x3c6 <__stack+0x167>
- 3c4:	45 ce       	rjmp	.-886    	; 0x50 <__SREG__+0x11>
-		}	
+void Relay::toggle()
+{
+ 21e:	fc 01       	movw	r30, r24
+	if(state)
+ 220:	80 81       	ld	r24, Z
+ 222:	91 81       	ldd	r25, Z+1	; 0x01
+ 224:	89 2b       	or	r24, r25
+ 226:	69 f0       	breq	.+26     	; 0x242 <_ZN5Relay6toggleEv+0x24>
+	PORTB &= ~_BV(pin);
+ 228:	28 b3       	in	r18, 0x18	; 24
+ 22a:	81 e0       	ldi	r24, 0x01	; 1
+ 22c:	90 e0       	ldi	r25, 0x00	; 0
+ 22e:	02 80       	ldd	r0, Z+2	; 0x02
+ 230:	02 c0       	rjmp	.+4      	; 0x236 <_ZN5Relay6toggleEv+0x18>
+ 232:	88 0f       	add	r24, r24
+ 234:	99 1f       	adc	r25, r25
+ 236:	0a 94       	dec	r0
+ 238:	e2 f7       	brpl	.-8      	; 0x232 <_ZN5Relay6toggleEv+0x14>
+ 23a:	80 95       	com	r24
+ 23c:	82 23       	and	r24, r18
+ 23e:	88 bb       	out	0x18, r24	; 24
+ 240:	0b c0       	rjmp	.+22     	; 0x258 <_ZN5Relay6toggleEv+0x3a>
+	else
+	PORTB |= _BV(pin);
+ 242:	28 b3       	in	r18, 0x18	; 24
+ 244:	81 e0       	ldi	r24, 0x01	; 1
+ 246:	90 e0       	ldi	r25, 0x00	; 0
+ 248:	02 80       	ldd	r0, Z+2	; 0x02
+ 24a:	02 c0       	rjmp	.+4      	; 0x250 <_ZN5Relay6toggleEv+0x32>
+ 24c:	88 0f       	add	r24, r24
+ 24e:	99 1f       	adc	r25, r25
+ 250:	0a 94       	dec	r0
+ 252:	e2 f7       	brpl	.-8      	; 0x24c <_ZN5Relay6toggleEv+0x2e>
+ 254:	82 2b       	or	r24, r18
+ 256:	88 bb       	out	0x18, r24	; 24
 
-		//Change the relay's current state
-		void toggle()
-		{
-			if(state)
- 3c6:	89 2b       	or	r24, r25
- 3c8:	69 f0       	breq	.+26     	; 0x3e4 <__stack+0x185>
-				PORTB &= ~_BV(pin);
- 3ca:	28 b3       	in	r18, 0x18	; 24
- 3cc:	81 e0       	ldi	r24, 0x01	; 1
- 3ce:	90 e0       	ldi	r25, 0x00	; 0
- 3d0:	06 2e       	mov	r0, r22
- 3d2:	02 c0       	rjmp	.+4      	; 0x3d8 <__stack+0x179>
- 3d4:	88 0f       	add	r24, r24
- 3d6:	99 1f       	adc	r25, r25
- 3d8:	0a 94       	dec	r0
- 3da:	e2 f7       	brpl	.-8      	; 0x3d4 <__stack+0x175>
- 3dc:	80 95       	com	r24
- 3de:	82 23       	and	r24, r18
- 3e0:	88 bb       	out	0x18, r24	; 24
- 3e2:	0b c0       	rjmp	.+22     	; 0x3fa <__stack+0x19b>
-			else
-				PORTB |= _BV(pin);
- 3e4:	28 b3       	in	r18, 0x18	; 24
- 3e6:	81 e0       	ldi	r24, 0x01	; 1
- 3e8:	90 e0       	ldi	r25, 0x00	; 0
- 3ea:	06 2e       	mov	r0, r22
- 3ec:	02 c0       	rjmp	.+4      	; 0x3f2 <__stack+0x193>
- 3ee:	88 0f       	add	r24, r24
- 3f0:	99 1f       	adc	r25, r25
- 3f2:	0a 94       	dec	r0
- 3f4:	e2 f7       	brpl	.-8      	; 0x3ee <__stack+0x18f>
- 3f6:	82 2b       	or	r24, r18
- 3f8:	88 bb       	out	0x18, r24	; 24
+	state = !state;
+ 258:	81 e0       	ldi	r24, 0x01	; 1
+ 25a:	90 e0       	ldi	r25, 0x00	; 0
+ 25c:	20 81       	ld	r18, Z
+ 25e:	31 81       	ldd	r19, Z+1	; 0x01
+ 260:	23 2b       	or	r18, r19
+ 262:	11 f0       	breq	.+4      	; 0x268 <__stack+0x9>
+ 264:	80 e0       	ldi	r24, 0x00	; 0
+ 266:	90 e0       	ldi	r25, 0x00	; 0
+ 268:	91 83       	std	Z+1, r25	; 0x01
+ 26a:	80 83       	st	Z, r24
+ 26c:	08 95       	ret
 
-			state = !state;
- 3fa:	81 e0       	ldi	r24, 0x01	; 1
- 3fc:	90 e0       	ldi	r25, 0x00	; 0
- 3fe:	45 2b       	or	r20, r21
- 400:	11 f0       	breq	.+4      	; 0x406 <__LOCK_REGION_LENGTH__+0x6>
- 402:	80 e0       	ldi	r24, 0x00	; 0
- 404:	90 e0       	ldi	r25, 0x00	; 0
- 406:	ac 01       	movw	r20, r24
- 408:	23 ce       	rjmp	.-954    	; 0x50 <__SREG__+0x11>
+0000026e <_ZN5Relay3setEi>:
+}
 
-0000040a <_exit>:
- 40a:	f8 94       	cli
+void Relay::set(int input)
+{
+	input = !!input; //Normalize the input to 1 or 0
+ 26e:	21 e0       	ldi	r18, 0x01	; 1
+ 270:	67 2b       	or	r22, r23
+ 272:	09 f4       	brne	.+2      	; 0x276 <_ZN5Relay3setEi+0x8>
+ 274:	20 e0       	ldi	r18, 0x00	; 0
+ 276:	30 e0       	ldi	r19, 0x00	; 0
+	if(input != state) toggle(); //Toggle the pin if the goal & current setting are different
+ 278:	fc 01       	movw	r30, r24
+ 27a:	40 81       	ld	r20, Z
+ 27c:	51 81       	ldd	r21, Z+1	; 0x01
+ 27e:	24 17       	cp	r18, r20
+ 280:	35 07       	cpc	r19, r21
+ 282:	09 f0       	breq	.+2      	; 0x286 <_ZN5Relay3setEi+0x18>
+ 284:	cc df       	rcall	.-104    	; 0x21e <_ZN5Relay6toggleEv>
+ 286:	08 95       	ret
 
-0000040c <__stop_program>:
- 40c:	ff cf       	rjmp	.-2      	; 0x40c <__stop_program>
+00000288 <_exit>:
+ 288:	f8 94       	cli
+
+0000028a <__stop_program>:
+ 28a:	ff cf       	rjmp	.-2      	; 0x28a <__stop_program>
