@@ -31,13 +31,13 @@ int main(void)
 		switch(remote_cmd.cmd)
 		{
 			case IR_Receiver::POWER:
-				relay1.toggle();
+				relay1.press();
 				break;
 			case IR_Receiver::ZERO:
-				relay1.set(FALSE);
+				relay1.button_set(FALSE);
 				break;
 			case IR_Receiver::ONE:
-				relay1.set(TRUE);
+				relay1.button_set(TRUE);
 				break;
 			default:
 				break;
