@@ -13,6 +13,9 @@
 #include <util/delay.h>
 #include "Relay.h"
 
+#define FALSE 0
+#define TRUE  1
+
 // default constructor
 Relay::Relay()
 {
@@ -53,9 +56,12 @@ void Relay::set(int input)
 
 void Relay::press()
 {
-	toggle();
+	set(FALSE);
 	_delay_ms(10);
-	toggle();
+	set(TRUE);
+	_delay_ms(10);
+	set(FALSE);
+	_delay_ms(10);
 	
 	//Invert the state after being inverted twice
 	button_state = !button_state;

@@ -3,29 +3,29 @@ Firmware.elf:     file format elf32-avr
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .text         000002ae  00000000  00000000  00000054  2**1
+  0 .text         00000316  00000000  00000000  00000054  2**1
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  1 .data         00000000  00800060  00800060  00000302  2**0
+  1 .data         00000000  00800060  00800060  0000036a  2**0
                   CONTENTS, ALLOC, LOAD, DATA
-  2 .comment      00000030  00000000  00000000  00000302  2**0
+  2 .comment      00000030  00000000  00000000  0000036a  2**0
                   CONTENTS, READONLY
-  3 .note.gnu.avr.deviceinfo 0000003c  00000000  00000000  00000334  2**2
+  3 .note.gnu.avr.deviceinfo 0000003c  00000000  00000000  0000039c  2**2
                   CONTENTS, READONLY
-  4 .debug_aranges 000000d8  00000000  00000000  00000370  2**0
+  4 .debug_aranges 000000d8  00000000  00000000  000003d8  2**0
                   CONTENTS, READONLY, DEBUGGING
-  5 .debug_info   000013f5  00000000  00000000  00000448  2**0
+  5 .debug_info   00001494  00000000  00000000  000004b0  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_abbrev 00000bf3  00000000  00000000  0000183d  2**0
+  6 .debug_abbrev 00000bf3  00000000  00000000  00001944  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_line   000007cc  00000000  00000000  00002430  2**0
+  7 .debug_line   000007ea  00000000  00000000  00002537  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_frame  000001b4  00000000  00000000  00002bfc  2**2
+  8 .debug_frame  000001b4  00000000  00000000  00002d24  2**2
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_str    000005e6  00000000  00000000  00002db0  2**0
+  9 .debug_str    000005e6  00000000  00000000  00002ed8  2**0
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_loc    00000703  00000000  00000000  00003396  2**0
+ 10 .debug_loc    00000793  00000000  00000000  000034be  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_ranges 000000b0  00000000  00000000  00003a99  2**0
+ 11 .debug_ranges 000000b0  00000000  00000000  00003c51  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -55,7 +55,7 @@ Disassembly of section .text:
   26:	de bf       	out	0x3e, r29	; 62
   28:	cd bf       	out	0x3d, r28	; 61
   2a:	a3 d0       	rcall	.+326    	; 0x172 <main>
-  2c:	3e c1       	rjmp	.+636    	; 0x2aa <_exit>
+  2c:	72 c1       	rjmp	.+740    	; 0x312 <_exit>
 
 0000002e <__bad_interrupt>:
   2e:	e8 cf       	rjmp	.-48     	; 0x0 <__vectors>
@@ -423,207 +423,306 @@ int main(void)
  186:	ce 01       	movw	r24, r28
  188:	01 96       	adiw	r24, 0x01	; 1
  18a:	b7 df       	rcall	.-146    	; 0xfa <_ZN11IR_ReceiverC1Ev>
-	Relay relay1(1);
- 18c:	61 e0       	ldi	r22, 0x01	; 1
- 18e:	70 e0       	ldi	r23, 0x00	; 0
- 190:	ce 01       	movw	r24, r28
- 192:	02 96       	adiw	r24, 0x02	; 2
- 194:	21 d0       	rcall	.+66     	; 0x1d8 <_ZN5RelayC1Ei>
+	Relay relay1;
+ 18c:	ce 01       	movw	r24, r28
+ 18e:	02 96       	adiw	r24, 0x02	; 2
+ 190:	3c d0       	rcall	.+120    	; 0x20a <_ZN5RelayC1Ev>
 	BB_I2C writer(4, 3);
- 196:	43 e0       	ldi	r20, 0x03	; 3
- 198:	50 e0       	ldi	r21, 0x00	; 0
- 19a:	64 e0       	ldi	r22, 0x04	; 4
- 19c:	70 e0       	ldi	r23, 0x00	; 0
- 19e:	ce 01       	movw	r24, r28
- 1a0:	08 96       	adiw	r24, 0x08	; 8
- 1a2:	46 df       	rcall	.-372    	; 0x30 <_ZN6BB_I2CC1Eii>
+ 192:	43 e0       	ldi	r20, 0x03	; 3
+ 194:	50 e0       	ldi	r21, 0x00	; 0
+ 196:	64 e0       	ldi	r22, 0x04	; 4
+ 198:	70 e0       	ldi	r23, 0x00	; 0
+ 19a:	ce 01       	movw	r24, r28
+ 19c:	08 96       	adiw	r24, 0x08	; 8
+ 19e:	48 df       	rcall	.-368    	; 0x30 <_ZN6BB_I2CC1Eii>
 	//Initialize an empty IR command
 	IR_Receiver::IR_cmd remote_cmd;
 
 	while(1)
 	{
 		remote_cmd = sensor1.recv();
- 1a4:	ce 01       	movw	r24, r28
- 1a6:	01 96       	adiw	r24, 0x01	; 1
- 1a8:	ac df       	rcall	.-168    	; 0x102 <_ZN11IR_Receiver4recvEv>
+ 1a0:	ce 01       	movw	r24, r28
+ 1a2:	01 96       	adiw	r24, 0x01	; 1
+ 1a4:	ae df       	rcall	.-164    	; 0x102 <_ZN11IR_Receiver4recvEv>
 		switch(remote_cmd.cmd)
- 1aa:	96 31       	cpi	r25, 0x16	; 22
- 1ac:	49 f0       	breq	.+18     	; 0x1c0 <main+0x4e>
- 1ae:	95 34       	cpi	r25, 0x45	; 69
- 1b0:	19 f0       	breq	.+6      	; 0x1b8 <main+0x46>
- 1b2:	9c 30       	cpi	r25, 0x0C	; 12
- 1b4:	b9 f7       	brne	.-18     	; 0x1a4 <main+0x32>
- 1b6:	0a c0       	rjmp	.+20     	; 0x1cc <main+0x5a>
+ 1a6:	96 31       	cpi	r25, 0x16	; 22
+ 1a8:	49 f0       	breq	.+18     	; 0x1bc <main+0x4a>
+ 1aa:	95 34       	cpi	r25, 0x45	; 69
+ 1ac:	19 f0       	breq	.+6      	; 0x1b4 <main+0x42>
+ 1ae:	9c 30       	cpi	r25, 0x0C	; 12
+ 1b0:	b9 f7       	brne	.-18     	; 0x1a0 <main+0x2e>
+ 1b2:	0a c0       	rjmp	.+20     	; 0x1c8 <main+0x56>
 		{
 			case IR_Receiver::POWER:
 				relay1.press();
- 1b8:	ce 01       	movw	r24, r28
- 1ba:	02 96       	adiw	r24, 0x02	; 2
- 1bc:	50 d0       	rcall	.+160    	; 0x25e <_ZN5Relay5pressEv>
+ 1b4:	ce 01       	movw	r24, r28
+ 1b6:	02 96       	adiw	r24, 0x02	; 2
+ 1b8:	72 d0       	rcall	.+228    	; 0x29e <_ZN5Relay5pressEv>
 				break;
- 1be:	f2 cf       	rjmp	.-28     	; 0x1a4 <main+0x32>
+ 1ba:	f2 cf       	rjmp	.-28     	; 0x1a0 <main+0x2e>
 			case IR_Receiver::ZERO:
 				relay1.button_set(FALSE);
- 1c0:	60 e0       	ldi	r22, 0x00	; 0
- 1c2:	70 e0       	ldi	r23, 0x00	; 0
- 1c4:	ce 01       	movw	r24, r28
- 1c6:	02 96       	adiw	r24, 0x02	; 2
- 1c8:	63 d0       	rcall	.+198    	; 0x290 <_ZN5Relay10button_setEi>
+ 1bc:	60 e0       	ldi	r22, 0x00	; 0
+ 1be:	70 e0       	ldi	r23, 0x00	; 0
+ 1c0:	ce 01       	movw	r24, r28
+ 1c2:	02 96       	adiw	r24, 0x02	; 2
+ 1c4:	99 d0       	rcall	.+306    	; 0x2f8 <_ZN5Relay10button_setEi>
 				break;
- 1ca:	ec cf       	rjmp	.-40     	; 0x1a4 <main+0x32>
+ 1c6:	ec cf       	rjmp	.-40     	; 0x1a0 <main+0x2e>
 			case IR_Receiver::ONE:
 				relay1.button_set(TRUE);
- 1cc:	61 e0       	ldi	r22, 0x01	; 1
- 1ce:	70 e0       	ldi	r23, 0x00	; 0
- 1d0:	ce 01       	movw	r24, r28
- 1d2:	02 96       	adiw	r24, 0x02	; 2
- 1d4:	5d d0       	rcall	.+186    	; 0x290 <_ZN5Relay10button_setEi>
+ 1c8:	61 e0       	ldi	r22, 0x01	; 1
+ 1ca:	70 e0       	ldi	r23, 0x00	; 0
+ 1cc:	ce 01       	movw	r24, r28
+ 1ce:	02 96       	adiw	r24, 0x02	; 2
+ 1d0:	93 d0       	rcall	.+294    	; 0x2f8 <_ZN5Relay10button_setEi>
 				break;
- 1d6:	e6 cf       	rjmp	.-52     	; 0x1a4 <main+0x32>
+ 1d2:	e6 cf       	rjmp	.-52     	; 0x1a0 <main+0x2e>
 
-000001d8 <_ZN5RelayC1Ei>:
+000001d4 <_ZN5RelayC1Ei>:
+Relay::Relay()
+{
+	Relay(1);
+}
+
+Relay::Relay(int pin)
+ 1d4:	fc 01       	movw	r30, r24
+{
+	//Initialize the state as off
+	state = 0;
+ 1d6:	11 82       	std	Z+1, r1	; 0x01
+ 1d8:	10 82       	st	Z, r1
+	button_state = 0;
+ 1da:	13 82       	std	Z+3, r1	; 0x03
+ 1dc:	12 82       	std	Z+2, r1	; 0x02
+
+	//Ensure the pin is one of the 5 possibilities & set the pin for this relay
+	if(0 <= pin && pin <= 5)
+ 1de:	86 2f       	mov	r24, r22
+ 1e0:	97 2f       	mov	r25, r23
+ 1e2:	06 97       	sbiw	r24, 0x06	; 6
+ 1e4:	18 f4       	brcc	.+6      	; 0x1ec <_ZN5RelayC1Ei+0x18>
+	this->pin = pin;
+ 1e6:	64 83       	std	Z+4, r22	; 0x04
+ 1e8:	75 83       	std	Z+5, r23	; 0x05
+ 1ea:	04 c0       	rjmp	.+8      	; 0x1f4 <_ZN5RelayC1Ei+0x20>
+	else
+	this->pin = 1; //1 is the default pin
+ 1ec:	81 e0       	ldi	r24, 0x01	; 1
+ 1ee:	90 e0       	ldi	r25, 0x00	; 0
+ 1f0:	95 83       	std	Z+5, r25	; 0x05
+ 1f2:	84 83       	std	Z+4, r24	; 0x04
+
+	//Set the pin as an output
+	DDRB |= _BV(pin);
+ 1f4:	27 b3       	in	r18, 0x17	; 23
+ 1f6:	81 e0       	ldi	r24, 0x01	; 1
+ 1f8:	90 e0       	ldi	r25, 0x00	; 0
+ 1fa:	02 c0       	rjmp	.+4      	; 0x200 <__DATA_REGION_LENGTH__>
+ 1fc:	88 0f       	add	r24, r24
+ 1fe:	99 1f       	adc	r25, r25
+ 200:	6a 95       	dec	r22
+ 202:	e2 f7       	brpl	.-8      	; 0x1fc <_ZN5RelayC1Ei+0x28>
+ 204:	82 2b       	or	r24, r18
+ 206:	87 bb       	out	0x17, r24	; 23
+ 208:	08 95       	ret
+
+0000020a <_ZN5RelayC1Ev>:
+
+#define FALSE 0
+#define TRUE  1
+
+// default constructor
+Relay::Relay()
+ 20a:	cf 93       	push	r28
+ 20c:	df 93       	push	r29
+ 20e:	00 d0       	rcall	.+0      	; 0x210 <_ZN5RelayC1Ev+0x6>
+ 210:	00 d0       	rcall	.+0      	; 0x212 <_ZN5RelayC1Ev+0x8>
+ 212:	00 d0       	rcall	.+0      	; 0x214 <_ZN5RelayC1Ev+0xa>
+ 214:	cd b7       	in	r28, 0x3d	; 61
+ 216:	de b7       	in	r29, 0x3e	; 62
+{
+	Relay(1);
+ 218:	61 e0       	ldi	r22, 0x01	; 1
+ 21a:	70 e0       	ldi	r23, 0x00	; 0
+ 21c:	ce 01       	movw	r24, r28
+ 21e:	01 96       	adiw	r24, 0x01	; 1
+ 220:	d9 df       	rcall	.-78     	; 0x1d4 <_ZN5RelayC1Ei>
+}
+ 222:	26 96       	adiw	r28, 0x06	; 6
+ 224:	0f b6       	in	r0, 0x3f	; 63
+ 226:	f8 94       	cli
+ 228:	de bf       	out	0x3e, r29	; 62
+ 22a:	0f be       	out	0x3f, r0	; 63
+ 22c:	cd bf       	out	0x3d, r28	; 61
+ 22e:	df 91       	pop	r29
+ 230:	cf 91       	pop	r28
+ 232:	08 95       	ret
+
+00000234 <_ZN5Relay6toggleEv>:
+	//Set the pin as an output
+	DDRB |= _BV(pin);
+}
+
+void Relay::toggle()
+{
+ 234:	fc 01       	movw	r30, r24
+	if(state)
+ 236:	80 81       	ld	r24, Z
+ 238:	91 81       	ldd	r25, Z+1	; 0x01
+ 23a:	89 2b       	or	r24, r25
+ 23c:	69 f0       	breq	.+26     	; 0x258 <_ZN5Relay6toggleEv+0x24>
+	PORTB &= ~_BV(pin);
+ 23e:	28 b3       	in	r18, 0x18	; 24
+ 240:	81 e0       	ldi	r24, 0x01	; 1
+ 242:	90 e0       	ldi	r25, 0x00	; 0
+ 244:	04 80       	ldd	r0, Z+4	; 0x04
+ 246:	02 c0       	rjmp	.+4      	; 0x24c <_ZN5Relay6toggleEv+0x18>
+ 248:	88 0f       	add	r24, r24
+ 24a:	99 1f       	adc	r25, r25
+ 24c:	0a 94       	dec	r0
+ 24e:	e2 f7       	brpl	.-8      	; 0x248 <_ZN5Relay6toggleEv+0x14>
+ 250:	80 95       	com	r24
+ 252:	82 23       	and	r24, r18
+ 254:	88 bb       	out	0x18, r24	; 24
+ 256:	0b c0       	rjmp	.+22     	; 0x26e <__stack+0xf>
+	else
+	PORTB |= _BV(pin);
+ 258:	28 b3       	in	r18, 0x18	; 24
+ 25a:	81 e0       	ldi	r24, 0x01	; 1
+ 25c:	90 e0       	ldi	r25, 0x00	; 0
+ 25e:	04 80       	ldd	r0, Z+4	; 0x04
+ 260:	02 c0       	rjmp	.+4      	; 0x266 <__stack+0x7>
+ 262:	88 0f       	add	r24, r24
+ 264:	99 1f       	adc	r25, r25
+ 266:	0a 94       	dec	r0
+ 268:	e2 f7       	brpl	.-8      	; 0x262 <__stack+0x3>
+ 26a:	82 2b       	or	r24, r18
+ 26c:	88 bb       	out	0x18, r24	; 24
+
+	state = !state;
+ 26e:	81 e0       	ldi	r24, 0x01	; 1
+ 270:	90 e0       	ldi	r25, 0x00	; 0
+ 272:	20 81       	ld	r18, Z
+ 274:	31 81       	ldd	r19, Z+1	; 0x01
+ 276:	23 2b       	or	r18, r19
+ 278:	11 f0       	breq	.+4      	; 0x27e <__stack+0x1f>
+ 27a:	80 e0       	ldi	r24, 0x00	; 0
+ 27c:	90 e0       	ldi	r25, 0x00	; 0
+ 27e:	91 83       	std	Z+1, r25	; 0x01
+ 280:	80 83       	st	Z, r24
+ 282:	08 95       	ret
+
+00000284 <_ZN5Relay3setEi>:
 }
 
 void Relay::set(int input)
 {
 	input = !!input; //Normalize the input to 1 or 0
+ 284:	21 e0       	ldi	r18, 0x01	; 1
+ 286:	67 2b       	or	r22, r23
+ 288:	09 f4       	brne	.+2      	; 0x28c <_ZN5Relay3setEi+0x8>
+ 28a:	20 e0       	ldi	r18, 0x00	; 0
+ 28c:	30 e0       	ldi	r19, 0x00	; 0
 	if(input != state) toggle(); //Toggle the pin if the goal & current setting are different
- 1d8:	fc 01       	movw	r30, r24
- 1da:	11 82       	std	Z+1, r1	; 0x01
- 1dc:	10 82       	st	Z, r1
- 1de:	13 82       	std	Z+3, r1	; 0x03
- 1e0:	12 82       	std	Z+2, r1	; 0x02
- 1e2:	86 2f       	mov	r24, r22
- 1e4:	97 2f       	mov	r25, r23
- 1e6:	06 97       	sbiw	r24, 0x06	; 6
- 1e8:	18 f4       	brcc	.+6      	; 0x1f0 <_ZN5RelayC1Ei+0x18>
- 1ea:	64 83       	std	Z+4, r22	; 0x04
- 1ec:	75 83       	std	Z+5, r23	; 0x05
- 1ee:	04 c0       	rjmp	.+8      	; 0x1f8 <_ZN5RelayC1Ei+0x20>
- 1f0:	81 e0       	ldi	r24, 0x01	; 1
- 1f2:	90 e0       	ldi	r25, 0x00	; 0
- 1f4:	95 83       	std	Z+5, r25	; 0x05
- 1f6:	84 83       	std	Z+4, r24	; 0x04
- 1f8:	27 b3       	in	r18, 0x17	; 23
- 1fa:	81 e0       	ldi	r24, 0x01	; 1
- 1fc:	90 e0       	ldi	r25, 0x00	; 0
- 1fe:	02 c0       	rjmp	.+4      	; 0x204 <__DATA_REGION_LENGTH__+0x4>
- 200:	88 0f       	add	r24, r24
- 202:	99 1f       	adc	r25, r25
- 204:	6a 95       	dec	r22
- 206:	e2 f7       	brpl	.-8      	; 0x200 <__DATA_REGION_LENGTH__>
- 208:	82 2b       	or	r24, r18
- 20a:	87 bb       	out	0x17, r24	; 23
- 20c:	08 95       	ret
+ 28e:	fc 01       	movw	r30, r24
+ 290:	40 81       	ld	r20, Z
+ 292:	51 81       	ldd	r21, Z+1	; 0x01
+ 294:	24 17       	cp	r18, r20
+ 296:	35 07       	cpc	r19, r21
+ 298:	09 f0       	breq	.+2      	; 0x29c <_ZN5Relay3setEi+0x18>
+ 29a:	cc df       	rcall	.-104    	; 0x234 <_ZN5Relay6toggleEv>
+ 29c:	08 95       	ret
 
-0000020e <_ZN5Relay6toggleEv>:
- 20e:	fc 01       	movw	r30, r24
- 210:	80 81       	ld	r24, Z
- 212:	91 81       	ldd	r25, Z+1	; 0x01
- 214:	89 2b       	or	r24, r25
- 216:	69 f0       	breq	.+26     	; 0x232 <_ZN5Relay6toggleEv+0x24>
- 218:	28 b3       	in	r18, 0x18	; 24
- 21a:	81 e0       	ldi	r24, 0x01	; 1
- 21c:	90 e0       	ldi	r25, 0x00	; 0
- 21e:	04 80       	ldd	r0, Z+4	; 0x04
- 220:	02 c0       	rjmp	.+4      	; 0x226 <_ZN5Relay6toggleEv+0x18>
- 222:	88 0f       	add	r24, r24
- 224:	99 1f       	adc	r25, r25
- 226:	0a 94       	dec	r0
- 228:	e2 f7       	brpl	.-8      	; 0x222 <_ZN5Relay6toggleEv+0x14>
- 22a:	80 95       	com	r24
- 22c:	82 23       	and	r24, r18
- 22e:	88 bb       	out	0x18, r24	; 24
- 230:	0b c0       	rjmp	.+22     	; 0x248 <_ZN5Relay6toggleEv+0x3a>
- 232:	28 b3       	in	r18, 0x18	; 24
- 234:	81 e0       	ldi	r24, 0x01	; 1
- 236:	90 e0       	ldi	r25, 0x00	; 0
- 238:	04 80       	ldd	r0, Z+4	; 0x04
- 23a:	02 c0       	rjmp	.+4      	; 0x240 <_ZN5Relay6toggleEv+0x32>
- 23c:	88 0f       	add	r24, r24
- 23e:	99 1f       	adc	r25, r25
- 240:	0a 94       	dec	r0
- 242:	e2 f7       	brpl	.-8      	; 0x23c <_ZN5Relay6toggleEv+0x2e>
- 244:	82 2b       	or	r24, r18
- 246:	88 bb       	out	0x18, r24	; 24
- 248:	81 e0       	ldi	r24, 0x01	; 1
- 24a:	90 e0       	ldi	r25, 0x00	; 0
- 24c:	20 81       	ld	r18, Z
- 24e:	31 81       	ldd	r19, Z+1	; 0x01
- 250:	23 2b       	or	r18, r19
- 252:	11 f0       	breq	.+4      	; 0x258 <_ZN5Relay6toggleEv+0x4a>
- 254:	80 e0       	ldi	r24, 0x00	; 0
- 256:	90 e0       	ldi	r25, 0x00	; 0
- 258:	91 83       	std	Z+1, r25	; 0x01
- 25a:	80 83       	st	Z, r24
- 25c:	08 95       	ret
-
-0000025e <_ZN5Relay5pressEv>:
+0000029e <_ZN5Relay5pressEv>:
 }
 
 void Relay::press()
 {
- 25e:	cf 93       	push	r28
- 260:	df 93       	push	r29
- 262:	ec 01       	movw	r28, r24
-	toggle();
- 264:	d4 df       	rcall	.-88     	; 0x20e <_ZN5Relay6toggleEv>
+ 29e:	cf 93       	push	r28
+ 2a0:	df 93       	push	r29
+ 2a2:	ec 01       	movw	r28, r24
+	set(FALSE);
+ 2a4:	60 e0       	ldi	r22, 0x00	; 0
+ 2a6:	70 e0       	ldi	r23, 0x00	; 0
+ 2a8:	ed df       	rcall	.-38     	; 0x284 <_ZN5Relay3setEi>
 	#else
 		//round up by default
 		__ticks_dc = (uint32_t)(ceil(fabs(__tmp)));
 	#endif
 
 	__builtin_avr_delay_cycles(__ticks_dc);
- 266:	8f e1       	ldi	r24, 0x1F	; 31
- 268:	9e e4       	ldi	r25, 0x4E	; 78
- 26a:	01 97       	sbiw	r24, 0x01	; 1
- 26c:	f1 f7       	brne	.-4      	; 0x26a <__stack+0xb>
- 26e:	00 c0       	rjmp	.+0      	; 0x270 <__stack+0x11>
- 270:	00 00       	nop
+ 2aa:	8f e1       	ldi	r24, 0x1F	; 31
+ 2ac:	9e e4       	ldi	r25, 0x4E	; 78
+ 2ae:	01 97       	sbiw	r24, 0x01	; 1
+ 2b0:	f1 f7       	brne	.-4      	; 0x2ae <_ZN5Relay5pressEv+0x10>
+ 2b2:	00 c0       	rjmp	.+0      	; 0x2b4 <_ZN5Relay5pressEv+0x16>
+ 2b4:	00 00       	nop
 	_delay_ms(10);
-	toggle();
- 272:	ce 01       	movw	r24, r28
- 274:	cc df       	rcall	.-104    	; 0x20e <_ZN5Relay6toggleEv>
+	set(TRUE);
+ 2b6:	61 e0       	ldi	r22, 0x01	; 1
+ 2b8:	70 e0       	ldi	r23, 0x00	; 0
+ 2ba:	ce 01       	movw	r24, r28
+ 2bc:	e3 df       	rcall	.-58     	; 0x284 <_ZN5Relay3setEi>
+ 2be:	8f e1       	ldi	r24, 0x1F	; 31
+ 2c0:	9e e4       	ldi	r25, 0x4E	; 78
+ 2c2:	01 97       	sbiw	r24, 0x01	; 1
+ 2c4:	f1 f7       	brne	.-4      	; 0x2c2 <_ZN5Relay5pressEv+0x24>
+ 2c6:	00 c0       	rjmp	.+0      	; 0x2c8 <_ZN5Relay5pressEv+0x2a>
+ 2c8:	00 00       	nop
+	_delay_ms(10);
+	set(FALSE);
+ 2ca:	60 e0       	ldi	r22, 0x00	; 0
+ 2cc:	70 e0       	ldi	r23, 0x00	; 0
+ 2ce:	ce 01       	movw	r24, r28
+ 2d0:	d9 df       	rcall	.-78     	; 0x284 <_ZN5Relay3setEi>
+ 2d2:	8f e1       	ldi	r24, 0x1F	; 31
+ 2d4:	9e e4       	ldi	r25, 0x4E	; 78
+ 2d6:	01 97       	sbiw	r24, 0x01	; 1
+ 2d8:	f1 f7       	brne	.-4      	; 0x2d6 <_ZN5Relay5pressEv+0x38>
+ 2da:	00 c0       	rjmp	.+0      	; 0x2dc <_ZN5Relay5pressEv+0x3e>
+ 2dc:	00 00       	nop
+	_delay_ms(10);
 	
 	//Invert the state after being inverted twice
 	button_state = !button_state;
- 276:	81 e0       	ldi	r24, 0x01	; 1
- 278:	90 e0       	ldi	r25, 0x00	; 0
- 27a:	2a 81       	ldd	r18, Y+2	; 0x02
- 27c:	3b 81       	ldd	r19, Y+3	; 0x03
- 27e:	23 2b       	or	r18, r19
- 280:	11 f0       	breq	.+4      	; 0x286 <__stack+0x27>
- 282:	80 e0       	ldi	r24, 0x00	; 0
- 284:	90 e0       	ldi	r25, 0x00	; 0
- 286:	9b 83       	std	Y+3, r25	; 0x03
- 288:	8a 83       	std	Y+2, r24	; 0x02
+ 2de:	81 e0       	ldi	r24, 0x01	; 1
+ 2e0:	90 e0       	ldi	r25, 0x00	; 0
+ 2e2:	2a 81       	ldd	r18, Y+2	; 0x02
+ 2e4:	3b 81       	ldd	r19, Y+3	; 0x03
+ 2e6:	23 2b       	or	r18, r19
+ 2e8:	11 f0       	breq	.+4      	; 0x2ee <_ZN5Relay5pressEv+0x50>
+ 2ea:	80 e0       	ldi	r24, 0x00	; 0
+ 2ec:	90 e0       	ldi	r25, 0x00	; 0
+ 2ee:	9b 83       	std	Y+3, r25	; 0x03
+ 2f0:	8a 83       	std	Y+2, r24	; 0x02
 }
- 28a:	df 91       	pop	r29
- 28c:	cf 91       	pop	r28
- 28e:	08 95       	ret
+ 2f2:	df 91       	pop	r29
+ 2f4:	cf 91       	pop	r28
+ 2f6:	08 95       	ret
 
-00000290 <_ZN5Relay10button_setEi>:
+000002f8 <_ZN5Relay10button_setEi>:
 
 void Relay::button_set(int input)
 {
 	input = !!input; //Normalize the input to 1 or 0
- 290:	21 e0       	ldi	r18, 0x01	; 1
- 292:	67 2b       	or	r22, r23
- 294:	09 f4       	brne	.+2      	; 0x298 <_ZN5Relay10button_setEi+0x8>
- 296:	20 e0       	ldi	r18, 0x00	; 0
- 298:	30 e0       	ldi	r19, 0x00	; 0
+ 2f8:	21 e0       	ldi	r18, 0x01	; 1
+ 2fa:	67 2b       	or	r22, r23
+ 2fc:	09 f4       	brne	.+2      	; 0x300 <_ZN5Relay10button_setEi+0x8>
+ 2fe:	20 e0       	ldi	r18, 0x00	; 0
+ 300:	30 e0       	ldi	r19, 0x00	; 0
 	if(input != button_state) press();
- 29a:	fc 01       	movw	r30, r24
- 29c:	42 81       	ldd	r20, Z+2	; 0x02
- 29e:	53 81       	ldd	r21, Z+3	; 0x03
- 2a0:	24 17       	cp	r18, r20
- 2a2:	35 07       	cpc	r19, r21
- 2a4:	09 f0       	breq	.+2      	; 0x2a8 <_ZN5Relay10button_setEi+0x18>
- 2a6:	db df       	rcall	.-74     	; 0x25e <_ZN5Relay5pressEv>
- 2a8:	08 95       	ret
+ 302:	fc 01       	movw	r30, r24
+ 304:	42 81       	ldd	r20, Z+2	; 0x02
+ 306:	53 81       	ldd	r21, Z+3	; 0x03
+ 308:	24 17       	cp	r18, r20
+ 30a:	35 07       	cpc	r19, r21
+ 30c:	09 f0       	breq	.+2      	; 0x310 <_ZN5Relay10button_setEi+0x18>
+ 30e:	c7 df       	rcall	.-114    	; 0x29e <_ZN5Relay5pressEv>
+ 310:	08 95       	ret
 
-000002aa <_exit>:
- 2aa:	f8 94       	cli
+00000312 <_exit>:
+ 312:	f8 94       	cli
 
-000002ac <__stop_program>:
- 2ac:	ff cf       	rjmp	.-2      	; 0x2ac <__stop_program>
+00000314 <__stop_program>:
+ 314:	ff cf       	rjmp	.-2      	; 0x314 <__stop_program>

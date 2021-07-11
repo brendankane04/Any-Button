@@ -21,10 +21,6 @@ Discarded input sections
  .text          0x00000000        0x0 Relay.o
  .data          0x00000000        0x0 Relay.o
  .bss           0x00000000        0x0 Relay.o
- .text._ZN5RelayC2Ev
-                0x00000000       0x2a Relay.o
- .text._ZN5Relay3setEi
-                0x00000000       0x1a Relay.o
  .text          0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr25\libgcc.a(_exit.o)
  .data          0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr25\libgcc.a(_exit.o)
  .bss           0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr25\libgcc.a(_exit.o)
@@ -172,7 +168,7 @@ END GROUP
 .rela.plt
  *(.rela.plt)
 
-.text           0x00000000      0x2ae
+.text           0x00000000      0x316
  *(.vectors)
  .vectors       0x00000000       0x1e C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATtiny_DFP/1.8.332/gcc/dev/attiny85/avr25/crtattiny85.o
                 0x00000000                __vector_default
@@ -267,26 +263,33 @@ END GROUP
  .text._ZN11IR_Receiver4recvEv
                 0x00000102       0x70 IR_Receiver.o
                 0x00000102                _ZN11IR_Receiver4recvEv
- .text.main     0x00000172       0x66 main.o
+ .text.main     0x00000172       0x62 main.o
                 0x00000172                main
  .text._ZN5RelayC2Ei
-                0x000001d8       0x36 Relay.o
-                0x000001d8                _ZN5RelayC2Ei
-                0x000001d8                _ZN5RelayC1Ei
+                0x000001d4       0x36 Relay.o
+                0x000001d4                _ZN5RelayC2Ei
+                0x000001d4                _ZN5RelayC1Ei
+ .text._ZN5RelayC2Ev
+                0x0000020a       0x2a Relay.o
+                0x0000020a                _ZN5RelayC2Ev
+                0x0000020a                _ZN5RelayC1Ev
  .text._ZN5Relay6toggleEv
-                0x0000020e       0x50 Relay.o
-                0x0000020e                _ZN5Relay6toggleEv
+                0x00000234       0x50 Relay.o
+                0x00000234                _ZN5Relay6toggleEv
+ .text._ZN5Relay3setEi
+                0x00000284       0x1a Relay.o
+                0x00000284                _ZN5Relay3setEi
  .text._ZN5Relay5pressEv
-                0x0000025e       0x32 Relay.o
-                0x0000025e                _ZN5Relay5pressEv
+                0x0000029e       0x5a Relay.o
+                0x0000029e                _ZN5Relay5pressEv
  .text._ZN5Relay10button_setEi
-                0x00000290       0x1a Relay.o
-                0x00000290                _ZN5Relay10button_setEi
-                0x000002aa                . = ALIGN (0x2)
+                0x000002f8       0x1a Relay.o
+                0x000002f8                _ZN5Relay10button_setEi
+                0x00000312                . = ALIGN (0x2)
  *(.fini9)
- .fini9         0x000002aa        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr25\libgcc.a(_exit.o)
-                0x000002aa                _exit
-                0x000002aa                exit
+ .fini9         0x00000312        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr25\libgcc.a(_exit.o)
+                0x00000312                _exit
+                0x00000312                exit
  *(.fini9)
  *(.fini8)
  *(.fini8)
@@ -305,11 +308,11 @@ END GROUP
  *(.fini1)
  *(.fini1)
  *(.fini0)
- .fini0         0x000002aa        0x4 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr25\libgcc.a(_exit.o)
+ .fini0         0x00000312        0x4 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr25\libgcc.a(_exit.o)
  *(.fini0)
-                0x000002ae                _etext = .
+                0x00000316                _etext = .
 
-.data           0x00800060        0x0 load address 0x000002ae
+.data           0x00800060        0x0 load address 0x00000316
                 [!provide]                PROVIDE (__data_start, .)
  *(.data)
  *(.data*)
@@ -327,8 +330,8 @@ END GROUP
  *(.bss*)
  *(COMMON)
                 [!provide]                PROVIDE (__bss_end, .)
-                0x000002ae                __data_load_start = LOADADDR (.data)
-                0x000002ae                __data_load_end = (__data_load_start + SIZEOF (.data))
+                0x00000316                __data_load_start = LOADADDR (.data)
+                0x00000316                __data_load_end = (__data_load_start + SIZEOF (.data))
 
 .noinit         0x00800060        0x0
                 [!provide]                PROVIDE (__noinit_start, .)
@@ -416,13 +419,13 @@ END GROUP
 .debug_pubnames
  *(.debug_pubnames)
 
-.debug_info     0x00000000     0x13f5
+.debug_info     0x00000000     0x1494
  *(.debug_info .gnu.linkonce.wi.*)
  .debug_info    0x00000000      0x420 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATtiny_DFP/1.8.332/gcc/dev/attiny85/avr25/crtattiny85.o
  .debug_info    0x00000420      0x2b3 BB_I2C.o
  .debug_info    0x000006d3      0x50b IR_Receiver.o
- .debug_info    0x00000bde      0x44d main.o
- .debug_info    0x0000102b      0x3ca Relay.o
+ .debug_info    0x00000bde      0x443 main.o
+ .debug_info    0x00001021      0x473 Relay.o
 
 .debug_abbrev   0x00000000      0xbf3
  *(.debug_abbrev)
@@ -432,13 +435,13 @@ END GROUP
  .debug_abbrev  0x00000810      0x1bb main.o
  .debug_abbrev  0x000009cb      0x228 Relay.o
 
-.debug_line     0x00000000      0x7cc
+.debug_line     0x00000000      0x7ea
  *(.debug_line .debug_line.* .debug_line_end)
  .debug_line    0x00000000       0xf2 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATtiny_DFP/1.8.332/gcc/dev/attiny85/avr25/crtattiny85.o
  .debug_line    0x000000f2      0x1c1 BB_I2C.o
  .debug_line    0x000002b3      0x27a IR_Receiver.o
  .debug_line    0x0000052d       0xa5 main.o
- .debug_line    0x000005d2      0x1fa Relay.o
+ .debug_line    0x000005d2      0x218 Relay.o
 
 .debug_frame    0x00000000      0x1b4
  *(.debug_frame)
@@ -459,12 +462,12 @@ END GROUP
  .debug_str     0x000005a6       0x40 Relay.o
                                 0x2a4 (size before relaxing)
 
-.debug_loc      0x00000000      0x703
+.debug_loc      0x00000000      0x793
  *(.debug_loc)
  .debug_loc     0x00000000      0x192 BB_I2C.o
  .debug_loc     0x00000192      0x323 IR_Receiver.o
  .debug_loc     0x000004b5       0x47 main.o
- .debug_loc     0x000004fc      0x207 Relay.o
+ .debug_loc     0x000004fc      0x297 Relay.o
 
 .debug_macinfo
  *(.debug_macinfo)

@@ -19,7 +19,7 @@
 int main(void)
 {
 	IR_Receiver sensor1;
-	Relay relay1(1);
+	Relay relay1;
 	BB_I2C writer(4, 3);
 
 	//Initialize an empty IR command
