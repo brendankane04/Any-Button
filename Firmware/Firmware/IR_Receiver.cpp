@@ -20,6 +20,12 @@
 
 int IR_Receiver::wait_until_change()
 {
+
+	//Initialize the clock, set up time, & the prescaler even if the DIV8 fuse is set.
+	//Essentially, speed up the clock if it isn't fast enough
+	CLKPR |= 0x80; //Enable changes on the CLKPR register
+	CLKPR &= ~0x0F; //Set the prescaler to 1
+	
 	int count = 0;
 	GIFR |= _BV(INTF0); //Clear the flag before starting
 	while
