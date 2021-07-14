@@ -13,11 +13,25 @@
 #include <util/delay.h>
 #include "IR_Receiver.h"
 
+//Code which, when uncommented, will run the changed interrupt code
+//The changes will cause the interrupts to activate on the PCINT interrupts, allowing for 
+//attaching the senor input to any functional pin
+//#define PCINT_CHANGE
+
 int IR_Receiver::wait_until_change()
 {
 	int count = 0;
 	GIFR |= _BV(INTF0); //Clear the flag before starting
-	while((GIFR & _BV(INTF0)) == 0)
+	while
+	(
+		#ifdef PCINT_CHANGE
+		//Changed code
+		(GIFR & _BV(PCIF)) == 0)
+		#else
+		//Original code
+		(GIFR & _BV(INTF0)) == 0 
+		#endif
+	)
 	{
 		//Increment
 		count++;
@@ -54,12 +68,48 @@ char IR_Receiver::read_byte()
 	return output;
 }
 
-
 IR_Receiver::IR_Receiver()
 {
+	IR_Receiver(7);
+}
+
+IR_Receiver::IR_Receiver(int pin)
+{
+	#ifdef PCINT_CHANGE
+
+	//Scaffold code
+	//Pick which pin is connected to the IR receiver
+	switch (pin)
+	{
+		case 1:
+			PCMSK = _BV(PCINT5);
+			break;
+		case 2:
+			PCMSK = _BV(PCINT3);
+			break;
+		case 3:
+			PCMSK = _BV(PCINT4);
+			break;
+		case 5:
+			PCMSK = _BV(PCINT0);
+			break;
+		case 6:
+			PCMSK = _BV(PCINT1);
+			break;
+		case 7:
+			PCMSK = _BV(PCINT2);
+			break;
+		default:
+			break;
+	}
+
+	#else 
+
 	//Set up the interrupt on the INT0 pin to receive the IR signal
 	//Initialize the interrupt mode for INT0
 	MCUCR |= _BV(ISC00);
+
+	#endif
 }
 
 IR_Receiver::IR_cmd IR_Receiver::recv()
