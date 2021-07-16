@@ -3,6 +3,14 @@ With this device, you can make any pushbutton or switch on a home appliance *rem
 
 Simply connect the leads of the button to the leads of the appliance to the relay on this device, and it will work just fine.
 
+## Materials:
+
+<!-- TODO: check this list against what I have*-->
+1. VS1838 IR Receiver <br>
+2. IR Transmitter <br>
+3. Attiny85 DIP package <br>
+4.  
+
 ## Firmware: 
 
 This file system is a project which can be conveniently opened in Atmel Studio 7 with the following important source files:
