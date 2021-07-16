@@ -19,7 +19,7 @@
 int main(void)
 {
 	IR_Receiver sensor1;
-	Relay relay1;
+	Relay button1;
 	BB_I2C writer(4, 3);
 
 	//Initialize an empty IR command
@@ -31,13 +31,13 @@ int main(void)
 		switch(remote_cmd.cmd)
 		{
 			case IR_Receiver::POWER:
-				relay1.press();
+				button1.press();
 				break;
 			case IR_Receiver::ZERO:
-				relay1.button_set(FALSE);
+				button1.button_set(FALSE);
 				break;
 			case IR_Receiver::ONE:
-				relay1.button_set(TRUE);
+				button1.button_set(TRUE);
 				break;
 			default:
 				break;
