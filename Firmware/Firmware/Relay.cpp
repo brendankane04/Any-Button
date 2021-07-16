@@ -38,12 +38,22 @@ Relay::Relay(int pin)
 	DDRB |= _BV(pin);
 }
 
+void Relay::Deactivate()
+{
+	PORTB &= ~_BV(pin);
+}
+
+void Relay::Activate()
+{
+	PORTB |= _BV(pin);
+}
+
 void Relay::toggle()
 {
 	if(state)
-	PORTB &= ~_BV(pin);
+		Deactivate(); //Turn off if currently on
 	else
-	PORTB |= _BV(pin);
+		Activate(); //Turn on if currently off
 
 	state = !state;
 }

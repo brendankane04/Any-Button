@@ -16,6 +16,11 @@ class Relay
 		int button_state;
 		int pin;
 
+	//Set the external device to LOW, whatever that means
+	void Deactivate();
+	//Set the external device to HIGH, whatever that means
+	void Activate();
+
 	public:
 		//Default Constructor
 		Relay();
