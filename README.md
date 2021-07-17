@@ -7,9 +7,11 @@ Simply connect the leads of the button to the leads of the appliance to the rela
 
 <!-- TODO: check this list against what I have*-->
 1. VS1838 IR Receiver <br>
-2. IR Transmitter <br>
-3. Attiny85 DIP package <br>
-4.  
+2. IR Remote (MP3 Control) <br>
+3. Attiny85, DIP package <br>
+4. LM317 Voltage regulator <br>
+5. Capacitors <br> 
+6. Resistors 
 
 ## Firmware: 
 
