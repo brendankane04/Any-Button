@@ -42,5 +42,6 @@ int main(void)
 			default:
 				break;
 		}
+		_delay_ms(10);
 	}
 }
