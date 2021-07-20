@@ -12,14 +12,14 @@
 class Relay
 {
 	private:
-		int state;
+		int state; //Current state of the relay
 		int button_state;
-		int pin;
+		int pin; //The pin on PORTB which the device is connected to 
 
-	//Set the external device to LOW, whatever that means
-	void Deactivate();
-	//Set the external device to HIGH, whatever that means
-	void Activate();
+		//Set the external device to LOW, whatever that means
+		void Deactivate();
+		//Set the external device to HIGH, whatever that means
+		void Activate();
 
 	public:
 		//Default Constructor
