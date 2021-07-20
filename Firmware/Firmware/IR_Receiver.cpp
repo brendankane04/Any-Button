@@ -35,7 +35,7 @@ int IR_Receiver::wait_until_change()
 		(GIFR & _BV(PCIF)) == 0)
 		#else
 		//Original code
-		(GIFR & _BV(INTF0)) == 0 
+		(GIFR & _BV(INTF0)) == 0)
 		#endif
 	)
 	{
