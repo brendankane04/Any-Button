@@ -4,9 +4,9 @@ EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
 Sheet 1 1
-Title ""
-Date ""
-Rev ""
+Title "Any Button Main Board"
+Date "2021-07-22"
+Rev "RevA"
 Comp ""
 Comment1 ""
 Comment2 ""
