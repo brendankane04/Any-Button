@@ -1,4 +1,165 @@
-EESchema Schematic File Version 2
-EELAYER 25 0
+EESchema Schematic File Version 4
+EELAYER 30 0
 EELAYER END
+$Descr A4 11693 8268
+encoding utf-8
+Sheet 1 1
+Title ""
+Date ""
+Rev ""
+Comp ""
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+$Comp
+L MCU_Microchip_ATtiny:ATtiny85-20PU U?
+U 1 1 60F8DA9A
+P 5550 4150
+F 0 "U?" H 5021 4196 50  0000 R CNN
+F 1 "ATtiny85-20PU" H 5021 4105 50  0000 R CNN
+F 2 "Package_DIP:DIP-8_W7.62mm" H 5550 4150 50  0001 C CIN
+F 3 "http://ww1.microchip.com/downloads/en/DeviceDoc/atmel-2586-avr-8-bit-microcontroller-attiny25-attiny45-attiny85_datasheet.pdf" H 5550 4150 50  0001 C CNN
+	1    5550 4150
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 60F8F914
+P 5550 4750
+F 0 "#PWR?" H 5550 4500 50  0001 C CNN
+F 1 "GND" H 5555 4577 50  0000 C CNN
+F 2 "" H 5550 4750 50  0001 C CNN
+F 3 "" H 5550 4750 50  0001 C CNN
+	1    5550 4750
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:VCC #PWR?
+U 1 1 60F9015E
+P 5550 3550
+F 0 "#PWR?" H 5550 3400 50  0001 C CNN
+F 1 "VCC" H 5565 3723 50  0000 C CNN
+F 2 "" H 5550 3550 50  0001 C CNN
+F 3 "" H 5550 3550 50  0001 C CNN
+	1    5550 3550
+	1    0    0    -1  
+$EndComp
+$Comp
+L Connector_Generic:Conn_01x03 J?
+U 1 1 60F91FAD
+P 7700 4150
+F 0 "J?" H 7780 4192 50  0000 L CNN
+F 1 "IR Sensor" H 7780 4101 50  0000 L CNN
+F 2 "" H 7700 4150 50  0001 C CNN
+F 3 "~" H 7700 4150 50  0001 C CNN
+	1    7700 4150
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:VCC #PWR?
+U 1 1 60F92FA8
+P 7500 4150
+F 0 "#PWR?" H 7500 4000 50  0001 C CNN
+F 1 "VCC" V 7515 4277 50  0000 L CNN
+F 2 "" H 7500 4150 50  0001 C CNN
+F 3 "" H 7500 4150 50  0001 C CNN
+	1    7500 4150
+	0    -1   -1   0   
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 60F9362D
+P 7500 4250
+F 0 "#PWR?" H 7500 4000 50  0001 C CNN
+F 1 "GND" V 7505 4122 50  0000 R CNN
+F 2 "" H 7500 4250 50  0001 C CNN
+F 3 "" H 7500 4250 50  0001 C CNN
+	1    7500 4250
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	7500 4050 6150 4050
+Text Label 6950 4050 0    50   ~ 0
+IR_Signal
+$Comp
+L Connector_Generic:Conn_01x03 J?
+U 1 1 60F9468A
+P 7700 3750
+F 0 "J?" H 7780 3792 50  0000 L CNN
+F 1 "Relay" H 7780 3701 50  0000 L CNN
+F 2 "" H 7700 3750 50  0001 C CNN
+F 3 "~" H 7700 3750 50  0001 C CNN
+	1    7700 3750
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:VCC #PWR?
+U 1 1 60F950A0
+P 7500 3750
+F 0 "#PWR?" H 7500 3600 50  0001 C CNN
+F 1 "VCC" V 7515 3877 50  0000 L CNN
+F 2 "" H 7500 3750 50  0001 C CNN
+F 3 "" H 7500 3750 50  0001 C CNN
+	1    7500 3750
+	0    -1   -1   0   
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 60F9543F
+P 7500 3850
+F 0 "#PWR?" H 7500 3600 50  0001 C CNN
+F 1 "GND" V 7505 3722 50  0000 R CNN
+F 2 "" H 7500 3850 50  0001 C CNN
+F 3 "" H 7500 3850 50  0001 C CNN
+	1    7500 3850
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	7500 3650 6950 3650
+Wire Wire Line
+	6950 3650 6950 3950
+Wire Wire Line
+	6950 3950 6150 3950
+Text Label 6950 3650 0    50   ~ 0
+Relay_Signal
+$Comp
+L Connector_Generic:Conn_01x03 J?
+U 1 1 60F97C35
+P 7700 4600
+F 0 "J?" H 7780 4642 50  0000 L CNN
+F 1 "Conn_01x03" H 7780 4551 50  0000 L CNN
+F 2 "" H 7700 4600 50  0001 C CNN
+F 3 "~" H 7700 4600 50  0001 C CNN
+	1    7700 4600
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	6150 4150 6950 4150
+Wire Wire Line
+	6950 4150 6950 4500
+Wire Wire Line
+	6950 4500 7500 4500
+Wire Wire Line
+	7500 4600 6900 4600
+Wire Wire Line
+	6900 4600 6900 4250
+Wire Wire Line
+	6900 4250 6150 4250
+Text Label 7000 4600 0    50   ~ 0
+SDA
+Text Label 7000 4500 0    50   ~ 0
+SCL
+$Comp
+L power:GND #PWR?
+U 1 1 60F991EA
+P 7500 4700
+F 0 "#PWR?" H 7500 4450 50  0001 C CNN
+F 1 "GND" V 7505 4572 50  0000 R CNN
+F 2 "" H 7500 4700 50  0001 C CNN
+F 3 "" H 7500 4700 50  0001 C CNN
+	1    7500 4700
+	0    1    1    0   
+$EndComp
 $EndSCHEMATC
