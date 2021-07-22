@@ -129,7 +129,7 @@ L Connector_Generic:Conn_01x03 J?
 U 1 1 60F97C35
 P 7700 4600
 F 0 "J?" H 7780 4642 50  0000 L CNN
-F 1 "Conn_01x03" H 7780 4551 50  0000 L CNN
+F 1 "BB_I2C" H 7780 4551 50  0000 L CNN
 F 2 "Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical" H 7700 4600 50  0001 C CNN
 F 3 "~" H 7700 4600 50  0001 C CNN
 	1    7700 4600
@@ -219,7 +219,7 @@ U 1 1 60FA27FD
 P 3250 5600
 F 0 "U?" H 3250 5842 50  0000 C CNN
 F 1 "L7805" H 3250 5751 50  0000 C CNN
-F 2 "" H 3275 5450 50  0001 L CIN
+F 2 "Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical" H 3275 5450 50  0001 L CIN
 F 3 "http://www.st.com/content/ccc/resource/technical/document/datasheet/41/4f/b3/b0/12/d4/47/88/CD00000444.pdf/files/CD00000444.pdf/jcr:content/translations/en.CD00000444.pdf" H 3250 5550 50  0001 C CNN
 	1    3250 5600
 	1    0    0    -1  
@@ -229,8 +229,8 @@ L Simulation_SPICE:VDC V?
 U 1 1 60FA39C1
 P 2650 5950
 F 0 "V?" H 2780 6041 50  0000 L CNN
-F 1 "VDC" H 2780 5950 50  0000 L CNN
-F 2 "" H 2650 5950 50  0001 C CNN
+F 1 "Vin" H 2780 5950 50  0000 L CNN
+F 2 "Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical" H 2650 5950 50  0001 C CNN
 F 3 "~" H 2650 5950 50  0001 C CNN
 F 4 "Y" H 2650 5950 50  0001 L CNN "Spice_Netlist_Enabled"
 F 5 "V" H 2650 5950 50  0001 L CNN "Spice_Primitive"
