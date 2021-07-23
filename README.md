@@ -1,15 +1,14 @@
 # Any Button
 With this device, you can make any pushbutton or switch on a home appliance *remote controlled!* 
 
-Simply connect the leads of the button to the leads of the appliance to the relay on this device, and it will work just fine.
+Simply connect the leads of the button of the appliance to the relay on this device, and it will make the device remote-operated.
 
 ## Materials:
 
-<!-- TODO: check this list against what I have*-->
 1. VS1838 IR Receiver <br>
 2. IR Remote (MP3 Control) <br>
 3. Attiny85, DIP package <br>
-4. LM317 Voltage regulator <br>
+4. L7805 5V Voltage regulator <br>
 5. Capacitors <br> 
 6. Resistors 
 
@@ -26,4 +25,14 @@ This file system is a project which can be conveniently opened in Atmel Studio 7
 
 ## Schematics:
 
-TBD
+This files system contains a project which designs the schematic design & the board layout of the device. 
+The project can opened with kicad.
+
+It uses default parts & layouts. Consequently, it has no custom libraries.
+
+The final product can be conveniently viewed in the form of PDF's
+
+### PDF's:
+
+-**Schematic.pdf:** Image of the schematics <br>
+-**Layout.pdf:** Image of the board layout <br>
