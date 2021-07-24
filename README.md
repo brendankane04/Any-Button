@@ -28,6 +28,8 @@ This file system is a project which can be conveniently opened in Atmel Studio 7
 This files system contains a project which designs the schematic design & the board layout of the device. 
 The project can opened with kicad.
 
+The device may be connected to the appliance by attaching a >= 5V line or by using an independent voltage source.
+
 It uses default parts & layouts. Consequently, it has no custom libraries.
 
 The final product can be conveniently viewed in the form of PDF's
