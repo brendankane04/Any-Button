@@ -207,6 +207,12 @@
     <Compile Include="IR_Receiver.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="Lever.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Lever.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="main.cpp">
       <SubType>compile</SubType>
     </Compile>

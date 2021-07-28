@@ -32,10 +32,10 @@ int IR_Receiver::wait_until_change()
 	(
 		#ifdef PCINT_CHANGE
 		//Changed code
-		(GIFR & _BV(PCIF)) == 0)
+		(GIFR & _BV(PCIF)) == 0
 		#else
 		//Original code
-		(GIFR & _BV(INTF0)) == 0)
+		(GIFR & _BV(INTF0)) == 0
 		#endif
 	)
 	{

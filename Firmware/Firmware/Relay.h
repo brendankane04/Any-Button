@@ -11,7 +11,7 @@
 //Class which controls a relay for toggle & setting configuration
 class Relay
 {
-	private:
+	protected:
 		int state; //Current state of the relay
 		int button_state;
 		int pin; //The pin on PORTB which the device is connected to 
