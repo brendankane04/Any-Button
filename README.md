@@ -21,6 +21,7 @@ This file system is a project which can be conveniently opened in Atmel Studio 7
 -**main.cpp:** Main file<br>
 -**IR_Receiver.cpp:** Driver for the IR Receiver connected to the INT0 pin<br>
 -**Relay.cpp:** Driver for the relay which simulates the switch or button<br>
+-**Lever.cpp:** Driver for a relay which controls a solenoid attached to a lever. This requires more physical set up & hardware but doesn't necessitate directly wiring to the appliance.<br>
 -**BB\_I2C.cpp:** Driver for a rudimentary pseudo-I2C communication protocl. It was written to make debugging easier.<br>
 
 ## Schematics:
