@@ -46,41 +46,6 @@ F 3 "" H 5550 3550 50  0001 C CNN
 	1    5550 3550
 	1    0    0    -1  
 $EndComp
-$Comp
-L Connector_Generic:Conn_01x03 J2
-U 1 1 60F91FAD
-P 7700 4150
-F 0 "J2" H 7780 4192 50  0000 L CNN
-F 1 "IR Sensor" H 7780 4101 50  0000 L CNN
-F 2 "Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical" H 7700 4150 50  0001 C CNN
-F 3 "~" H 7700 4150 50  0001 C CNN
-	1    7700 4150
-	1    0    0    -1  
-$EndComp
-$Comp
-L power:VCC #PWR0103
-U 1 1 60F92FA8
-P 7500 4150
-F 0 "#PWR0103" H 7500 4000 50  0001 C CNN
-F 1 "VCC" V 7515 4277 50  0000 L CNN
-F 2 "" H 7500 4150 50  0001 C CNN
-F 3 "" H 7500 4150 50  0001 C CNN
-	1    7500 4150
-	0    -1   -1   0   
-$EndComp
-$Comp
-L power:GND #PWR0104
-U 1 1 60F9362D
-P 7500 4250
-F 0 "#PWR0104" H 7500 4000 50  0001 C CNN
-F 1 "GND" V 7505 4122 50  0000 R CNN
-F 2 "" H 7500 4250 50  0001 C CNN
-F 3 "" H 7500 4250 50  0001 C CNN
-	1    7500 4250
-	0    1    1    0   
-$EndComp
-Wire Wire Line
-	7500 4050 6150 4050
 Text Label 6950 4050 0    50   ~ 0
 IR_Signal
 $Comp
@@ -291,4 +256,133 @@ Wire Notes Line
 	8350 5900 4400 5900
 Wire Notes Line
 	4400 5900 4400 3300
+Wire Wire Line
+	7500 4050 6150 4050
+$Comp
+L Connector_Generic:Conn_01x03 J?
+U 1 1 6106117F
+P 3900 2250
+F 0 "J?" H 3980 2292 50  0000 L CNN
+F 1 "IR Sensor" H 3980 2201 50  0000 L CNN
+F 2 "Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical" H 3900 2250 50  0001 C CNN
+F 3 "~" H 3900 2250 50  0001 C CNN
+	1    3900 2250
+	-1   0    0    1   
+$EndComp
+$Comp
+L power:VCC #PWR?
+U 1 1 610617CF
+P 5400 1700
+F 0 "#PWR?" H 5400 1550 50  0001 C CNN
+F 1 "VCC" V 5415 1827 50  0000 L CNN
+F 2 "" H 5400 1700 50  0001 C CNN
+F 3 "" H 5400 1700 50  0001 C CNN
+	1    5400 1700
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 610624ED
+P 5000 2450
+F 0 "#PWR?" H 5000 2200 50  0001 C CNN
+F 1 "GND" V 5005 2322 50  0000 R CNN
+F 2 "" H 5000 2450 50  0001 C CNN
+F 3 "" H 5000 2450 50  0001 C CNN
+	1    5000 2450
+	0    -1   -1   0   
+$EndComp
+$Comp
+L Device:R R?
+U 1 1 61062E0C
+P 5400 1850
+F 0 "R?" H 5330 1804 50  0000 R CNN
+F 1 "10k" H 5330 1895 50  0000 R CNN
+F 2 "Resistor_THT:R_Axial_DIN0204_L3.6mm_D1.6mm_P1.90mm_Vertical" V 5330 1850 50  0001 C CNN
+F 3 "~" H 5400 1850 50  0001 C CNN
+	1    5400 1850
+	-1   0    0    1   
+$EndComp
+$Comp
+L Device:R R?
+U 1 1 61063930
+P 5000 1850
+F 0 "R?" H 4930 1804 50  0000 R CNN
+F 1 "100" H 4930 1895 50  0000 R CNN
+F 2 "Resistor_THT:R_Axial_DIN0204_L3.6mm_D1.6mm_P1.90mm_Vertical" V 4930 1850 50  0001 C CNN
+F 3 "~" H 5000 1850 50  0001 C CNN
+	1    5000 1850
+	-1   0    0    1   
+$EndComp
+Wire Wire Line
+	5000 1700 5400 1700
+Connection ~ 5400 1700
+Wire Wire Line
+	5000 2000 5000 2150
+Wire Wire Line
+	4100 2250 4300 2250
+Wire Wire Line
+	4300 2250 4300 2450
+Wire Wire Line
+	4300 2450 4550 2450
+Text Label 6000 2350 2    50   ~ 0
+IR_Signal
+$Comp
+L Device:C C?
+U 1 1 6106C3B9
+P 4550 2300
+F 0 "C?" H 4665 2346 50  0000 L CNN
+F 1 "0.1u" H 4665 2255 50  0000 L CNN
+F 2 "Capacitor_THT:C_Disc_D3.0mm_W1.6mm_P2.50mm" H 4588 2150 50  0001 C CNN
+F 3 "~" H 4550 2300 50  0001 C CNN
+	1    4550 2300
+	1    0    0    -1  
+$EndComp
+Connection ~ 4550 2150
+Connection ~ 4550 2450
+Wire Wire Line
+	4550 2150 4950 2150
+Wire Wire Line
+	4100 2350 4100 2550
+Wire Wire Line
+	5400 2000 5400 2350
+Wire Wire Line
+	5400 2350 6000 2350
+Connection ~ 5400 2350
+Wire Wire Line
+	5400 2350 5400 2550
+Wire Wire Line
+	4100 2550 5400 2550
+Wire Wire Line
+	4950 2450 5000 2450
+Wire Wire Line
+	4550 2450 4950 2450
+$Comp
+L Device:C C?
+U 1 1 6106CC7A
+P 4950 2300
+F 0 "C?" H 5065 2346 50  0000 L CNN
+F 1 "10u" H 5065 2255 50  0000 L CNN
+F 2 "Capacitor_THT:C_Disc_D3.0mm_W1.6mm_P2.50mm" H 4988 2150 50  0001 C CNN
+F 3 "~" H 4950 2300 50  0001 C CNN
+	1    4950 2300
+	1    0    0    -1  
+$EndComp
+Connection ~ 4950 2150
+Wire Wire Line
+	4950 2150 5000 2150
+Connection ~ 4950 2450
+Wire Wire Line
+	4450 2150 4550 2150
+Wire Wire Line
+	4100 2150 4550 2150
+Wire Notes Line
+	3300 1350 3300 2700
+Wire Notes Line
+	3300 2700 6050 2700
+Wire Notes Line
+	6050 2700 6050 1350
+Wire Notes Line
+	3300 1350 6050 1350
+Text Notes 3300 1350 0    50   ~ 0
+IR Circuit
 $EndSCHEMATC
