@@ -16,7 +16,7 @@
 //Code which, when uncommented, will run the changed interrupt code
 //The changes will cause the interrupts to activate on the PCINT interrupts, allowing for 
 //attaching the senor input to any functional pin
-#define PCINT_CHANGE
+//#define PCINT_CHANGE
 
 int IR_Receiver::wait_until_change()
 {
