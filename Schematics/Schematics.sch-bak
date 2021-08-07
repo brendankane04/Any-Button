@@ -383,4 +383,6 @@ Wire Notes Line
 	6050 2700 6050 1350
 Wire Notes Line
 	3300 1350 6050 1350
+Text Notes 3300 1350 0    50   ~ 0
+IR Circuit
 $EndSCHEMATC

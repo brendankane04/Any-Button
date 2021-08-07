@@ -14,17 +14,6 @@ Comment3 ""
 Comment4 ""
 $EndDescr
 $Comp
-L MCU_Microchip_ATtiny:ATtiny85-20PU U2
-U 1 1 60F8DA9A
-P 5550 4150
-F 0 "U2" H 5021 4196 50  0000 R CNN
-F 1 "ATtiny85-20PU" H 5021 4105 50  0000 R CNN
-F 2 "Package_DIP:DIP-8_W7.62mm" H 5550 4150 50  0001 C CIN
-F 3 "http://ww1.microchip.com/downloads/en/DeviceDoc/atmel-2586-avr-8-bit-microcontroller-attiny25-attiny45-attiny85_datasheet.pdf" H 5550 4150 50  0001 C CNN
-	1    5550 4150
-	1    0    0    -1  
-$EndComp
-$Comp
 L power:GND #PWR0101
 U 1 1 60F8F914
 P 5550 4750
@@ -33,17 +22,6 @@ F 1 "GND" H 5555 4577 50  0000 C CNN
 F 2 "" H 5550 4750 50  0001 C CNN
 F 3 "" H 5550 4750 50  0001 C CNN
 	1    5550 4750
-	1    0    0    -1  
-$EndComp
-$Comp
-L power:VCC #PWR0102
-U 1 1 60F9015E
-P 5550 3550
-F 0 "#PWR0102" H 5550 3400 50  0001 C CNN
-F 1 "VCC" H 5565 3723 50  0000 C CNN
-F 2 "" H 5550 3550 50  0001 C CNN
-F 3 "" H 5550 3550 50  0001 C CNN
-	1    5550 3550
 	1    0    0    -1  
 $EndComp
 Text Label 6950 4050 0    50   ~ 0
@@ -85,8 +63,6 @@ Wire Wire Line
 	7500 3650 6950 3650
 Wire Wire Line
 	6950 3650 6950 3950
-Wire Wire Line
-	6950 3950 6150 3950
 Text Label 6950 3650 0    50   ~ 0
 Relay_Signal
 $Comp
@@ -101,8 +77,6 @@ F 3 "~" H 7700 4600 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	6150 4150 6950 4150
-Wire Wire Line
 	6950 4150 6950 4500
 Wire Wire Line
 	6950 4500 7500 4500
@@ -110,8 +84,6 @@ Wire Wire Line
 	7500 4600 6900 4600
 Wire Wire Line
 	6900 4600 6900 4250
-Wire Wire Line
-	6900 4250 6150 4250
 Text Label 7000 4600 0    50   ~ 0
 SDA
 Text Label 7000 4500 0    50   ~ 0
@@ -249,15 +221,11 @@ Wire Notes Line
 Wire Notes Line
 	2300 6500 2300 4950
 Wire Notes Line
-	4400 3300 8350 3300
-Wire Notes Line
 	8350 3300 8350 5900
 Wire Notes Line
 	8350 5900 4400 5900
 Wire Notes Line
 	4400 5900 4400 3300
-Wire Wire Line
-	7500 4050 6150 4050
 $Comp
 L Connector_Generic:Conn_01x03 J?
 U 1 1 6106117F
@@ -385,4 +353,36 @@ Wire Notes Line
 	3300 1350 6050 1350
 Text Notes 3300 1350 0    50   ~ 0
 IR Circuit
+Wire Wire Line
+	6900 4250 6150 4250
+Wire Wire Line
+	6150 4150 6950 4150
+Wire Wire Line
+	7500 4050 6150 4050
+Wire Wire Line
+	6950 3950 6150 3950
+Wire Notes Line
+	4400 3300 8350 3300
+$Comp
+L power:VCC #PWR0102
+U 1 1 60F9015E
+P 5550 3550
+F 0 "#PWR0102" H 5550 3400 50  0001 C CNN
+F 1 "VCC" H 5565 3723 50  0000 C CNN
+F 2 "" H 5550 3550 50  0001 C CNN
+F 3 "" H 5550 3550 50  0001 C CNN
+	1    5550 3550
+	1    0    0    -1  
+$EndComp
+$Comp
+L MCU_Microchip_ATtiny:ATtiny85-20PU U2
+U 1 1 60F8DA9A
+P 5550 4150
+F 0 "U2" H 5021 4196 50  0000 R CNN
+F 1 "ATtiny85-20PU" H 5021 4105 50  0000 R CNN
+F 2 "Package_DIP:DIP-8_W7.62mm" H 5550 4150 50  0001 C CIN
+F 3 "http://ww1.microchip.com/downloads/en/DeviceDoc/atmel-2586-avr-8-bit-microcontroller-attiny25-attiny45-attiny85_datasheet.pdf" H 5550 4150 50  0001 C CNN
+	1    5550 4150
+	1    0    0    -1  
+$EndComp
 $EndSCHEMATC
