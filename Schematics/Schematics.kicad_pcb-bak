@@ -2,7 +2,7 @@
 
   (general
     (thickness 1.6)
-    (drawings 9)
+    (drawings 10)
     (tracks 53)
     (zones 0)
     (modules 12)
@@ -692,6 +692,9 @@
     )
   )
 
+  (gr_text Battery (at 81.28 59.69 270) (layer Dwgs.User)
+    (effects (font (size 1 1) (thickness 0.15)))
+  )
   (gr_text Relay (at 103.505 56.515 180) (layer Dwgs.User)
     (effects (font (size 1 1) (thickness 0.15)))
   )
