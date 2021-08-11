@@ -11,7 +11,6 @@
 #include <util/delay.h>
 #include "IR_Receiver.h"
 #include "Relay.h"
-#include "BB_I2C.h"
 
 #define FALSE 0
 #define TRUE  1
@@ -20,7 +19,6 @@ int main(void)
 {
 	IR_Receiver sensor1;
 	Relay button1;
-	BB_I2C writer(4, 3);
 
 	//Initialize an empty IR command
 	IR_Receiver::IR_cmd remote_cmd;
