@@ -23,20 +23,21 @@ int IR_Receiver::wait_until_change()
 
 	//Initialize the clock, set up time, & the prescaler even if the DIV8 fuse is set.
 	//Essentially, speed up the clock if it isn't fast enough
-	CLKPR |= 0x80; //Enable changes on the CLKPR register
-	CLKPR &= ~0x0F; //Set the prescaler to 1
+	//CLKPR |= 0x80; //Enable changes on the CLKPR register
+	//CLKPR &= ~0x0F; //Set the prescaler to 1
 	
 	int count = 0;
 	GIFR |= _BV(INTF0); //Clear the flag before starting
 	while
 	(
-		#ifdef PCINT_CHANGE
+		//#ifdef PCINT_CHANGE
 		//Changed code
-		(GIFR & _BV(PCIF)) == 0
-		#else
+		//(GIFR & _BV(PCIF)) == 0
+		//#else
 		//Original code
-		(GIFR & _BV(INTF0)) == 0
-		#endif
+		//(GIFR & _BV(INTF0)) == 0
+		GIFR == 0
+		//#endif
 	)
 	{
 		//Increment
@@ -81,7 +82,7 @@ IR_Receiver::IR_Receiver()
 
 IR_Receiver::IR_Receiver(int pin)
 {
-	#ifdef PCINT_CHANGE
+/*	#ifdef PCINT_CHANGE
 
 	//Scaffold code
 	//Pick which pin is connected to the IR receiver
@@ -110,12 +111,12 @@ IR_Receiver::IR_Receiver(int pin)
 	}
 
 	#else 
-
+*/
 	//Set up the interrupt on the INT0 pin to receive the IR signal
 	//Initialize the interrupt mode for INT0
 	MCUCR |= _BV(ISC00);
 
-	#endif
+//	#endif
 }
 
 IR_Receiver::IR_cmd IR_Receiver::recv()
@@ -126,6 +127,8 @@ IR_Receiver::IR_cmd IR_Receiver::recv()
 
 	//Wait for the beginning of the AGC pulse
 	length = measure_square_wave();
+
+	PORTB = ~PORTB;
 
 	//Reject command if nothing the AGC isn't long enough
 	if(length < AGC_PULSE)
@@ -175,6 +178,8 @@ IR_Receiver::IR_cmd IR_Receiver::recv()
 		output.cmd = -1;
 		return output;
 	}
+	
+	PORTB = ~PORTB;
 	
 	return output;
 }

@@ -23,19 +23,21 @@ int main(void)
 	//Initialize an empty IR command
 	IR_Receiver::IR_cmd remote_cmd;
 
+	PORTB = 0x00;
+
 	while(1)
 	{
 		remote_cmd = sensor1.recv();
 		switch(remote_cmd.cmd)
 		{
 			case IR_Receiver::POWER:
-				button1.press();
+				button1.toggle();
 				break;
 			case IR_Receiver::ZERO:
-				button1.button_set(FALSE);
+				button1.set(FALSE);
 				break;
 			case IR_Receiver::ONE:
-				button1.button_set(TRUE);
+				button1.set(TRUE);
 				break;
 			default:
 				break;
