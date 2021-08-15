@@ -13,14 +13,8 @@
 #include <util/delay.h>
 #include "IR_Receiver.h"
 
-//Code which, when uncommented, will run the changed interrupt code
-//The changes will cause the interrupts to activate on the PCINT interrupts, allowing for 
-//attaching the senor input to any functional pin
-//#define PCINT_CHANGE
-
 int IR_Receiver::wait_until_change()
 {
-
 	//Initialize the clock, set up time, & the prescaler even if the DIV8 fuse is set.
 	//Essentially, speed up the clock if it isn't fast enough
 	//CLKPR |= 0x80; //Enable changes on the CLKPR register
@@ -28,17 +22,7 @@ int IR_Receiver::wait_until_change()
 	
 	int count = 0;
 	GIFR |= _BV(INTF0); //Clear the flag before starting
-	while
-	(
-		//#ifdef PCINT_CHANGE
-		//Changed code
-		//(GIFR & _BV(PCIF)) == 0
-		//#else
-		//Original code
-		//(GIFR & _BV(INTF0)) == 0
-		GIFR == 0
-		//#endif
-	)
+	while((GIFR & _BV(INTF0)) == 0)
 	{
 		//Increment
 		count++;
@@ -82,41 +66,9 @@ IR_Receiver::IR_Receiver()
 
 IR_Receiver::IR_Receiver(int pin)
 {
-/*	#ifdef PCINT_CHANGE
-
-	//Scaffold code
-	//Pick which pin is connected to the IR receiver
-	switch (pin)
-	{
-		case 1:
-			PCMSK = _BV(PCINT5);
-			break;
-		case 2:
-			PCMSK = _BV(PCINT3);
-			break;
-		case 3:
-			PCMSK = _BV(PCINT4);
-			break;
-		case 5:
-			PCMSK = _BV(PCINT0);
-			break;
-		case 6:
-			PCMSK = _BV(PCINT1);
-			break;
-		case 7:
-			PCMSK = _BV(PCINT2);
-			break;
-		default:
-			break;
-	}
-
-	#else 
-*/
 	//Set up the interrupt on the INT0 pin to receive the IR signal
 	//Initialize the interrupt mode for INT0
 	MCUCR |= _BV(ISC00);
-
-//	#endif
 }
 
 IR_Receiver::IR_cmd IR_Receiver::recv()
@@ -128,13 +80,11 @@ IR_Receiver::IR_cmd IR_Receiver::recv()
 	//Wait for the beginning of the AGC pulse
 	length = measure_square_wave();
 
-	PORTB = ~PORTB;
-
 	//Reject command if nothing the AGC isn't long enough
 	if(length < AGC_PULSE)
 	{
 		output.addr = 0;
-		output.cmd = 0;
+		output.cmd = 1;
 		return output;
 	}
 	
@@ -148,7 +98,7 @@ IR_Receiver::IR_cmd IR_Receiver::recv()
 		wait_until_change();
 
 		output.addr = 0;
-		output.cmd = 0;
+		output.cmd = 2;
 		return output;
 	}
 
@@ -168,6 +118,7 @@ IR_Receiver::IR_cmd IR_Receiver::recv()
 	wait_until_change();
 
 	//Check for error conditions regarding the inverted bits
+	//Return 0, -1 if a transmission error occurs
 	if
 	(
 	output.addr != ((unsigned char) ~inv_output.addr) ||
@@ -178,8 +129,6 @@ IR_Receiver::IR_cmd IR_Receiver::recv()
 		output.cmd = -1;
 		return output;
 	}
-	
-	PORTB = ~PORTB;
 	
 	return output;
 }

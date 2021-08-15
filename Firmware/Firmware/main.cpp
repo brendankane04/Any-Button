@@ -18,12 +18,10 @@
 int main(void)
 {
 	IR_Receiver sensor1;
-	Relay button1;
+	Relay button1(1);
 
 	//Initialize an empty IR command
 	IR_Receiver::IR_cmd remote_cmd;
-
-	PORTB = 0x00;
 
 	while(1)
 	{
@@ -31,13 +29,13 @@ int main(void)
 		switch(remote_cmd.cmd)
 		{
 			case IR_Receiver::POWER:
-				button1.toggle();
+				button1.press();
 				break;
 			case IR_Receiver::ZERO:
-				button1.set(FALSE);
+				button1.button_set(FALSE);
 				break;
 			case IR_Receiver::ONE:
-				button1.set(TRUE);
+				button1.button_set(TRUE);
 				break;
 			default:
 				break;
