@@ -85,7 +85,7 @@ IR_Receiver::IR_cmd IR_Receiver::recv()
 	if(length < AGC_PULSE)
 	{
 		output.addr = 0;
-		output.cmd = 1;
+		output.cmd = -1;
 		return output;
 	}
 	
@@ -99,7 +99,7 @@ IR_Receiver::IR_cmd IR_Receiver::recv()
 		wait_until_change();
 
 		output.addr = 0;
-		output.cmd = 2;
+		output.cmd = -2;
 		return output;
 	}
 
@@ -127,7 +127,7 @@ IR_Receiver::IR_cmd IR_Receiver::recv()
 	)
 	{
 		output.addr = 0;
-		output.cmd = -1;
+		output.cmd = -3;
 		return output;
 	}
 	
