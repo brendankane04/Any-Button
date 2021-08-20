@@ -9,8 +9,7 @@ Simply connect the leads of the button of the appliance to the relay on this dev
 2. [IR Remote (MP3 Control)](https://www.amazon.com/KOOBOOK-Infrared-Wireless-Control-Receiver/dp/B07S67SFSF/ref=pd_sbs_1/140-3142093-1069413?pd_rd_w=dmh5y&pf_rd_p=0a3ad226-8a77-4898-9a99-63ffeb1aef90&pf_rd_r=679X1BYENFA4Q5D7KPQT&pd_rd_r=20a569e2-5dc0-4ce2-99c9-b3cc044566fd&pd_rd_wg=Kmetr&pd_rd_i=B07S67SFSF&psc=1) <br>
 3. [Attiny85, DIP package](https://www.amazon.com/Original-Atmel-Dip-8-ATTINY85-20PU-Tiny85-20Pu/dp/B06W9JBJJ6/ref=sr_1_3?dchild=1&keywords=attiny85&qid=1628904159&sr=8-3) <br>
 4. [L7805 5V Voltage regulator](https://www.amazon.com/Pieces-Voltage-Regulator-Linear-Positive/dp/B07RB251DC/ref=sr_1_4?dchild=1&keywords=L7805&qid=1628904211&sr=8-4) <br>
-5. Capacitors <br> 
-6. Resistors <br>
+5. Various Electical Components <br> 
 
 ## Firmware: 
 
