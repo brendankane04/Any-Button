@@ -20,10 +20,28 @@ class IR_Receiver
 		
 	public:
 		//Constants which define the command numbers
-		//It varies by remote
+		//It varies by remote, but this corresponds to the remote in the README
 		static const char POWER = 0x45;
+		static const char MODE  = 0x46;
+		static const char MUTE  = 0x47;
+		static const char PAUSE = 0x44;
+		static const char REWND = 0x40;
+		static const char FFWD  = 0x43;
+		static const char EQ    = 0x07;
+		static const char VOLDN = 0x15;
+		static const char VOLUP = 0x09;
 		static const char ZERO  = 0x16;
+		static const char SWTCH = 0x19;
+		static const char US_D  = 0x0D;
 		static const char ONE   = 0x0C;
+		static const char TWO   = 0x18;
+		static const char THREE = 0x5E;
+		static const char FOUR  = 0x08;
+		static const char FIVE  = 0x1C;
+		static const char SIX   = 0x5A;
+		static const char SEVEN = 0x42;
+		static const char EIGHT = 0x52;
+		static const char NINE  = 0x4A;
 
 		struct IR_cmd
 		{
