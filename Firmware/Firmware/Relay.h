@@ -22,8 +22,6 @@ class Relay
 		void Activate();
 
 	public:
-		//Default Constructor
-		Relay();
 		//pin: which pin on PORTB the relay is connected to
 		Relay(int pin);
 		//Change the relay's current state

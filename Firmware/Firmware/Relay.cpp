@@ -16,12 +16,6 @@
 #define FALSE 0
 #define TRUE  1
 
-// default constructor
-Relay::Relay()
-{
-	Relay(1);
-}
-
 Relay::Relay(int pin)
 {
 	//Initialize the state as off

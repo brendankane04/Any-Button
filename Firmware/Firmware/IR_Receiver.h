@@ -60,8 +60,6 @@ class IR_Receiver
 		char read_byte();
 		
 	public:
-		//Default Constructor
-		IR_Receiver();
 		//Constructor. Connect the IR receiver to the physical 'pin' on the DIP package
 		//the pin is NOT the PCINTX signal
 		IR_Receiver(int pin);

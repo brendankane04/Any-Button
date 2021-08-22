@@ -17,7 +17,7 @@
 
 int main(void)
 {
-	IR_Receiver sensor1;
+	IR_Receiver sensor1(7);
 	Relay button1(1);
 
 	//Initialize an empty IR command

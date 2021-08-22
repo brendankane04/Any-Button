@@ -60,11 +60,6 @@ char IR_Receiver::read_byte()
 	return output;
 }
 
-IR_Receiver::IR_Receiver()
-{
-	IR_Receiver(7);
-}
-
 IR_Receiver::IR_Receiver(int pin)
 {
 	//Set up the interrupt on the INT0 pin to receive the IR signal
