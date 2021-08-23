@@ -20,11 +20,6 @@
 //variable delay macro, since the library function requires a constant
 #define var_delay(duration) for(int i = 0; i < duration; i++) _delay_ms(1);
 
-Lever::Lever() : Relay()
-{
-	period = 100;
-}
-
 Lever::Lever(int pin, int period) : Relay(pin)
 {
 	this->period = period;

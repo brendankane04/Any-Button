@@ -18,8 +18,6 @@ private:
 	int period; //The length of the the button press in milliseconds
 
 public:
-	//Default Constructor
-	Lever();
 	//Constructor 
 	Lever(int pin, int period);
 	//Modified button press function. It holds for a longer, variable time based on the solenoid
