@@ -65,6 +65,8 @@ class IR_Receiver
 		IR_Receiver(int pin);
 		//Read in an IR command & address
 		IR_cmd recv();
+		//Poll the receiver for a command coming in. Returns an error if there's an error
+		unsigned char listen();
 }; //IR_Receiver
 
 #endif //__IR_RECEIVER_H__

@@ -128,3 +128,30 @@ IR_Receiver::IR_cmd IR_Receiver::recv()
 	
 	return output;
 }
+
+unsigned char IR_Receiver::listen()
+{
+	IR_cmd signal;
+	signal.addr = 0x00;
+	signal.cmd = 0x00;
+
+	while(1)
+	{
+		signal = recv();
+		
+		switch(signal.cmd)
+		{
+			case POWER:
+
+				break;
+			case MODE:
+				
+				break;
+			case MUTE:
+			
+				break;
+		}		
+	}
+
+	return 0;	
+}
