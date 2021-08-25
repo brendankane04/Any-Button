@@ -159,49 +159,49 @@ unsigned char IR_Receiver::listen()
 				ir_cmd_tbl[5]();
 				break;
 			case EQ:
-
+				ir_cmd_tbl[6]();
 				break;
 			case VOLDN:
-
+				ir_cmd_tbl[7]();
 				break;
 			case VOLUP:
-
+				ir_cmd_tbl[8]();
 				break;
 			case ZERO:
-
+				ir_cmd_tbl[9]();
 				break;
 			case SWTCH:
-
+				ir_cmd_tbl[10]();
 				break;
 			case US_D:
-
+				ir_cmd_tbl[11]();
 				break;
 			case ONE:
-
+				ir_cmd_tbl[12]();
 				break;
 			case TWO:
-
+				ir_cmd_tbl[13]();
 				break;
 			case THREE:
-
+				ir_cmd_tbl[14]();
 				break;
 			case FOUR:
-
+				ir_cmd_tbl[15]();
 				break;
 			case FIVE:
-
+				ir_cmd_tbl[16]();
 				break;
 			case SIX:
-
+				ir_cmd_tbl[17]();
 				break;
 			case SEVEN:
-
+				ir_cmd_tbl[18]();
 				break;
 			case EIGHT:
-
+				ir_cmd_tbl[19]();
 				break;
 			case NINE:
-
+				ir_cmd_tbl[20]();
 				break;
 		}		
 	}
