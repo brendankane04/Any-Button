@@ -131,9 +131,7 @@ IR_Receiver::IR_cmd IR_Receiver::recv()
 
 unsigned char IR_Receiver::listen()
 {
-	IR_cmd signal;
-	signal.addr = 0x00;
-	signal.cmd = 0x00;
+	IR_cmd signal = {0};
 
 	while(1)
 	{
@@ -142,13 +140,68 @@ unsigned char IR_Receiver::listen()
 		switch(signal.cmd)
 		{
 			case POWER:
-
+				ir_cmd_tbl[0]();
 				break;
 			case MODE:
-				
+				ir_cmd_tbl[1]();
 				break;
 			case MUTE:
-			
+				ir_cmd_tbl[2]();
+				break;
+			case PAUSE:
+				ir_cmd_tbl[3]();
+				break;
+			case REWND:
+				ir_cmd_tbl[4]();
+
+				break;
+			case FFWD:
+				ir_cmd_tbl[5]();
+				break;
+			case EQ:
+
+				break;
+			case VOLDN:
+
+				break;
+			case VOLUP:
+
+				break;
+			case ZERO:
+
+				break;
+			case SWTCH:
+
+				break;
+			case US_D:
+
+				break;
+			case ONE:
+
+				break;
+			case TWO:
+
+				break;
+			case THREE:
+
+				break;
+			case FOUR:
+
+				break;
+			case FIVE:
+
+				break;
+			case SIX:
+
+				break;
+			case SEVEN:
+
+				break;
+			case EIGHT:
+
+				break;
+			case NINE:
+
 				break;
 		}		
 	}

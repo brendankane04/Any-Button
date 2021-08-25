@@ -17,6 +17,10 @@ class IR_Receiver
 		static const int AGC_PULSE  = 7500;
 		static const int LONG_PULSE = 3000;
 		static const int ONE_PULSE  = 1200;
+
+		//Definition of IR Command function table
+		typedef void (*IR_Func)(void);
+		IR_Func ir_cmd_tbl[21];
 		
 	public:
 		//Constants which define the command numbers
