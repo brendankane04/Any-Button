@@ -385,4 +385,37 @@ F 3 "http://ww1.microchip.com/downloads/en/DeviceDoc/atmel-2586-avr-8-bit-microc
 	1    5550 4150
 	1    0    0    -1  
 $EndComp
+$Comp
+L Connector_Generic:Conn_01x02 J4
+U 1 1 61271092
+P 2650 5250
+F 0 "J4" H 2730 5242 50  0000 L CNN
+F 1 "Conn_01x02" H 2730 5151 50  0000 L CNN
+F 2 "Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical" H 2650 5250 50  0001 C CNN
+F 3 "~" H 2650 5250 50  0001 C CNN
+	1    2650 5250
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:VCC #PWR0112
+U 1 1 6127160D
+P 2450 5250
+F 0 "#PWR0112" H 2450 5100 50  0001 C CNN
+F 1 "VCC" H 2465 5423 50  0000 C CNN
+F 2 "" H 2450 5250 50  0001 C CNN
+F 3 "" H 2450 5250 50  0001 C CNN
+	1    2450 5250
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR0113
+U 1 1 61271C27
+P 2450 5350
+F 0 "#PWR0113" H 2450 5100 50  0001 C CNN
+F 1 "GND" H 2455 5177 50  0000 C CNN
+F 2 "" H 2450 5350 50  0001 C CNN
+F 3 "" H 2450 5350 50  0001 C CNN
+	1    2450 5350
+	1    0    0    -1  
+$EndComp
 $EndSCHEMATC
