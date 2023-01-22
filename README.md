@@ -37,6 +37,6 @@ The final product can be conveniently viewed in the form of PDF's
 ### PDF's:
 
 -**Schematic.pdf:** Image of the schematics <br>
-[Schematics](Schematics/Schematic.pdf)
+![Schematics](Schematics/Schematic.pdf)<br>
 -**Layout.pdf:** Image of the board layout <br>
-[Layout](Schematics/Layout.pdf)
+![Layout](Schematics/Layout.pdf)<br>
